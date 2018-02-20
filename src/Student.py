@@ -8,8 +8,10 @@ class StudentList:
     def __init__(self, course):
         self.students = []
         self.course = course
-    def addStudent(self,student):
-        self.students.append(copy.deepcopy(student))
+		
+		
+    def addStudent(self,dstudent):
+        self.students.append(copy.deepcopy(dstudent))
     def removeStudent(self,id):
         for student in self.students:
             if student.id == id:
@@ -23,8 +25,8 @@ class StudentList:
             newStudent = Student(row[0], row[1], row[2])
             self.students.append(copy.deepcopy(newStudent))
     def printStudents(self):
-        for student in self.students:
-            student.printStudent()
+        for sstudent in self.students:
+            sstudent.printStudent()
 
 class Student:
     def __init__(self,id,name,email):
