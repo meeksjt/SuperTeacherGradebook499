@@ -53,7 +53,7 @@ class Student:
         cursor.execute(query)
         connection.commit()
     def saveStudent(self):
-        """Saves the student to the database"""
+        """Not needed, since set functions do this for us. Will be removed soon"""
         print("Function not implemented yet.")
         #This will save the student to the database.
         #Either UPDATE or INSERT here, depending on if the student exists or not.
