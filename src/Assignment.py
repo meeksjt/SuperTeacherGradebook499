@@ -1,4 +1,4 @@
-#Holds one assignment
-#Holds assignment data, plus a Grades.
+# Holds one assignment
+# Holds assignment data, plus a Grades.
 class Assignment:
 	pass
