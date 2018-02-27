@@ -14,5 +14,6 @@ class Database:
 
 		return results
 
-
+connection = sqlite3.connect('../databases/jacobstest.db')
+cursor = connection.cursor()
 currentDatabase = ""
