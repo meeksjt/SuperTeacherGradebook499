@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8182ec8d-dba4-4515-ab29-4b53dc8c7d68" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/assets/asset1.txt" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/databases/database1.db" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/docs/documentation" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Student.py" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/sexyback/Student.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/sexyback/jacobstest.db" afterPath="$PROJECT_DIR$/databases/jacobstest.db" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,42 +14,64 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/Senior_Project$Student.coverage" NAME="Student Coverage Results" MODIFIED="1518964610255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+  </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="database1.db" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/databases/database1.db">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="Student.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Student.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="asset1.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/asset1.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="2726">
+              <caret line="94" column="0" lean-forward="true" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+                <marker date="1518964620378" expanded="true" signature="672:687" ph="SELECT * FRO... " />
+                <marker date="1518964620378" expanded="true" signature="672:707" ph="SELECT * FRO... " />
+                <marker date="1518964620378" expanded="true" signature="672:708" ph="SELECT * FRO... &quot;" />
+                <marker date="1518964620378" expanded="true" signature="672:709" ph="SELECT * FRO... " />
+                <marker date="1518964620378" expanded="true" signature="1194:1290" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="1461:1497" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="1461:1518" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="1461:1532" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="1461:1533" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="1461:1554" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="1744:1838" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="2356:2417" ph="DELETE FROM cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="2356:2419" ph="DELETE FROM cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="2367:2417" ph="UPDATE cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="2647:2733" ph="CREATE TABLE... IF" />
+                <marker date="1518964620378" expanded="true" signature="2761:2834" ph="INSERT INTO cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="2861:2927" ph="INSERT INTO cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="2954:3030" ph="INSERT INTO cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="3057:3136" ph="INSERT INTO cs499_studentList... " />
+                <marker date="1518964620378" expanded="true" signature="3405:3438" ph="SELECT * FRO... cs499_studentList" />
+                <marker date="1518964620378" expanded="true" signature="3405:3440" ph="SELECT * FRO... cs499_studentList" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>copy</find>
+      <find>print</find>
+      <find>delete</find>
+      <find>append</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/sexyback/Student.py" />
+        <option value="$PROJECT_DIR$/src/Student.py" />
+      </list>
+    </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -58,9 +79,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="308" />
-    <option name="y" value="122" />
+    <option name="y" value="142" />
     <option name="width" value="1280" />
     <option name="height" value="777" />
   </component>
@@ -79,6 +100,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -110,12 +133,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -131,6 +152,32 @@
         </RuleState>
       </list>
     </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Student" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\Jacob the Wise\PycharmProjects\Sandbox\venv\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="SuperTeacherGradebook499" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Student.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Python.Student" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -149,27 +196,28 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="308" y="122" width="1280" height="777" extended-state="0" />
+    <frame x="-11" y="-11" width="1942" height="1042" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295838" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0859375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39932507" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -184,27 +232,86 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/databases/database1.db">
+    <entry file="file://$USER_HOME$/Desktop/CK2 Character Editor/Character Editor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="6960">
+          <caret line="240" column="38" lean-forward="false" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/asset1.txt">
+    <entry file="file://$PROJECT_DIR$/src/Student.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="377">
+          <caret line="14" column="29" lean-forward="false" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+            <marker date="1518964620378" expanded="true" signature="672:687" ph="SELECT * FRO... " />
+            <marker date="1518964620378" expanded="true" signature="672:707" ph="SELECT * FRO... " />
+            <marker date="1518964620378" expanded="true" signature="672:708" ph="SELECT * FRO... &quot;" />
+            <marker date="1518964620378" expanded="true" signature="672:709" ph="SELECT * FRO... " />
+            <marker date="1518964620378" expanded="true" signature="1194:1290" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1497" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1518" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1532" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1533" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1554" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1744:1838" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2356:2417" ph="DELETE FROM cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2356:2419" ph="DELETE FROM cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2367:2417" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2647:2733" ph="CREATE TABLE... IF" />
+            <marker date="1518964620378" expanded="true" signature="2761:2834" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2861:2927" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2954:3030" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="3057:3136" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="3405:3438" ph="SELECT * FRO... cs499_studentList" />
+            <marker date="1518964620378" expanded="true" signature="3405:3440" ph="SELECT * FRO... cs499_studentList" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
+    <entry file="file://$PROJECT_DIR$/sexyback/Student.py" />
+    <entry file="file://$USER_HOME$/Desktop/CK2 Character Editor/Character Editor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="6931">
+          <caret line="240" column="38" lean-forward="false" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Student.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2726">
+          <caret line="94" column="0" lean-forward="true" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+            <marker date="1518964620378" expanded="true" signature="672:687" ph="SELECT * FRO... " />
+            <marker date="1518964620378" expanded="true" signature="672:707" ph="SELECT * FRO... " />
+            <marker date="1518964620378" expanded="true" signature="672:708" ph="SELECT * FRO... &quot;" />
+            <marker date="1518964620378" expanded="true" signature="672:709" ph="SELECT * FRO... " />
+            <marker date="1518964620378" expanded="true" signature="1194:1290" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1497" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1518" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1532" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1533" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1461:1554" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="1744:1838" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2356:2417" ph="DELETE FROM cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2356:2419" ph="DELETE FROM cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2367:2417" ph="UPDATE cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2647:2733" ph="CREATE TABLE... IF" />
+            <marker date="1518964620378" expanded="true" signature="2761:2834" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2861:2927" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="2954:3030" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="3057:3136" ph="INSERT INTO cs499_studentList... " />
+            <marker date="1518964620378" expanded="true" signature="3405:3438" ph="SELECT * FRO... cs499_studentList" />
+            <marker date="1518964620378" expanded="true" signature="3405:3440" ph="SELECT * FRO... cs499_studentList" />
+          </folding>
         </state>
       </provider>
     </entry>
