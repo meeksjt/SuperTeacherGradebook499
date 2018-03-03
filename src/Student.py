@@ -9,15 +9,28 @@ class StudentList:
     def __init__(self, course):
         self.students = []
         self.course = course
+        self.tableName = course+"studentList"
+        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);")
+        self.loadStudents()
+        
+		#self.tableName = re.sub('[^A-Za-z0-9]+', '', self.tableName)
 		
     def setEmail(self,id,email):
         for student in self.students:
             if student.id == id:
                 print("Found one!")
                 student.setEmail(email)
-		
-    def addStudent(self,dstudent):
+                self.loadStudents()
+    def addStudent(self,id,name,email):
+        newStudent = Student(self.tableName,id,name,email)
+        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(newStudent.id) + ", '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')")
+        connection.commit()
+        self.__addStudent(newStudent)
+    def __addStudent(self,dstudent):
         self.students.append(copy.deepcopy(dstudent))
+    def saveStudents(self):
+        for student in self.students:
+            student.saveStudent()
     def removeStudent(self,id):
         for student in self.students:
             if student.id == id:
@@ -25,10 +38,10 @@ class StudentList:
                 self.loadStudents()
     def loadStudents(self):
         self.students.clear() #Erase what's in the list
-        cursor.execute("SELECT * FROM `" + self.course + "`")
+        cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
         for row in results:
-            newStudent = Student(row[0], row[1], row[2])
+            newStudent = Student(self.tableName, row[0], row[1], row[2])
             self.students.append(copy.deepcopy(newStudent))
     def printStudents(self):
         for sstudent in self.students:
@@ -36,20 +49,23 @@ class StudentList:
 
 class Student:
 #Need to reload students after setting name.
-    def __init__(self,id,name,email):
+    def __init__(self,tableName,id,name,email):
+        self.tableName = tableName
         self.name = name
         self.email = email
         self.id = id
+
+		#connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
     def setEmail(self,email):
         self.email = email
-        query = "UPDATE cs499_studentList SET email = '" + str(self.email) + "' WHERE id = '" + str(self.id) + "';"
+        query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE id = '" + str(self.id) + "';"
         print(query)
         cursor.execute(query)
         connection.commit()
     def setName(self,name):
         """Tested"""
         self.name=name
-        query = "UPDATE cs499_studentList SET name = '" + str(self.name) + "' WHERE id = " + str(self.id) + ";"
+        query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE id = " + str(self.id) + ";"
         print(query)
         cursor.execute(query)
         connection.commit()
@@ -57,13 +73,14 @@ class Student:
         """Sets ID in object and in database"""
         self.id=id
 
-        query = "UPDATE cs499_studentList SET id = '" + str(self.id) + "' WHERE name = '" + str(self.name) + "';"
+        query = "UPDATE "+self.tableName+" SET id = '" + str(self.id) + "' WHERE name = '" + str(self.name) + "';"
         print(query)
         cursor.execute(query)
         connection.commit()
     def saveStudent(self):
         """Not needed, since set functions do this for us. Will be removed soon"""
-        print("Function not implemented yet.")
+        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(self.id) + ", '" + str(self.name) + "', '" + str(self.email) + "')")
+        connection.commit()
         #This will save the student to the database.
         #Either UPDATE or INSERT here, depending on if the student exists or not.
     def printStudent(self):
@@ -71,7 +88,7 @@ class Student:
         print("ID: ", self.id)
         print("Email: ", self.email)
     def removeStudent(self):
-        query = "DELETE FROM cs499_studentList WHERE id = '" + str(self.id) + "';"
+        query = "DELETE FROM "+self.tableName+" WHERE id = '" + str(self.id) + "';"
         print(query)
         cursor.execute(query)
         connection.commit()
@@ -89,17 +106,30 @@ def createTestDatabase():
     connection.commit()
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
-students = StudentList("cs499_studentList")
+#students = StudentList("cs499")
+#students.addStudent(id,name,email)
+#students.removeStudent(id)
+#students.students # This is an list you can iterate through, which has sets for email, id, and name.
+
 #createTestDatabase()
 
-cursor.execute('SELECT * FROM `cs499_studentList`')
-results = cursor.fetchall()
-createTestDatabase()
-for row in results:
-    newStudent = Student(row[0],row[1],row[2])
-    students.addStudent(newStudent)
-students.setEmail(1994, "fhouck8@hotmail.com")
+#cursor.execute('SELECT * FROM `cs499studentList`')
+#results = cursor.fetchall()
+#createTestDatabase()
+#for row in results:
+#    newStudent = Student(row[0],row[1],row[2])
+#    students.addStudent(newStudent)
+#students.setEmail(1994, "fhouck8@hotmail.com")
+#students.printStudents()
+#students.setEmail(1, "!@#$%^&*(*&^%")
 #x = input("What student do you want to change?")
+#x = input("Enter a Student name: ")
 
-students.printStudents()
+#y = input("Enter a Student id: ")
+
+#z = input("Enter a Student email: ")
+#students.addStudent(y,x,z)
+
+#students.printStudents()
+#students.students[0].set
 #INSERT INTO `cs499_studentList`(`ID`,`name`,`email`) VALUES (NULL,NULL,NULL);
