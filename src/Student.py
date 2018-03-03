@@ -23,9 +23,14 @@ class StudentList:
                 self.loadStudents()
     def addStudent(self,id,name,email):
         newStudent = Student(self.tableName,id,name,email)
+        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(newStudent.id) + ", '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')")
+        connection.commit()
         self.__addStudent(newStudent)
     def __addStudent(self,dstudent):
         self.students.append(copy.deepcopy(dstudent))
+    def saveStudents(self):
+        for student in self.students:
+            student.saveStudent()
     def removeStudent(self,id):
         for student in self.students:
             if student.id == id:
@@ -49,6 +54,8 @@ class Student:
         self.name = name
         self.email = email
         self.id = id
+
+		#connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
     def setEmail(self,email):
         self.email = email
         query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE id = '" + str(self.id) + "';"
@@ -72,7 +79,8 @@ class Student:
         connection.commit()
     def saveStudent(self):
         """Not needed, since set functions do this for us. Will be removed soon"""
-        print("Function not implemented yet.")
+        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(self.id) + ", '" + str(self.name) + "', '" + str(self.email) + "')")
+        connection.commit()
         #This will save the student to the database.
         #Either UPDATE or INSERT here, depending on if the student exists or not.
     def printStudent(self):
@@ -101,22 +109,22 @@ def createTestDatabase():
 students = StudentList("cs499")
 #createTestDatabase()
 
-cursor.execute('SELECT * FROM `cs499studentList`')
-results = cursor.fetchall()
-createTestDatabase()
+#cursor.execute('SELECT * FROM `cs499studentList`')
+#results = cursor.fetchall()
+#createTestDatabase()
 #for row in results:
 #    newStudent = Student(row[0],row[1],row[2])
 #    students.addStudent(newStudent)
 #students.setEmail(1994, "fhouck8@hotmail.com")
 students.printStudents()
-students.setEmail(1, "!@#$%^&*(*&^%")
+#students.setEmail(1, "!@#$%^&*(*&^%")
 #x = input("What student do you want to change?")
 x = input("Enter a Student name: ")
 
 y = input("Enter a Student id: ")
 
 z = input("Enter a Student email: ")
-students.addStudent(x,y,z)
+students.addStudent(y,x,z)
 
 students.printStudents()
 #INSERT INTO `cs499_studentList`(`ID`,`name`,`email`) VALUES (NULL,NULL,NULL);
