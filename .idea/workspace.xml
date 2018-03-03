@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8182ec8d-dba4-4515-ab29-4b53dc8c7d68" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/databases/jacobstest.db" afterPath="$PROJECT_DIR$/databases/jacobstest.db" />
+      <change beforePath="$PROJECT_DIR$/src/Grade.py" afterPath="$PROJECT_DIR$/src/Grade.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,22 +19,9 @@
       <file leaf-file-name="Student.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Student.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2349">
-              <caret line="81" column="21" lean-forward="false" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="21" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-                <marker date="1519511492191" expanded="true" signature="742:777" ph="SELECT * FRO... missing_value" />
-                <marker date="1519511492191" expanded="true" signature="1236:1332" ph="UPDATE cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="1468:1540" ph="UPDATE cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="1716:1810" ph="UPDATE cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="2293:2356" ph="DELETE FROM cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="2557:2643" ph="CREATE TABLE... cs499_studentList" />
-                <marker date="1519511492191" expanded="true" signature="2668:2741" ph="INSERT INTO cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="2765:2831" ph="INSERT INTO cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="2855:2931" ph="INSERT INTO cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="2955:3034" ph="INSERT INTO cs499_studentList... " />
-                <marker date="1519511492191" expanded="true" signature="3304:3337" ph="SELECT * FRO... cs499_studentList" />
-              </folding>
+            <state relative-caret-position="2262">
+              <caret line="79" column="21" lean-forward="false" selection-start-line="79" selection-start-column="21" selection-end-line="79" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -60,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Database.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Database.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="522">
-              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -80,7 +66,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GradeList.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GradeList.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/GradeList.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -151,6 +137,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,8 +155,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -269,58 +255,9 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Student.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <marker date="1519511492191" expanded="true" signature="742:777" ph="SELECT * FRO... missing_value" />
-            <marker date="1519511492191" expanded="true" signature="1236:1332" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="1468:1540" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="1716:1810" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2293:2356" ph="DELETE FROM cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2557:2643" ph="CREATE TABLE... cs499_studentList" />
-            <marker date="1519511492191" expanded="true" signature="2668:2741" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2765:2831" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2855:2931" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2955:3034" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="3304:3337" ph="SELECT * FRO... cs499_studentList" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/CK2 Character Editor/Character Editor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6960">
-          <caret line="240" column="38" lean-forward="false" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Student.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="14" column="29" lean-forward="false" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <marker date="1519511492191" expanded="true" signature="742:777" ph="SELECT * FRO... missing_value" />
-            <marker date="1519511492191" expanded="true" signature="1236:1332" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="1468:1540" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="1716:1810" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2293:2356" ph="DELETE FROM cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2557:2643" ph="CREATE TABLE... cs499_studentList" />
-            <marker date="1519511492191" expanded="true" signature="2668:2741" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2765:2831" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2855:2931" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2955:3034" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="3304:3337" ph="SELECT * FRO... cs499_studentList" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sexyback/Student.py" />
-    <entry file="file://$USER_HOME$/Desktop/CK2 Character Editor/Character Editor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6931">
-          <caret line="240" column="38" lean-forward="false" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="38" />
+        <state relative-caret-position="2320">
+          <caret line="81" column="21" lean-forward="false" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -364,31 +301,97 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Student.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2349">
-          <caret line="81" column="21" lean-forward="false" selection-start-line="81" selection-start-column="21" selection-end-line="81" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <marker date="1519511492191" expanded="true" signature="742:777" ph="SELECT * FRO... missing_value" />
-            <marker date="1519511492191" expanded="true" signature="1236:1332" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="1468:1540" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="1716:1810" ph="UPDATE cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2293:2356" ph="DELETE FROM cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2557:2643" ph="CREATE TABLE... cs499_studentList" />
-            <marker date="1519511492191" expanded="true" signature="2668:2741" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2765:2831" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2855:2931" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="2955:3034" ph="INSERT INTO cs499_studentList... " />
-            <marker date="1519511492191" expanded="true" signature="3304:3337" ph="SELECT * FRO... cs499_studentList" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Desktop/CK2 Character Editor/Character Editor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6960">
+          <caret line="240" column="38" lean-forward="false" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Student.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="14" column="29" lean-forward="false" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sexyback/Student.py" />
+    <entry file="file://$USER_HOME$/Desktop/CK2 Character Editor/Character Editor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6931">
+          <caret line="240" column="38" lean-forward="false" selection-start-line="240" selection-start-column="34" selection-end-line="240" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Assignment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="3" column="8" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AssignmentCategory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29">
+          <caret line="1" column="8" lean-forward="false" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Grade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Student.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2262">
+          <caret line="79" column="21" lean-forward="false" selection-start-line="79" selection-start-column="21" selection-end-line="79" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Database.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="522">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GradeList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
