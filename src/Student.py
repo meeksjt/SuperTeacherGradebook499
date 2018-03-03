@@ -106,7 +106,11 @@ def createTestDatabase():
     connection.commit()
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
-students = StudentList("cs499")
+#students = StudentList("cs499")
+#students.addStudent(id,name,email)
+#students.removeStudent(id)
+#students.students # This is an list you can iterate through, which has sets for email, id, and name.
+
 #createTestDatabase()
 
 #cursor.execute('SELECT * FROM `cs499studentList`')
@@ -116,15 +120,16 @@ students = StudentList("cs499")
 #    newStudent = Student(row[0],row[1],row[2])
 #    students.addStudent(newStudent)
 #students.setEmail(1994, "fhouck8@hotmail.com")
-students.printStudents()
+#students.printStudents()
 #students.setEmail(1, "!@#$%^&*(*&^%")
 #x = input("What student do you want to change?")
-x = input("Enter a Student name: ")
+#x = input("Enter a Student name: ")
 
-y = input("Enter a Student id: ")
+#y = input("Enter a Student id: ")
 
-z = input("Enter a Student email: ")
-students.addStudent(y,x,z)
+#z = input("Enter a Student email: ")
+#students.addStudent(y,x,z)
 
-students.printStudents()
+#students.printStudents()
+#students.students[0].set
 #INSERT INTO `cs499_studentList`(`ID`,`name`,`email`) VALUES (NULL,NULL,NULL);

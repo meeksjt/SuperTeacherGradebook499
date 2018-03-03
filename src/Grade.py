@@ -3,7 +3,8 @@ import re
 #Holds one grade.
 #May have a testGrade and a actualGrade, and have a setGrade function to test a grade, and a saveGrade function to save the grade to the database.
 class Grade:
-	def __init__(self, id, tableName):
+	def __init__(self, id, grade, tableName):
+		# We HAVE to have the StudentID, or we have no way of accessing the grade from the database.
 		self.id = id
 		self.grade = "-" #Sets default grade to "-", meaning there's no grade entered yet
 	def setGrade(self,grade):
@@ -25,7 +26,11 @@ class GradeList:
 	def __init__(self, courseName, assignmentCategoryName, assignmentName):
 		self.tableName = courseName+assignmentCategoryName+assignmentName
 		self.tableName = re.sub('[^A-Za-z0-9]+', '', self.tableName)
-		print(self.tableName)
-		pass
-		
+		self.gradeList = []
+	def setGrade(self,id,grade):
+		for grad in self.gradeList:
+			if grad.id == id:
+				grad.setGrade(grade)
+			else:
+				self.gradeList.append(Grade(id, grade,self.tableName))
 stuff = GradeList("CS499", "Tests", "Test1")
