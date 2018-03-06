@@ -12,6 +12,7 @@ class StudentList:
         self.tableName = course+"studentList"
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);")
         self.loadStudents()
+		self.attend = Dict()
         
 		#self.tableName = re.sub('[^A-Za-z0-9]+', '', self.tableName)
 		
