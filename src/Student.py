@@ -75,6 +75,7 @@ class Student:
     def set_name(self,name):
         """Tested"""
         self.name=name
+		# I used a query to make it easier by creating our string, and just passing it to the cursor.
         query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE id = " + str(self.id) + ";"
         print(query)
         cursor.execute(query)

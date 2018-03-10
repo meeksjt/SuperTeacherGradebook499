@@ -40,5 +40,8 @@ class Course:
 
 	def change_category_weight(self):
 		pass
+	def delete_course(self):
+		#Will be implemented later
+		pass
 
 funk = Course("CS 399", "Fall", "01")
