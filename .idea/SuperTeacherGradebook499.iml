@@ -4,7 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
+<<<<<<< HEAD
     <orderEntry type="jdk" jdkName="Python 3.6" jdkType="Python SDK" />
+=======
+    <orderEntry type="inheritedJdk" />
+>>>>>>> 02c99dedf1cc531eee6f755d2e7b3b5ce7cd7277
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
