@@ -1,2 +1,0 @@
-class AssignmentCategory:
-	pass

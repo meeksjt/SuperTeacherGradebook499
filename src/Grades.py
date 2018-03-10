@@ -1,22 +1,30 @@
 import re
 
-#Holds one grade.
-#May have a testGrade and a actualGrade, and have a setGrade function to test a grade, and a saveGrade function to save the grade to the database.
-class Grade:
-	def __init__(self, id, grade, tableName):
-		# We HAVE to have the StudentID, or we have no way of accessing the grade from the database.
-		self.id = id
-		self.grade = "-" #Sets default grade to "-", meaning there's no grade entered yet
-	def setGrade(self,grade):
-		self.grade=grade
-		
+"""
+   Holds one grade.
+   May have a testGrade and a actualGrade, and have a setGrade function to test a grade,
+   and a saveGrade function to save the grade to the database.
+"""
+
+
+class Grades:
+
+
+    def __init__(self):
+    # We HAVE to have the StudentID, or we have no way of accessing the grade from the database.
+		self.assignment_grades = {}
+
+
+	def set_grade(self, student_id, grade):
+		self.assignment_grades[student_id] = grade
+
+
 	#Just returns the grade
-	def getGrade(self):
+	def get_grade(self, student_id):
 		return self.grade
 	
 	#Call this when you want to save the grade to the database
-	def saveGrade(self):
-		pass
+	def s
 	
 #Holds all the grades for one assignment
 #basically an advanced List, a la AssignmentList
