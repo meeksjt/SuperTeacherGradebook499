@@ -94,30 +94,61 @@ class AssignmentCategoryBase:
 
     def get_student_category_grade(self, student_id):
 
+        student_grades = []
+        assignment_values = []
+        assignment_scores = []
+
+        for assignment in self.assignmentList:
+            grade = assignment.get_student_grade(student_id)
+            student_grades.append(grade)
+            weight = assignment.get_weight()
+            total_points = assignment.get_total_points()
+            assignment_values.append(total_points)
+            assignment_scores.append((grade / total_points) * weight)
+
+        return self.drop_grades(student_grades, assignment_values, assignment_scores)
+
+    """
+        Function to calculate the student score after dropping appropriate assignments
+        Parameters:
+            student_grades: (list) list of student grades
+            assignment_values: (list) list of assignment values
+            assignment_scores: (list) list of weighted student grades
+    """
+
+    def drop_grades(self, student_grades, assignment_values, assignment_scores):
+
         student_points = 0
         total_points = 0
 
-        for assignment in self.assignmentList:
-            student_grade = assignment.get_student_grade(student_id)
-            assignment_weight = assignment.get_weight()
-            assignment_value = assignment.get_total_points()
-            total_points += assignment_value
-            student_points += (student_grade / assignment_value) * assignment_weight
+        for i in range(self.dropCount):
+            index = self.get_min_score(assignment_scores)
+            del student_grades[i]
+            del assignment_values[i]
+            del assignment_scores[i]
+
+        for i in range(len(student_grades)):
+            student_points += student_grades[i]
+            total_points += assignment_values[i]
 
         return (student_points / total_points) * self.weight
 
+    """
+        Function to get the lowest score of a student for a particular list of scores
+        Parameters:
+            assignment_scores: (list) list of student scores
+        Returns:
+            min: (int) index of the lowest score in the student assignment list
+    """
 
-    def get_dropped_assignments(self, student_id):
+    def get_min_score(self, assignment_scores):
 
-        assignment_grades = {}
+        min = 0
+        for i in assignment_scores:
+            if i < min:
+                min = i
 
-        for assignment in self.assignmentList:
-            student_grade = assignment.get_student_grade(student_id)
-            assignment_weight = assignment.get_weight()
-            assignment_value = assignment.get_total_points()
-            assignment_grades[assignment.get_assignment_name()] = \
-                ((student_grade / assignment_value) * assignment_weight)
-
+        return min
 
 
 
