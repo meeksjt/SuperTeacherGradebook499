@@ -63,7 +63,7 @@ def main():
 
     conn = connect_to_user_db()
     create_user_table(conn)
-    validate_login_credentials(conn, "jtm0035", "youdontneedtoknowthis")
+    validate_login_credentials(conn, "jtm002030203", "youdontneedtoknowthis")
 
 
 main()
