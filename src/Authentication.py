@@ -9,8 +9,8 @@ def hash_credential(user_credential):
     return credential.hexdigest()
 
 
-def connect_to_user_db():
-    conn = sqlite3.connect('../databases/users.db')
+def connect_to_db(database_name):
+    conn = sqlite3.connect(database_name)
     return conn
 
 
@@ -23,7 +23,7 @@ def create_user_table(conn):
         c.execute('CREATE TABLE users ({f}, {s})'.format(f=first_column, s=second_column))
         conn.commit()
     except sqlite3.OperationalError:
-        print("users table already exists")
+        pass
 
 
 def add_login_credentials(conn, username, password):
@@ -34,10 +34,11 @@ def add_login_credentials(conn, username, password):
     try:
         c.execute('INSERT INTO users VALUES ("{f}", "{s}")'.format(f=username_hash, s=password_hash))
         conn.commit()
+        return True
         # Auto-generate the various tables necessary
 
     except sqlite3.IntegrityError:
-        print("This user already exists")
+        return False
 
 
 def validate_login_credentials(conn, username, password):
@@ -61,7 +62,7 @@ def validate_login_credentials(conn, username, password):
 
 def main():
 
-    conn = connect_to_user_db()
+    conn = connect_to_db('../databases/users.db')
     create_user_table(conn)
     validate_login_credentials(conn, "jtm002030203", "youdontneedtoknowthis")
 
