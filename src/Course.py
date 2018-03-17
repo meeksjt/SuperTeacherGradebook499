@@ -9,7 +9,7 @@ class Course:
 		self.section =section
 		self.semester=semester
 		self.table_name = re.sub('\W+', '_', (name+"_"+semester+"_"+section))
-		print("Course Name: "+self.table_name)
+		#print("Course Name: "+self.table_name)
 
 		#Change This Later.
 		self.assignmentCategoryList = []
@@ -35,7 +35,9 @@ class Course:
 	def delete_student(self,id):
 		self.student_list.remove_student(id)
 
+	#What is this function for?
 	def display_category(self):
+
 		pass
 
 	def change_category_weight(self):
@@ -44,4 +46,4 @@ class Course:
 		#Will be implemented later
 		pass
 
-funk = Course("CS 399", "Fall", "01")
+#funk = Course("CS 399", "Fall", "01")
