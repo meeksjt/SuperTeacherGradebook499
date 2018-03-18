@@ -27,7 +27,7 @@ class StudentList:
 
     def add_student(self,id,name,email):
         newStudent = Student(self.tableName,id,name,email)
-        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(newStudent.id) + ", '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')")
+        connection.execute(("INSERT INTO " + str(self.tableName) + " VALUES(" + str(newStudent.id) + ", '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
         connection.commit()
         self.__add_student(newStudent)
 
