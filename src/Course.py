@@ -15,9 +15,14 @@ class Course:
 		self.assignmentCategoryList = []
 
 		self.gradeScale = dict()
+		self.gradeScale["A"] = 90.0
+		self.gradeScale["B"] = 80.0
+		self.gradeScale["C"] = 70.0
+		self.gradeScale["D"] = 60.0
+
 		#Calls Student List, which creates all that garbage
 		self.student_list = StudentList(self.table_name)
-		self.add_student("5","Matt","Email")
+		#self.add_student("5","Matt","Email")
 
 		pass
 
@@ -32,13 +37,20 @@ class Course:
 		self.student_list.add_student(id,name,email)
 		pass
 
-	def delete_student(self,id):
+	def remove_student(self,id):
 		self.student_list.remove_student(id)
 
 	#What is this function for?
 	def display_category(self):
 
 		pass
+
+	def set_grade_scale(self,a,b,c,d):
+		self.gradeScale['A'] = a
+		self.gradeScale['B'] = b
+		self.gradeScale['C'] = c
+		self.gradeScale['D'] = d
+
 
 	def change_category_weight(self):
 		pass
