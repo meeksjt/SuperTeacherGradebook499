@@ -1,24 +1,37 @@
 from Assignment import Assignment
 from GlobalVariables import *
+import copy
 import re
 """
 	Class to serve as our Base Class for various Assignment Categories
 """
 
 
-class AssignmentCategoryBase:
+class AssignmentCategory:
 	"""
 		Constructor for AssignmentCategoryBase
 	"""
-	def __init__(self,tableName, categoryName, weight, drop_count):
-		self.tableName=tableName+re.sub('\W+', '_',categoryName)
+	def __init__(self, tableName, categoryName, weight, drop_count):
+		self.tableName = tableName+re.sub('\W+', '_',categoryName)
 		print(self.tableName)
 		self.weight = weight
 		self.dropCount = drop_count
 		self.assignmentList = []
-		cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Semester`	TEXT,`Section`	TEXT);")
+		cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Weight`	TEXT,`DropCount`	TEXT);")
 		connection.commit()
 
+	def __reloadCategory(self):
+		#Loads a category list back.
+		self.course_list.clear()  # Erase what's in the list
+		# Get everything in the table
+		cursor.execute("SELECT * FROM `courseList`")
+		# Our results go into this as a list, I think.
+		results = cursor.fetchall()
+		# Go through each row
+		for row in results:
+			# Here, we pass the Name, Semester, and Section to the Course object, and it creates it.
+			newCategory = AssignmentCategory(row[0], row[1], row[2])
+			self.course_list.append(copy.deepcopy(newCategory))
 	"""
 		Function to get the weight of the AssignmentCategory
 		Parameters:
@@ -156,5 +169,5 @@ class AssignmentCategoryBase:
 
 		return min
 
-jacob = AssignmentCategoryBase("CS499_", "Homework", "25", "0")
+
 
