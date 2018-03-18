@@ -1,9 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 
-
-# This class will have have a Dictionary of Lists, with a list per day of school. List will hold ids of each student who attended.
-# Can see if student attended by seeing if their id is in the list for the day
 class AttendanceSheet(object):
 
     def __init__(self):
@@ -11,7 +8,7 @@ class AttendanceSheet(object):
         self.ui = uic.loadUi('Attendance.ui', self.ASheet)
         self.ASheet.studentAttendanceTable.setHorizontalHeaderLabels(['Student Name', 'Present?'])
         self.add_students(
-            ['Georgie', 'Stephanie', 'Georgie', 'Stephanie Hammons', 'Georgie', 'Stephanie', 'Georgie', 'Stephanie', ])
+            ['Georgie', 'Stephanie', 'Georgie', 'Stephanie Hammons', 'Georgie', 'Stephanie', 'Georgie', 'Stephanie'])
         self.ASheet.show()
         self.ASheet.saveAttendanceButton.clicked.connect(self.save_attendance)
 
