@@ -112,12 +112,6 @@ class MainDisplay(object):
         self.splitter.setSizes([1, 800])
         self.form.show()
 
-        self.anim = QtCore.QPropertyAnimation(self.del_course, b"color")
-        self.anim.setDuration(2000)
-        self.anim.setLoopCount(2)
-        self.anim.setStartValue(QtGui.QColor(0, 0, 0))
-        self.anim.setEndValue(QtGui.QColor(255, 255, 255))
-
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
     # form like ( A B ( C D ( E F G ) ) )
