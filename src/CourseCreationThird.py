@@ -60,6 +60,13 @@ class CourseCreationThird(object):
             self.bad_input('Error', 'Category Weights need to total 100')
             return False
 
+    """
+    Function for telling the user they entered bad input
+    Parameters:
+        window_text: (string) the name of the window
+        error_message: (string) the error message that is displayed to the user
+    """
+
     def bad_input(self, window_text, error_message):
         choice = QtWidgets.QMessageBox.question(self.CCThird, window_text, error_message,
                                                 QtWidgets.QMessageBox.Cancel)

@@ -15,9 +15,8 @@ class StudentList:
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);")
         connection.commit()
         self.load_students()
-        
-		#self.tableName = re.sub('[^A-Za-z0-9]+', '', self.tableName)
-		
+
+
     def set_email(self,id,email):
         for student in self.students:
             if student.id == id:
