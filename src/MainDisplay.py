@@ -46,7 +46,7 @@ class MainDisplay(object):
         self.form.resize(1366, 768)
 
         self.splitter = QtWidgets.QSplitter(self.form)
-        self.splitter.setGeometry(QtCore.QRect(0, 0, 1366, 768))
+        self.splitter.setGeometry(QtCore.QRect(1, 1, 1364, 766))
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
 
@@ -112,6 +112,12 @@ class MainDisplay(object):
         self.splitter.setSizes([1, 800])
         self.form.show()
 
+        self.anim = QtCore.QPropertyAnimation(self.del_course, b"color")
+        self.anim.setDuration(2000)
+        self.anim.setLoopCount(2)
+        self.anim.setStartValue(QtGui.QColor(0, 0, 0))
+        self.anim.setEndValue(QtGui.QColor(255, 255, 255))
+
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
     # form like ( A B ( C D ( E F G ) ) )
@@ -143,20 +149,25 @@ class MainDisplay(object):
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
         index = self.course_tree.currentIndex()
-        item = self.model.itemFromIndex(index)
+        if index.isValid():
+            item = self.model.itemFromIndex(index)
 
-        grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
-        self.grade_sheet.setColumnCount(len(grade_labels))
-        self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
+            grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
+            self.grade_sheet.setColumnCount(len(grade_labels))
+            self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
 
-        labels = []
-        self.grade_sheet.setRowCount(item.rowCount())
-        if item.hasChildren():
-            for row in range(0, item.rowCount()):
-                name = item.child(row).text()
-                labels.append(name)
-            self.grade_sheet.setVerticalHeaderLabels(labels)
-            self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
+            labels = []
+            self.grade_sheet.setRowCount(item.rowCount())
+            if item.hasChildren():
+                for row in range(0, item.rowCount()):
+                    name = item.child(row).text()
+                    labels.append(name)
+                self.grade_sheet.setVerticalHeaderLabels(labels)
+                self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
+        else:
+            self.grade_sheet.setRowCount(0)
+            self.grade_sheet.setColumnCount(0)
+            self.grade_sheet.clear()
 
     # when a user edits the name of a tree view row
     # update accordingly
