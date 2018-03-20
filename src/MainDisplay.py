@@ -46,9 +46,12 @@ class MainDisplay(object):
         self.form.resize(1366, 768)
 
         self.splitter = QtWidgets.QSplitter(self.form)
-        self.splitter.setGeometry(QtCore.QRect(1, 1, 1364, 766))
+        self.splitter.setGeometry(QtCore.QRect(0, 0, 1366, 768))
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
+        self.splitter.setStyleSheet(
+           "QSplitter::handle:vertical { border-color: #2b303b; width: 0px }"
+        )
 
         self.layoutWidget = QtWidgets.QWidget(self.splitter)
         self.layoutWidget.setObjectName("layoutWidget")
@@ -57,10 +60,42 @@ class MainDisplay(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
 
+        self.layoutWidget.setStyleSheet(
+           "background-color: #2b303b;"
+        )
+
         self.course_tree = QtWidgets.QTreeView()
-        self.course_tree.setAlternatingRowColors(True)
         self.course_tree.setAnimated(True)
         self.course_tree.setObjectName("course_tree")
+        self.course_tree.setStyleSheet(
+            "QTreeView { "
+                "border: none;"
+                "color: #eff1f5; "
+                "background-color: transparent; "
+                "selection-background-color: transparent;"
+                "selection-color: transparent;"
+                "show-decoration-selected: 1;"
+            "}"
+            "QTreeView::item:hover {"
+                "background: #65737e;"
+            "}"
+            "QTreeView::item:selected {"
+                "color: white;"
+                "background: #65737e;"
+            "}"
+            "QTreeView::branch:has-children:!has-siblings:closed,"
+            "QTreeView::branch:closed:has-children:has-siblings"
+            "{"
+                "border-image: none;"
+                "image: url(../assets/images/branch_closed.png);"
+            "}"
+            "QTreeView::branch:open:has-children:!has-siblings,"
+            "QTreeView::branch:open:has-children:has-siblings"
+            "{"
+                "border-image: none;"
+                "image: url(../assets/images/branch_open.png);"
+            "}"
+        )
 
         self.verticalLayout.addWidget(self.course_tree)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -69,35 +104,95 @@ class MainDisplay(object):
         self.del_course = QtWidgets.QPushButton(self.layoutWidget)
         self.del_course.setObjectName("del_course")
         self.del_course.setToolTip("Deletes the selected entry.")
+        self.del_course.setStyleSheet(
+            "QPushButton { "
+                "background-color: transparent;"
+                "border-image: url(../assets/images/del_course_button.png);"
+                "background: none;"
+                "border: none;"
+                "background-repeat: none;"
+                "min-width: 32px;"
+                "max-width: 32px;"
+                "min-height: 32px;"
+                "max-height: 32px;"
+            "}"
+            "QPushButton:hover { "
+                "border-image: url(../assets/images/del_course_button_highlight.png); "
+            "}"
+            "QPushButton:pressed { "
+                "border-image: url(../assets/images/del_course_button_pressed.png); "
+            "}"
+        )
         self.horizontalLayout.addWidget(self.del_course)
 
         self.add_course = QtWidgets.QPushButton(self.layoutWidget)
         self.add_course.setObjectName("add_course")
         self.add_course.setToolTip("Creates a new course.")
+        self.add_course.setStyleSheet(
+            "QPushButton { "
+                "background-color: transparent;"
+                "border-image: url(../assets/images/add_course_button.png);"
+                "background: none;"
+                "border: none;"
+                "background-repeat: none;"
+                "min-width: 32px;"
+                "max-width: 32px;"
+                "min-height: 32px;"
+                "max-height: 32px;"
+            "}"
+            "QPushButton:hover { "
+                "border-image: url(../assets/images/add_course_button_highlight.png); "
+            "}"
+            "QPushButton:pressed { "
+                "border-image: url(../assets/images/add_course_button_pressed.png); "
+            "}"
+        )
         self.horizontalLayout.addWidget(self.add_course)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.grade_sheet = QtWidgets.QTableWidget(self.splitter)
         self.grade_sheet.setObjectName("grade_sheet")
-        self.grade_sheet.setAlternatingRowColors(True)
-        self.grade_sheet.setShowGrid(True)
+        self.grade_sheet.setStyleSheet(
+            "QTableWidget {"
+                "border: none;"
+                "background-color: #eff1f5;"
+                "selection-background-color: #b48ead;"
+            "}"
+            "QTableCornerButton::section {"
+                "background-color: red;"
+                "border: 2px transparent red;"
+                "border-radius: 0px;"
+            "}"
+            "QTableWidget::indicator {"
+            "   background-color: black;"
+            "}"
+        )
+
         self.horizontal_header_view = self.grade_sheet.horizontalHeader()
         self.vertical_header_view = self.grade_sheet.verticalHeader()
+        self.horizontal_header_view.setStyleSheet(
+            "QHeaderView::section{ border: none; background-color: #c0c5ce}"
+            "QHeaderView::section:checked { background-color: #bf616a}"
+        )
+        self.vertical_header_view.setStyleSheet(
+            "QHeaderView::section{ "
+                "border: none;"
+                "padding: 6px;"
+                "background-color: #c0c5ce"
+            "}"
+            "QHeaderView::section:checked { background-color: #bf616a}"
+        )
 
         self.data_tree = CourseTree()
         self.model = QtGui.QStandardItemModel()
-        self.course_tree.setModel(self.model)
-
-        # initializes the data model with a given tree's data
         self.add_items(self.model, self.data_tree.tree_view_data)
+        self.course_tree.setModel(self.model)
 
         # connection for when add button is released
         self.add_course.released.connect(self.add_item)
-        self.add_course.setText("+")
 
         # connection for when delete button is released
         self.del_course.released.connect(self.del_selected_item)
-        self.del_course.setText("-")
 
         # connection for when a course is selected
         self.selection_model = self.course_tree.selectionModel()
@@ -110,13 +205,9 @@ class MainDisplay(object):
         self.course_tree.setUniformRowHeights(True)
 
         self.splitter.setSizes([1, 800])
-        self.form.show()
 
-        self.anim = QtCore.QPropertyAnimation(self.del_course, b"color")
-        self.anim.setDuration(2000)
-        self.anim.setLoopCount(2)
-        self.anim.setStartValue(QtGui.QColor(0, 0, 0))
-        self.anim.setEndValue(QtGui.QColor(255, 255, 255))
+        # self.form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.form.show()
 
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
@@ -128,29 +219,51 @@ class MainDisplay(object):
             if children:
                 self.add_items(item, children)
 
-    # add a row to the course tree view (new row = course)
+    # if the current row that is selected has children (is a course)
+    # then add a new course... else add a student
     def add_item(self):
         index = self.course_tree.currentIndex()
-        item = QtGui.QStandardItem()
-        item.setText("Enter Course Name")
-        self.model.insertRow(index.row() + 1, item)
-        # insert database logic here
 
-        #
+        # every option adds a student
+        student = QtGui.QStandardItem("Enter Student Name")
+
+        # if the current index is invalid, always add a course
+        if index.isValid():
+            current_item = self.model.itemFromIndex(index)
+
+            # append a new course with one student
+            # since a course needs at least one student
+            if current_item.hasChildren():
+                course = QtGui.QStandardItem("Enter Course Name")
+                self.model.insertRow(index.row() + 1, course)
+                course.appendRow(student)
+            else:
+                current_item.parent().appendRow(student)
+                # insert database logic here
+
+                #
+        else:
+            course = QtGui.QStandardItem("Enter Course Name")
+            self.model.insertRow(index.row() + 1, course)
+            course.appendRow(student)
+
+        self.load_grade_sheet()
 
     # delete selected item (row or student) from tree view
     def del_selected_item(self):
         index = self.course_tree.currentIndex()
         self.model.removeRow(index.row(), index.parent())
+        self.load_grade_sheet()
         # insert database logic here
 
         #
 
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
+        self.grade_sheet.clear()
         index = self.course_tree.currentIndex()
-        if index.isValid():
-            item = self.model.itemFromIndex(index)
+        item = self.model.itemFromIndex(index)
+        if index.isValid() and item.hasChildren():
 
             grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
             self.grade_sheet.setColumnCount(len(grade_labels))
@@ -167,7 +280,6 @@ class MainDisplay(object):
         else:
             self.grade_sheet.setRowCount(0)
             self.grade_sheet.setColumnCount(0)
-            self.grade_sheet.clear()
 
     # when a user edits the name of a tree view row
     # update accordingly
