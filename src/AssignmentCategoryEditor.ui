@@ -13,10 +13,43 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>310</y>
+     <width>521</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="removeSelectedCategory">
+      <property name="text">
+       <string>Remove Selected Category</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="addCategoryButton">
+      <property name="text">
+       <string>Add New Category</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="createCourseButton">
+      <property name="text">
+       <string>Create Course</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QTableWidget" name="categoryTable">
    <property name="geometry">
     <rect>
-     <x>37</x>
+     <x>50</x>
      <y>10</y>
      <width>521</width>
      <height>301</height>
@@ -67,39 +100,6 @@
    <column/>
    <column/>
    <column/>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>310</y>
-     <width>521</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QPushButton" name="removeSelectedCategory">
-      <property name="text">
-       <string>Remove Selected Category</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="addCategoryButton">
-      <property name="text">
-       <string>Add New Category</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="createCourseButton">
-      <property name="text">
-       <string>Create Course</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
   </widget>
  </widget>
  <resources/>

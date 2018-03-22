@@ -1,14 +1,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from Student import Student
 import sys
 
 class AttendanceSheet(object):
 
-    def __init__(self):
+    def __init__(self, studentList = []):
         self.ASheet = QtWidgets.QDialog()
         self.ui = uic.loadUi('Attendance.ui', self.ASheet)
         self.ASheet.studentAttendanceTable.setHorizontalHeaderLabels(['Student Name', 'Present?'])
-        self.add_students(
-            ['Georgie', 'Stephanie', 'Georgie', 'Stephanie Hammons', 'Georgie', 'Stephanie', 'Georgie', 'Stephanie'])
+        for student in studentList:
+            self.add_students(student.name)
         self.ASheet.show()
         self.ASheet.saveAttendanceButton.clicked.connect(self.save_attendance)
 
@@ -46,7 +47,6 @@ class AttendanceSheet(object):
 
         for i in students_who_came:
             print(i)
-
 
 
 if __name__ == "__main__":

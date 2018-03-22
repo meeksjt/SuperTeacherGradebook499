@@ -23,62 +23,8 @@
     </rect>
    </property>
    <property name="title">
-    <string>Course Creation</string>
+    <string>Course Creation - Course Details</string>
    </property>
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>69</y>
-      <width>121</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="courseNameLabel">
-       <property name="text">
-        <string>Course Name</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="courseSectionLabel">
-       <property name="text">
-        <string>Course Section</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="courseSemesterLabel">
-       <property name="text">
-        <string>Course Semester</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>70</y>
-      <width>201</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QLineEdit" name="courseNameField"/>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="courseSectionField"/>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="courseSemesterField"/>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="nextButton">
     <property name="geometry">
      <rect>
@@ -91,6 +37,66 @@
     <property name="text">
      <string>Next</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>341</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="courseNumberLabel">
+         <property name="text">
+          <string>Course Number</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="courseNameLabel">
+         <property name="text">
+          <string>Course Name</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="courseSectionLabel">
+         <property name="text">
+          <string>Course Section</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="courseSemesterLabel">
+         <property name="text">
+          <string>Course Semester</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="courseNumberField"/>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseNameField"/>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseSectionField"/>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseSemesterField"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>
