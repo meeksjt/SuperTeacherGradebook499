@@ -11,7 +11,8 @@ class Assignment:
         Instantiates an Assignment object
     """
 
-    def __init__(self, assignment_name, total=0, weight=0,):
+    def __init__(self, assignment_id, assignment_name, total=0, weight=0):
+        self.assignmentID = assignment_id
         self.assignmentName = assignment_name
         self.totalPoints = total
         self.weight = weight

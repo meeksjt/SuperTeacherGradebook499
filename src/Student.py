@@ -9,7 +9,7 @@ class StudentList:
     def __init__(self, course):
 
         self.students = []
-		#This holds the name of the course
+        #This holds the name of the course
         self.course = course
         self.tableName = course+"_student_list"
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);")
@@ -63,7 +63,7 @@ class Student:
         self.email = email
         self.id = id
 
-		#connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
+    #connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
     def set_email(self,email):
         self.email = email
         query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE id = '" + str(self.id) + "';"
@@ -74,7 +74,7 @@ class Student:
     def set_name(self,name):
         """Tested"""
         self.name=name
-		# I used a query to make it easier by creating our string, and just passing it to the cursor.
+        # I used a query to make it easier by creating our string, and just passing it to the cursor.
         query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE id = " + str(self.id) + ";"
         print(query)
         cursor.execute(query)

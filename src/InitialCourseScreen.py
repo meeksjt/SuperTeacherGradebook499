@@ -19,6 +19,7 @@ class InitialCourseScreen(object):
     def create_new_template_course(self):
         pass
 
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     main = InitialCourseScreen()
