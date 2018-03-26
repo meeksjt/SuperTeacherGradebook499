@@ -1,23 +1,28 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'CreateUser.ui'
-#
-# Created by: PyQt5 UI code generator 5.10.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 import Authentication
 
 
+"""
+Class for the GUI Window and operations of user creation
+"""
+
+
 class Ui_IGPCreateUser(object):
 
+    """
+    Constructor for user creation
+    """
     def __init__(self):
 
+        # Create Window
         self.IGPCreateUser = QtWidgets.QDialog()
+
+        # Display Window
         self.ui = uic.loadUi('CreateUser.ui', self.IGPCreateUser)
         self.IGPCreateUser.show()
+
+        # Link buttons
         self.IGPCreateUser.quitButton.clicked.connect(self.close_button_clicked)
         self.IGPCreateUser.createAccountButton.clicked.connect(self.create_account_button_clicked)
 
@@ -56,7 +61,9 @@ class Ui_IGPCreateUser(object):
                 print("This is where we return to our Login Gui Frame")
                 self.close_button_clicked()
 
-#if __name__ == "__main__":
-#    main = Ui_IGPCreateUser()
-#    sys.exit(main.app.exec_())
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    main = Ui_IGPCreateUser()
+    sys.exit(app.exec_())
 
