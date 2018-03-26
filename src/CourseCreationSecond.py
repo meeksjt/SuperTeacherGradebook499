@@ -53,8 +53,8 @@ class CourseCreationSecond(object):
     """
     def save_course_data(self):
         if self.validate_user_input():
-            self.CCSecond.hide()
             self.next_screen = CourseCreationThird()
+            self.CCSecond.hide()
 
     """
     Function to call when saving course data for course editing
@@ -136,5 +136,5 @@ class CourseCreationSecond(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    main = CourseCreationSecond()
+    main = CourseCreationSecond({'A':92.5, 'B':80, 'C':70, 'D':60})
     sys.exit(app.exec_())
