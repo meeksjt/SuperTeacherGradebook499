@@ -38,9 +38,9 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="createCourseButton">
+     <widget class="QPushButton" name="saveCategoriesButton">
       <property name="text">
-       <string>Create Course</string>
+       <string>Save Categories</string>
       </property>
      </widget>
     </item>
