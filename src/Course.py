@@ -1,4 +1,5 @@
 import re
+import Assignment
 from Student import *
 
 class Course:
@@ -21,14 +22,36 @@ class Course:
         self.student_list = StudentList(self.table_name)
         #self.add_student("5","Matt","Email")
 
+        # Assignment list
+        self.assignment_list = []
+
+        cursor.execute("CREATE TABLE IF NOT EXISTS `assignment_list` (`Assignment_ID`   INT,`Name`  TEXT,`Total`    INT,`Weight`    INT);")
+        connection.commit()
+
         pass
 
-    def add_assignment(self):
+    # Adds an assignment to assignment_list
+    def add_assignment(self, id, name, total, weight):
 
-        pass
+        # Creates instance of Assignment
+        assignment = Assignment(id, name, total, weight)
 
-    def drop_assignment(self):
-        pass
+        # Adds the instance to assignment_list
+        self.assignment_list.append(assignment)
+
+        # Inserts the assignment vales into the database
+        connection.execute(("INSERT INTO 'assignment_list' VALUES('" + str(assignment.id) + "', '" + str(assignment.name) + "', '" + str(assignment.total) + "', '" + str(assignment.weight) + "')"))
+        connection.commit()
+
+    # Drops an assignment from assignment_list
+    def drop_assignment(self, name):
+
+        # Drops the assignment based on the assignment name
+        for assignment in self.assignment_list:
+			if assignment.name == name:
+				self.assignment_list.remove(assignment)
+				cursor.execute("DELETE FROM 'assignment_list' where Name = '" + name + "';")
+				connection.commit()
 
     def add_student(self,id,name,email):
         self.student_list.add_student(id,name,email)
@@ -55,4 +78,3 @@ class Course:
         #Will be implemented later
         pass
 
-#funk = Course("CS 399", "Fall", "01")
