@@ -11,12 +11,16 @@ class Assignment:
         Instantiates an Assignment object
     """
 
-    def __init__(self, assignment_id, assignment_name, total=0, weight=0):
-        self.assignmentID = assignment_id
+    def __init__(self, assignment_uuid, assignment_name, total_points, student_list):
+        self.assignmentID = assignment_uuid
         self.assignmentName = assignment_name
-        self.totalPoints = total
-        self.weight = weight
+        self.totalPoints = total_points
+        self.tableName = assignment_uuid + '_grades'
+        self.studentList = student_list
         self.studentGrades = Grades()
+        ###Jacob###
+        #Need to create the grades table for this assignment if it doesn't already exist
+        #If it does already exist, you need to load up the assignment with the grades for it
 
     """
         Function to get assignmentName for an Assignment
@@ -60,31 +64,9 @@ class Assignment:
         self.totalPoints = new_total_points
 
     """
-        Function to get the weight of an Assignment
-        Parameters:
-            None
-        Returns:
-            self.weight : (float) the weight of an Assignment
-    """
-
-    def get_weight(self):
-        return self.weight
-
-    """
-        Function to set the weight of an Assignment
-        Parameters:
-            new_weight : (float) the new weight of an Assignment
-        Returns:
-            None
-    """
-
-    def set_weight(self, new_weight):
-        self.weight = new_weight
-
-    """
         Function to get a specific Student's grade for the Assignment
         Parameters:
-            student_id : (int) id of student we want to get Grade for
+            student_id : (string) id of student we want to get Grade for
         Returns:
             grade : (float) grade of the student on this Assignment
     """
@@ -95,7 +77,7 @@ class Assignment:
     """
         Function to set a specific Student's grade for an Assignment
         Parameters:
-            student_id : (int) id of the student we are setting the Grade for
+            student_id : (string) id of the student we are setting the Grade for
             grade : (float) grade of the student on this Assignment
         Returns:
             None

@@ -18,7 +18,7 @@ class Grades:
     """
         Function to set the grade for a particular Student
         Parameters:
-            student_id: (int) id of the Student we want to change the grade for
+            student_id: (string) id of the Student we want to change the grade for
             grade: (float) grade that we want to give the Student
         Returns:
             Nothing
@@ -29,7 +29,7 @@ class Grades:
     """
         Function to get the grade for a particular Student
         Parameters:
-            student_id: (int) id of the Student we want to get the grade for
+            student_id: (string) id of the Student we want to get the grade for
     """
     def get_grade(self, student_id):
         return self.assignmentGrades[student_id]

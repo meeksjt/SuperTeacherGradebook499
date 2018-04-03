@@ -50,7 +50,7 @@ class CreateNewStudent(object):
         valid = self.check_for_existing_student(conn, student_name, student_email)
         if valid:
             self.add_student(conn, student_name, student_email)
-            #self.CNStudent.hide()
+            self.CNStudent.hide()
         else:
             self.bad_input('Error', 'There already exists a student with that name and email')
 

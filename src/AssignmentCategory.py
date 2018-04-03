@@ -11,19 +11,25 @@ class AssignmentCategory:
     """
         Constructor for AssignmentCategoryBase
     """
-    def __init__(self, id, categoryName, total_points, drop_count):
-        self.categoryName = categoryName
+    def __init__(self, category_uuid, category_name, total_points, drop_count, student_list):
+        self.categoryName = category_name
 
-        # put id stuff here
-        #self.tableName = tableName+re.sub('\W+', '_',categoryName)
-        self.tableName = id
+        self.category_uuid = category_uuid
+        self.table_name = category_uuid + '_assignments'
 
         self.total_points = total_points
-        self.dropCount = drop_count
-        self.assignmentList = []
-        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Points`	TEXT,`DropCount`	TEXT);")
-        connection.commit()
+        self.drop_count = drop_count
+        self.student_list = student_list
+        self.assignment_list = []
 
+        # Need to check if table already exists
+        # If it does, load the contents of that table into self.assignmentList by creating new
+        # Assignment objects and reading in the grade tables for those Assignment objects
+
+
+        #cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Points`	TEXT,`DropCount`	TEXT);")
+        #connection.commit()
+    """
     def __reloadCategory(self):
         #Loads a category list back.
 
@@ -39,6 +45,7 @@ class AssignmentCategory:
             # Here, we pass the Name, Semester, and Section to the Course object, and it creates it.
             newCategory = AssignmentCategory(row[0], row[1], row[2])
             self.course_list.append(copy.deepcopy(newCategory))
+    """
     """
         Function to get the total_points of the AssignmentCategory
         Parameters:
@@ -70,7 +77,7 @@ class AssignmentCategory:
     """
 
     def get_drop_count(self):
-        return self.dropCount
+        return self.drop_count
 
     """
         Function to set the dropCount of the AssignmentCategory
@@ -81,7 +88,7 @@ class AssignmentCategory:
     """
 
     def set_drop_count(self, new_drop_count):
-        self.dropCount = new_drop_count
+        self.drop_count = new_drop_count
 
     """
         Function to add a new Assignment to our assignmentList
@@ -91,22 +98,22 @@ class AssignmentCategory:
             total_points : (float) total_points of the Assignment in the Assignment Category
     """
 
-    def add_assignment(self, assignment_name, totalPoints, total_points):
-        assignment = Assignment(assignment_name, totalPoints, total_points)
-        self.assignmentList.append(assignment)
+    def add_assignment(self, assignment_uuid, assignment_name, total_points, student_list):
+        assignment = Assignment(assignment_uuid, assignment_name, total_points, student_list)
+        self.assignment_list.append(assignment)
 
     """
         Function to delete an Assignment from our assignmentList
         Parameters:
-            assignment_name : (string) name of our Assignment we are deleting
+            assignment_uuid : (string) uuid of our Assignment we are deleting
         Returns:
             None
     """
 
-    def delete_assignment(self, assignment_name):
-        for assignment in self.assignmentList:
-            if assignment.assignmentName == assignment_name:
-                self.assignmentList.remove(assignment)
+    def delete_assignment(self, assignment_uuid):
+        for assignment in self.assignment_list:
+            if assignment.assignmentID == assignment_uuid:
+                self.assignment_list.remove(assignment)
                 break
 
     """
@@ -121,17 +128,17 @@ class AssignmentCategory:
     def get_student_category_grade(self, student_id):
 
         student_grades = []
-        assignment_values = []
-        assignment_scores = []
+        assignment_total_points = []
+        assignment_weighted_scores = []
 
-        for assignment in self.assignmentList:
+        for assignment in self.assignment_list:
             grade = assignment.get_student_grade(student_id)
             student_grades.append(grade)
             total_points = assignment.get_total_points()
-            assignment_values.append(total_points)
-            assignment_scores.append((grade / total_points) * total_points)
+            assignment_total_points.append(total_points)
+            assignment_weighted_scores.append((grade / total_points) * 100)
 
-        return self.drop_grades(student_grades, assignment_values, assignment_scores)
+        return self.drop_grades(student_grades.copy(), assignment_total_points.copy(), assignment_weighted_scores.copy())
 
     """
         Function to calculate the student score after dropping appropriate assignments
@@ -141,22 +148,22 @@ class AssignmentCategory:
             assignment_scores: (list) list of weighted student grades
     """
 
-    def drop_grades(self, student_grades, assignment_values, assignment_scores):
+    def drop_grades(self, student_grades, assignment_total_points, assignment_weighted_scores):
 
         student_points = 0
         total_points = 0
 
-        for i in range(self.dropCount):
-            index = self.get_min_score(assignment_scores)
-            del student_grades[i]
-            del assignment_values[i]
-            del assignment_scores[i]
+        for i in range(self.drop_count):
+            index = self.get_min_score(assignment_weighted_scores)
+            del student_grades[index]
+            del assignment_total_points[index]
+            del assignment_weighted_scores[index]
 
         for i in range(len(student_grades)):
             student_points += student_grades[i]
-            total_points += assignment_values[i]
+            total_points += assignment_total_points[i]
 
-        return (student_points / total_points) * self.total_points
+        return (student_points / total_points) * self.get_category_total_points()
 
     """
         Function to get the lowest score of a student for a particular list of scores
@@ -168,10 +175,9 @@ class AssignmentCategory:
 
     def get_min_score(self, assignment_scores):
 
-        min = 0
+        minimum = 10000000
         for i in assignment_scores:
-            if i < min:
-                min = i
+            if i < minimum:
+                minimum = i
 
-        return min
-
+        return minimum
