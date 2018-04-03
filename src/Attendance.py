@@ -24,8 +24,8 @@ Class for an individual Attendance Sheet
 
 class AttendanceSheet(object):
 
-	def __init__(self, attendanceDictionary, studentList, tablePrefix):
-		self.prefix = tablePrefix;
+	def __init__(self, attendanceDictionary, studentList, courseUUID):
+		self.prefix = courseUUID;
 		self.ASheet = QtWidgets.QDialog()
 		self.ui = uic.loadUi('Attendance.ui', self.ASheet)
 		self.ASheet.studentAttendanceTable.setHorizontalHeaderLabels(['Student Name', 'Present?'])
@@ -36,7 +36,7 @@ class AttendanceSheet(object):
 		# Get the current date and add our list of students
 		current_date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
 		self.add_students(studentList)
-		self.tableName = tablePrefix + "_attendance"
+		self.tableName = courseUUID + "_attendance"
 		cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`date`	TEXT,`students`	TEXT);")
 		connection.commit()
 		self.__load_attendance()
