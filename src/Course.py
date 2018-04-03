@@ -2,34 +2,26 @@ import re
 import Assignment
 from AssignmentCategoryList import AssignmentCategoryList
 from Student import *
+from GradeScale import GradeScale
+from Attendance import AttendanceDictionary
+
 
 class Course:
 
-    def __init__(self, id, number, name, section, semester, gradeScale):
-        #Need to know what to put here
-        self.number = number
+    def __init__(self, course_uuid, name, number, section, semester):
+
+        self.course_uuid = course_uuid
         self.name = name
+        self.number = number
         self.section = section
         self.semester = semester
-        self.table_name = id
-        #print("Course Name: "+self.table_name)
 
-        #Change This Later.
-        self.assignmentCategoryList = AssignmentCategoryList()
+        self.student_list = StudentList(self.course_uuid)
 
-        self.gradeScale = gradeScale.clone()
+        self.grade_scale = GradeScale(course_uuid)
 
-        #Calls Student List, which creates all that garbage
-        self.student_list = StudentList(self.table_name)
-        #self.add_student("5","Matt","Email")
 
-        # Assignment list
-        self.assignment_list = []
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS `assignment_list` (`Assignment_ID`   INT,`Name`  TEXT,`Total`    INT,`Weight`    INT);")
-        connection.commit()
-
-        pass
 
     # Adds an assignment to assignment_list
     def add_assignment(self, id, name, total, weight):
