@@ -18,6 +18,7 @@ class Assignment:
         self.tableName = assignment_uuid + '_grades'
         self.studentList = student_list
         self.studentGrades = Grades()
+
         ###Jacob###
         #Need to create the grades table for this assignment if it doesn't already exist
         #If it does already exist, you need to load up the assignment with the grades for it
