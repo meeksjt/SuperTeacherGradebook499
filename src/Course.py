@@ -1,5 +1,6 @@
 import re
 import Assignment
+from AssignmentCategoryList import AssignmentCategoryList
 from Student import *
 
 class Course:
@@ -14,7 +15,7 @@ class Course:
         #print("Course Name: "+self.table_name)
 
         #Change This Later.
-        self.assignmentCategoryList = []
+        self.assignmentCategoryList = AssignmentCategoryList()
 
         self.gradeScale = gradeScale.clone()
 

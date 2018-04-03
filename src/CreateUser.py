@@ -49,7 +49,6 @@ class Ui_IGPCreateUser(object):
         elif password != verifyPassword:
             self.bad_input('Error', 'Your password and verify password do not match!')
         else:
-
             conn = Authentication.connect_to_db('../databases/users.db')
             Authentication.create_user_table(conn)
             added = Authentication.add_login_credentials(conn, username, password)
