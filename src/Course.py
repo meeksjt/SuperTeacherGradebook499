@@ -17,8 +17,17 @@ class Course:
         self.semester = semester
 
         self.student_list = StudentList(self.course_uuid)
+        self.grade_scale = GradeScale(self.course_uuid)
+        self.assignment_category_list = AssignmentCategoryList(self.course_uuid)
 
-        self.grade_scale = GradeScale(course_uuid)
+        # Add Attendance
+
+
+
+
+
+######### Above is basically what we need from Course #########
+
 
 
 
@@ -41,10 +50,10 @@ class Course:
 
         # Drops the assignment based on the assignment name
         for assignment in self.assignment_list:
-			if assignment.name == name:
-				self.assignment_list.remove(assignment)
-				cursor.execute("DELETE FROM 'assignment_list' where Name = '" + name + "';")
-				connection.commit()
+            if assignment.name == name:
+                self.assignment_list.remove(assignment)
+                cursor.execute("DELETE FROM 'assignment_list' where Name = '" + name + "';")
+                connection.commit()
 
     def add_student(self,id,name,email):
         self.student_list.add_student(id,name,email)

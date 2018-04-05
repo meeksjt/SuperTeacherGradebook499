@@ -25,7 +25,7 @@ class StudentList:
 				self.load_students()
 
 	def add_student(self,id,name,email):
-		newStudent = Student(self.tableName,id,name,email)
+		newStudent = Student(id, id,name,email)
 		connection.execute(("INSERT INTO " + str(self.tableName) + " VALUES(" + str(newStudent.uuid) + "" + str(newStudent.id) + ", '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
 		connection.commit()
 		self.__add_student(newStudent)
@@ -57,12 +57,11 @@ class StudentList:
 
 class Student:
 #Need to reload students after setting name.
-	def __init__(self,tableName,id,name,email, uid):
+	def __init__(self,tableName,id,name,email):
 		self.tableName = tableName
 		self.name = name
 		self.email = email
 		self.id = id
-		self.uuid = id
 
 	#connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
 	def set_email(self,email):
@@ -122,7 +121,7 @@ def create_test_database():
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
 students = StudentList("cs499")
-students.add_student()
+students.add_student("1", "Tyler Meeks", "jtm0036@uah.edu")
 #students.addStudent(id,name,email)
 #students.removeStudent(id)
 #students.students # This is an list you can iterate through, which has sets for email, id, and name.
