@@ -9,7 +9,7 @@ were present for that date (string delimited by semicolon)
 """
 
 
-class AttendanceDictionary(object):
+class AttendanceDictionary():
     def __init__(self):
         self.attendance_sheets = {}
 
@@ -91,7 +91,7 @@ class AttendanceSheet(object):
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
         for row in results:
-            self.attendanceDictionary[row[0]] = row[1];
+            self.attendanceDictionary[row[0]] = row[1]
 
     def save_attendance(self):
         row_count = self.ASheet.studentAttendanceTable.rowCount()
@@ -118,7 +118,7 @@ class AttendanceSheet(object):
                 query = "UPDATE " + self.tableName + " SET students = '" + str(self.attendanceDictionary[i]) + "' WHERE date = " + str(i) + ";"
                 print(query)
                 cursor.execute(query)
-                connection.commit();
+                connection.commit()
             #Else, we INSERT
             else:
                 #Add database entry
