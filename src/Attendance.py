@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from Student import Student
+from Student import Student, StudentList
 import sys
 from GlobalVariables import *
 
@@ -9,13 +9,33 @@ were present for that date (string delimited by semicolon)
 """
 
 
-class AttendanceDictionary():
-    def __init__(self):
+class AttendanceDictionary(object):
+
+    def __init__(self, student_list):
+        self.student_list = student_list
         self.attendance_sheets = {}
+        self.total_days = 0
+        # add loading in from a database if the attendance dictionary already exists
 
     def add_sheet(self, dateString, studentsString):
         self.attendance_sheets[dateString] = studentsString
+        # add saving to the database
 
+    def get_student_presence_count(self, student_ID):
+        name = ""
+        self.total_days = 0
+        present_days = 0
+        for student in self.student_list.students:
+            if student.id == student_ID:
+                name = student.name
+
+        for day in self.attendance_sheets:
+            present_students = self.attendance_sheets[day].split(';')
+            if name in present_students:
+                present_days += 1
+            self.total_days += 1
+
+        return present_days
 
 """
 Class for an individual Attendance Sheet
@@ -25,13 +45,11 @@ Class for an individual Attendance Sheet
 class AttendanceSheet(object):
 
     def __init__(self, attendanceDictionary, studentList, courseUUID):
-        self.prefix = courseUUID;
         self.ASheet = QtWidgets.QDialog()
         self.ui = uic.loadUi('Attendance.ui', self.ASheet)
         self.ASheet.studentAttendanceTable.setHorizontalHeaderLabels(['Student Name', 'Present?'])
-        self.attendanceDictionary = attendanceDictionary.attendance_sheets
-
-
+        self.attendanceDictionary = attendanceDictionary
+        self.studentList = studentList
 
         # Get the current date and add our list of students
         current_date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
@@ -48,8 +66,6 @@ class AttendanceSheet(object):
         self.ASheet.saveAttendanceButton.clicked.connect(self.save_attendance)
         self.ASheet.attendanceCalendar.clicked[QtCore.QDate].connect(self.load_new_date)
 
-
-
     # Function to load student presence into the studentAttendanceTable
     def load_presence(self, students_present):
         row_count = self.ASheet.studentAttendanceTable.rowCount()
@@ -62,8 +78,8 @@ class AttendanceSheet(object):
     """
     Function to fill out table
     """
-    def add_students(self, students):
-        for student in students:
+    def add_students(self):
+        for student in self.studentList.students:
             row_insert = self.ASheet.studentAttendanceTable.rowCount()
             self.ASheet.studentAttendanceTable.insertRow(row_insert)
             self.ASheet.studentAttendanceTable.setItem(row_insert, 0, QtWidgets.QTableWidgetItem(student.name))
@@ -83,9 +99,9 @@ class AttendanceSheet(object):
 
     def uncheck_names(self):
         row_count = self.ASheet.studentAttendanceTable.rowCount()
-
         for row in range(0, row_count):
             self.ASheet.studentAttendanceTable.item(row, 1).setCheckState(QtCore.Qt.Unchecked)
+
     def __load_attendance(self):
         self.attendanceDictionary.clear()  # Erase what's in the list
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
@@ -124,12 +140,3 @@ class AttendanceSheet(object):
                 #Add database entry
                 connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(i) + "', '" + str(self.attendanceDictionary[i]) + "')")
                 connection.commit()
-
-
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    ad = AttendanceDictionary()
-    ad.add_sheet('26-03-2018', 'Tyler Meeks;Samantha Boggs')
-    main = AttendanceSheet(ad, [Student('', 1, 'Tyler Meeks', 'jtm0036@uah.edu'), Student('', 2, 'Samantha Boggs', 'sjb0034@uah.edu')], "YourMom")
-    sys.exit(app.exec_())

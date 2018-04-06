@@ -10,8 +10,8 @@ class AssignmentCategoryList(object):
         # Jacob: Need to add loading in from database and saving to database if table already exists
         # Will also need to do the loading for all the assignment categories and everything below that
 
-    def add_category(self, uuid, name, points, drop_count, student_list):
-        category = AssignmentCategory(uuid, name, points, drop_count, student_list)
+    def add_category(self, uuid, name, drop_count, student_list):
+        category = AssignmentCategory(uuid, name, drop_count, student_list)
         self.assignment_categories.append(category)
 
     def get_category(self, category_id):
