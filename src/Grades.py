@@ -4,6 +4,7 @@
 """
 
 
+
 class Grades:
 
     """
@@ -33,3 +34,6 @@ class Grades:
     """
     def get_grade(self, student_id):
         return self.assignmentGrades[student_id]
+
+    def clear_grades(self):
+        self.assignmentGrades.clear()
