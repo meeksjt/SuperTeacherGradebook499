@@ -162,3 +162,4 @@ class AssignmentCategory:
                 max = i
 
         return max
+
