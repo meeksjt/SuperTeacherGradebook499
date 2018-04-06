@@ -54,6 +54,8 @@ class StudentList:
 			if student.uuid == uuid:
 				return student.get_id()
 
+
+
 	def add_student(self,id,name,email):
 		newStudent = Student(self.tableName,id,name,email, uuid.uuid4())
 		#connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
@@ -108,6 +110,10 @@ class Student:
 
 	def get_name(self):
 		return self.name
+
+	def get_uuid(self):
+		return self.uuid
+
 
 	def set_email(self,email):
 		self.email = email
@@ -166,13 +172,13 @@ def create_test_database():
 	connection.commit()
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
-students = StudentList("cs499")
+#students = StudentList("cs499")
 #students.add_student("42","Jacob Houck", "YourMom@Gmail.com")
 #students.set_email("711bc1b8-265f-4236-a6b2-395bd2107879","HOLYMOLY@BATMAN.CSU")
-students.set_id("711bc1b8-265f-4236-a6b2-395bd2107879","LET THE BODIES HIT THE FLOOR!")
-students.set_name("711bc1b8-265f-4236-a6b2-395bd2107879","STAN")
-print("Hello?!?!")
-print(students.get_id("711bc1b8-265f-4236-a6b2-395bd2107879"), students.get_email("711bc1b8-265f-4236-a6b2-395bd2107879"),students.get_name("711bc1b8-265f-4236-a6b2-395bd2107879"))
+#students.set_id("711bc1b8-265f-4236-a6b2-395bd2107879","LET THE BODIES HIT THE FLOOR!")
+#students.set_name("711bc1b8-265f-4236-a6b2-395bd2107879","STAN")
+#print("Hello?!?!")
+#print(students.get_id("711bc1b8-265f-4236-a6b2-395bd2107879"), students.get_email("711bc1b8-265f-4236-a6b2-395bd2107879"),students.get_name("711bc1b8-265f-4236-a6b2-395bd2107879"))
 #students.print_students()
 #students.addStudent(id,name,email)
 #students.removeStudent(id)
