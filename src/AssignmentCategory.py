@@ -11,16 +11,17 @@ class AssignmentCategory:
     """
         Constructor for AssignmentCategoryBase
     """
-    def __init__(self, category_uuid, category_name, total_points, drop_count, student_list):
+    def __init__(self, category_uuid, category_name, drop_count, student_list):
         self.categoryName = category_name
 
         self.category_uuid = category_uuid
         self.table_name = category_uuid + '_assignments'
 
-        self.total_points = total_points
         self.drop_count = drop_count
         self.student_list = student_list
         self.assignment_list = []
+
+        self.total_category_points = 0
 
         # Need to check if table already exists
         # If it does, load the contents of that table into self.assignmentList by creating new
@@ -46,27 +47,6 @@ class AssignmentCategory:
             newCategory = AssignmentCategory(row[0], row[1], row[2])
             self.course_list.append(copy.deepcopy(newCategory))
     """
-    """
-        Function to get the total_points of the AssignmentCategory
-        Parameters:
-            None
-        Returns:
-            self.total_points : (float) the total_points of the category
-    """
-
-    def get_category_total_points(self):
-        return self.total_points
-
-    """
-        Function to set the total_points of the AssignmentCategory
-        Parameters:
-            new_total_points : (float) the new total_points of the AssignmentCategory
-        Returns:
-            None
-    """
-
-    def set_category_total_points(self, new_total_points):
-        self.total_points = new_total_points
 
     """
         Function to get the dropCount of the AssignmentCategory
@@ -114,6 +94,7 @@ class AssignmentCategory:
         for assignment in self.assignment_list:
             if assignment.assignmentID == assignment_uuid:
                 self.assignment_list.remove(assignment)
+                # Add the database deletion
                 break
 
     """
@@ -127,18 +108,20 @@ class AssignmentCategory:
 
     def get_student_category_grade(self, student_id):
 
+        self.total_category_points = 0
+
         student_grades = []
         assignment_total_points = []
-        assignment_weighted_scores = []
+        assignment_score_deficits = []
 
         for assignment in self.assignment_list:
             grade = assignment.get_student_grade(student_id)
             student_grades.append(grade)
             total_points = assignment.get_total_points()
             assignment_total_points.append(total_points)
-            assignment_weighted_scores.append((grade / total_points) * 100)
+            assignment_score_deficits.append(total_points - grade)
 
-        return self.drop_grades(student_grades.copy(), assignment_total_points.copy(), assignment_weighted_scores.copy())
+        return self.drop_grades(student_grades.copy(), assignment_total_points.copy(), assignment_score_deficits.copy())
 
     """
         Function to calculate the student score after dropping appropriate assignments
@@ -148,22 +131,21 @@ class AssignmentCategory:
             assignment_scores: (list) list of weighted student grades
     """
 
-    def drop_grades(self, student_grades, assignment_total_points, assignment_weighted_scores):
+    def drop_grades(self, student_grades, assignment_total_points, assignment_score_deficits):
 
         student_points = 0
-        total_points = 0
 
         for i in range(self.drop_count):
-            index = self.get_min_score(assignment_weighted_scores)
+            index = self.get_max_deficit(assignment_score_deficits)
             del student_grades[index]
             del assignment_total_points[index]
-            del assignment_weighted_scores[index]
+            del assignment_score_deficits[index]
 
         for i in range(len(student_grades)):
             student_points += student_grades[i]
-            total_points += assignment_total_points[i]
+            self.total_category_points += assignment_total_points[i]
 
-        return (student_points / total_points) * self.get_category_total_points()
+        return student_points
 
     """
         Function to get the lowest score of a student for a particular list of scores
@@ -172,12 +154,11 @@ class AssignmentCategory:
         Returns:
             min: (int) index of the lowest score in the student assignment list
     """
+    def get_max_deficit(self, assignment_score_deficits):
 
-    def get_min_score(self, assignment_scores):
+        max = 0
+        for i in assignment_score_deficits:
+            if i > max:
+                max = i
 
-        minimum = 10000000
-        for i in assignment_scores:
-            if i < minimum:
-                minimum = i
-
-        return minimum
+        return max
