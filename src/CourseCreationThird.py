@@ -36,7 +36,6 @@ class CourseCreationThird(object):
 
     """
         Function to remove the current row from the list of categories
-        Won't remove the Attendance category (the first row)
         Parameters:
             None
         Returns:
@@ -73,9 +72,8 @@ class CourseCreationThird(object):
         # Loop through and get data from the table
         for row in range(0, row_count):
             cat_name = self.CCThird.categoryTable.item(row, 0).text()
-            cat_weight = self.CCThird.categoryTable.item(row, 1).text()
-            cat_drop_count = self.CCThird.categoryTable.item(row, 2).text()
-            output.append([cat_name, cat_weight, cat_drop_count])
+            cat_drop_count = self.CCThird.categoryTable.item(row, 1).text()
+            output.append([cat_name, cat_drop_count])
 
         # Make sure that our data is valid
         valid = self.error_checking(output)
@@ -84,7 +82,7 @@ class CourseCreationThird(object):
         if valid:
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
-                self.categories_to_create.append(category[:])
+                self.categories_to_create.append(category[:].copy())
             self.CCThird.hide()
 
     """
@@ -98,8 +96,7 @@ class CourseCreationThird(object):
 
         # variables for the names, weights, and drop counts of each category
         category_names = [user_input[i][0] for i in range(len(user_input))]
-        category_weights = [user_input[j][1] for j in range(len(user_input))]
-        category_drop_counts = [user_input[k][2] for k in range(len(user_input))]
+        category_drop_counts = [user_input[j][1] for j in range(len(user_input))]
 
         for i in category_names:
             if i == "":
@@ -108,22 +105,16 @@ class CourseCreationThird(object):
 
         # check the drop counts
         for i in category_drop_counts:
+
+            if "." in i:
+                return False
+
             try:
                 x = int(i.strip())
                 if x < 0:
                     return False
             except ValueError:
                 self.bad_input('Error', 'You have a drop count that is not a nonnegative integer.  Please try again.')
-                return False
-
-        # Check category weights
-        point_sum = 0
-        for i in category_weights:
-            # Make sure we are adding numbers
-            try:
-                point_sum += float(i.strip())
-            except ValueError:
-                self.bad_input('Error', 'Category Weights need to be numerical values!')
                 return False
 
         return True
