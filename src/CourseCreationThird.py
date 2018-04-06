@@ -17,7 +17,7 @@ class CourseCreationThird(object):
     def __init__(self):
 
         # Table column headers
-        col_headers = ['Category Name', 'Category Weight (Points)', 'Drop Count']
+        col_headers = ['Category Name', 'Drop Count']
 
         # variable for categories for the CourseManager to create
         self.categories_to_create = []
@@ -25,16 +25,8 @@ class CourseCreationThird(object):
         self.CCThird = QtWidgets.QDialog()
         self.ui = uic.loadUi('CourseCreationThird.ui', self.CCThird)
         self.CCThird.categoryTable.setHorizontalHeaderLabels(col_headers)
-        self.CCThird.categoryTable.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.CCThird.categoryTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
 
-        # add our initial mandatory Attendance category to the table
-        # also no changing the attendance category name
-        row_insert = self.CCThird.categoryTable.rowCount()
-        self.add_category()
-        self.CCThird.categoryTable.setItem(row_insert, 0, QtWidgets.QTableWidgetItem("Attendance"))
-        self.CCThird.categoryTable.item(0, 0).setFlags(QtCore.Qt.ItemIsEnabled)
-        self.CCThird.categoryTable.setItem(row_insert, 1, QtWidgets.QTableWidgetItem("100"))
-        self.CCThird.categoryTable.setItem(row_insert, 2, QtWidgets.QTableWidgetItem("0"))
         self.CCThird.show()
 
         # Link our buttons
@@ -52,8 +44,7 @@ class CourseCreationThird(object):
     """
     def remove_category(self):
         row = self.CCThird.categoryTable.currentRow()
-        if row != 0:
-            self.CCThird.categoryTable.removeRow(row)
+        self.CCThird.categoryTable.removeRow(row)
 
     """
     Function to add a new row to our category table
@@ -67,7 +58,6 @@ class CourseCreationThird(object):
         self.CCThird.categoryTable.insertRow(self.CCThird.categoryTable.rowCount())
         self.CCThird.categoryTable.setItem(row_insert, 0, QtWidgets.QTableWidgetItem(""))
         self.CCThird.categoryTable.setItem(row_insert, 1, QtWidgets.QTableWidgetItem(""))
-        self.CCThird.categoryTable.setItem(row_insert, 2, QtWidgets.QTableWidgetItem(""))
 
     """
     Function to try to save our data to create new AssignmentCategories

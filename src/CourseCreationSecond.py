@@ -35,14 +35,11 @@ class CourseCreationSecond(object):
 
         # Show our beautiful GUI to the user
         self.CCSecond.show()
+        self.CCSecond.nextButton.clicked.connect(self.save_course_data)
 
         # We are using default value for gradeDict, which means we are mapping to Course Creation instead of Editing
-        if gradeDict['A'] == 0:
-            self.CCSecond.nextButton.clicked.connect(self.save_course_data)
-        # Otherwise, change the button label
-        else:
+        if gradeDict['A'] != 0:
             self.CCSecond.nextButton.setText("Save")
-            self.CCSecond.nextButton.clicked.connect(self.save_edited_course_data)
 
     """
     Function to call when saving course data for course creation
@@ -52,18 +49,6 @@ class CourseCreationSecond(object):
         None
     """
     def save_course_data(self):
-        if self.validate_user_input():
-            self.next_screen = CourseCreationThird()
-            self.CCSecond.hide()
-
-    """
-    Function to call when saving course data for course editing
-    Parameters:
-        None
-    Returns:
-        None
-    """
-    def save_edited_course_data(self):
         if self.validate_user_input():
             self.CCSecond.hide()
 
@@ -136,5 +121,5 @@ class CourseCreationSecond(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    main = CourseCreationSecond({'A':92.5, 'B':80, 'C':70, 'D':60})
+    main = CourseCreationSecond()
     sys.exit(app.exec_())
