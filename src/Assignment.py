@@ -58,7 +58,7 @@ class Assignment:
 				print("Already in the table.")
 			else:
 				print("Adding to database")
-				connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" +str(student.get_uuid())+"','"+"-"+"')")
+				connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" +str(student.get_uuid())+"','"+"-"+"')")
 				connection.commit()
 		#Now everyone is in the database. So we can reload the database.
 		self.studentGrades.clear_grades()
@@ -117,7 +117,7 @@ class Assignment:
 		#Do the actual saving of the grades here.
 		#Loops through the grades
 		for xuuid, grade in self.studentGrades.assignmentGrades.items():
-			query = "UPDATE " + self.tableName + " SET grade = '" + str(grade) + "' WHERE student_uuid = '" + str(xuuid) + "';"
+			query = "UPDATE `" + self.tableName + "` SET grade = '" + str(grade) + "' WHERE student_uuid = '" + str(xuuid) + "';"
 			print(query)
 			cursor.execute(query)
 			connection.commit()
