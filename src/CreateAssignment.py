@@ -5,6 +5,7 @@ import sqlite3
 from sqlite3 import Error
 from AssignmentCategory import AssignmentCategory
 from AssignmentCategoryList import AssignmentCategoryList
+from Student import StudentList
 import uuid
 
 """
@@ -14,10 +15,12 @@ This is the class that deals with creating a new Assignment
 
 class CreateAssignment(object):
 
-    def __init__(self, assignment_category_list):
+    def __init__(self, assignment_category_list, studentList):
         self.CAssignment = QtWidgets.QDialog()
         self.ui = uic.loadUi('CreateAssignment.ui', self.CAssignment)
         self.CAssignment.show()
+
+        self.studentList = studentList
 
         self.assignmentCategoryList = assignment_category_list
 
@@ -38,10 +41,7 @@ class CreateAssignment(object):
         if self.is_float(points):
             point_value = float(points)
             new_assignment_category = self.assignmentCategoryList.get_category(category)
-            new_assignment_category.add_assignment(uuid.uuid4(), name, point_value, point_value / float(new_assignment_category.get_category_total_points))
-            print(new_assignment_category.assignmentList[0].assignmentID)
-
-
+            new_assignment_category.add_assignment(str(uuid.uuid4()), name, point_value, self.studentList)
 
         print(category, name, points)
 
@@ -79,10 +79,13 @@ class CreateAssignment(object):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
-    r = AssignmentCategoryList()
-    r.add_category(AssignmentCategory(str(uuid.uuid4()), "Homework", 400, 0))
-    r.add_category(AssignmentCategory(str(uuid.uuid4()), "Quizzes", 300, 1))
-    r.add_category(AssignmentCategory(str(uuid.uuid4()), "Tests", 300, 0))
+    sl = StudentList('testingtesting')
+    #sl.add_student('1', 'A25229169', 'Tyler Meeks', 'jtm0036@uah.edu')
+    #sl.add_student('2', 'A25229170', 'Tyler Geeks', 'jtm0036@uah.edu')
 
-    x = CreateAssignment(r)
+    r = AssignmentCategoryList('testingtesting', sl)
+    #r.add_category('1', 'Tests', 0, sl)
+    #r.add_category('2', 'Homework', 0, sl)
+
+    x = CreateAssignment(r, sl)
     sys.exit(app.exec_())
