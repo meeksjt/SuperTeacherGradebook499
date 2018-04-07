@@ -1,3 +1,4 @@
+# Need to add database removal/editing for modified categories
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 from AssignmentCategory import AssignmentCategory
@@ -100,6 +101,7 @@ class AssignmentCategoryEditor(object):
         if valid:
             for i in range(len(output)):
                 if i < self.original_row_count:
+
                     # Add database change to make this permanent
                     self.assignment_categories_list.assignment_categories[i].categoryName = output[i][0]
                     self.assignment_categories_list.assignment_categories[i].drop_count = output[i][1]

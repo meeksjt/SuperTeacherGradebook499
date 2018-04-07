@@ -1,3 +1,5 @@
+# Add some getters and setters and deletions
+
 from AssignmentCategory import AssignmentCategory
 from GlobalVariables import *
 from Student import *
