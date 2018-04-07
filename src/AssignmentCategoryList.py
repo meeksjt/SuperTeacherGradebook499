@@ -17,8 +17,6 @@ class AssignmentCategoryList(object):
         connection.commit()
         self.__reload_categories(self.student_list)
 
-
-
         # Jacob: Need to add loading in from database and saving to database if table already exists
         # Will also need to do the loading for all the assignment categories and everything below that
 
