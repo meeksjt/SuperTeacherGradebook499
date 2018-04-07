@@ -15,7 +15,7 @@ class AssignmentCategory:
         self.categoryName = category_name
 
         self.category_uuid = category_uuid
-        self.table_name = category_uuid + '_assignments'
+        self.tableName = category_uuid + '_assignments'
 
         self.drop_count = drop_count
         self.student_list = student_list
@@ -30,7 +30,7 @@ class AssignmentCategory:
     def __reload_assignments(self):
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
-        
+
         # Go through each row
         for row in results:
             assignment = Assignment(row[0], row[1], row[2], row[3])
