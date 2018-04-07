@@ -79,11 +79,11 @@ class CreateAssignment(object):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
-    sl = StudentList('test5')
-    #sl.add_student('1', 'A25229169', 'Tyler Meeks', 'jtm0036@uah.edu')
+    sl = StudentList('test10')
+    sl.add_student('1', 'A25229169', 'Tyler Meeks', 'jtm0036@uah.edu')
 
-    r = AssignmentCategoryList('test5', sl)
-    #r.add_category('1', 'Tests', 0, sl)
+    r = AssignmentCategoryList('test10', sl)
+    r.add_category('1', 'Tests', 0, sl)
 
     x = CreateAssignment(r, sl)
     sys.exit(app.exec_())
