@@ -33,7 +33,7 @@ class AssignmentCategory:
 
         # Go through each row
         for row in results:
-            assignment = Assignment(row[0], row[1], row[2], row[3])
+            assignment = Assignment(row[0], row[1], row[2],self.student_list)
   
             self.assignment_list.append(copy.deepcopy(assignment))
     
@@ -71,7 +71,7 @@ class AssignmentCategory:
     def add_assignment(self, assignment_uuid, assignment_name, total_points, student_list):
         assignment = Assignment(assignment_uuid, assignment_name, total_points, student_list)
 
-        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "', '" + str(student_list) + "')")
+        connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
         connection.commit()
 
         self.__reload_assignments()

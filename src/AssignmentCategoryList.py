@@ -77,10 +77,10 @@ class AssignmentCategoryList(object):
                 #x.set_name(name)
 
 
-students = StudentList("cs399")
-students.add_student("a","b","c","d")
-test = AssignmentCategoryList("TERG",students)
+#students = StudentList("cs399")
+#students.add_student("a","b","c","d")
+#test = AssignmentCategoryList("TERG",students)
 
-test.add_category(uuid.uuid4(), "Ante Up", "5", students)
-for x in test.assignment_categories:
-    print(x.get_name())
+#test.add_category(uuid.uuid4(), "Ante Up", "5", students)
+#for x in test.assignment_categories:
+#    print(x.get_name())
