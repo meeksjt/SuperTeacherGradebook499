@@ -1,7 +1,10 @@
+# Finished
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 import Authentication
+from MainDisplay import *
 from CreateUser import Ui_IGPCreateUser
+
 
 class Ui_IGPLogin(object):
 
@@ -13,6 +16,8 @@ class Ui_IGPLogin(object):
         self.IGPLogin.loginButton.clicked.connect(self.login_button_clicked)
         self.IGPLogin.quitButton.clicked.connect(self.IGPLogin.close)
         self.IGPLogin.newUserButton.clicked.connect(self.new_user_button_clicked)
+
+        self.main_window = MainDisplay()
 
     def new_user_button_clicked(self):
         self.myOtherWindow = Ui_IGPCreateUser()
@@ -39,7 +44,10 @@ class Ui_IGPLogin(object):
                 self.bad_input('Error', 'There is no user with the login credentials you entered.  Please try again.')
             else:
                 print("Legit credentials")
-                print("This is where we switch over to the main GUI frame")
+                GlobalVariables.connection = sqlite3.connect('../databases/{}.db'.format(username))
+                GlobalVariables.cursor = GlobalVariables.connection.cursor()
+                self.IGPLogin.close()
+                self.main_window.form.show()
 
     def bad_input(self, window_text, error_message):
         choice = QtWidgets.QMessageBox.question(self.IGPLogin, window_text, error_message,

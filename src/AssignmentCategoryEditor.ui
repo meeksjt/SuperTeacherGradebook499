@@ -38,9 +38,9 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="createCourseButton">
+     <widget class="QPushButton" name="saveCategoriesButton">
       <property name="text">
-       <string>Create Course</string>
+       <string>Save Categories</string>
       </property>
      </widget>
     </item>
@@ -74,10 +74,16 @@
     <number>0</number>
    </property>
    <property name="columnCount">
-    <number>3</number>
+    <number>2</number>
    </property>
    <attribute name="horizontalHeaderCascadingSectionResizes">
     <bool>true</bool>
+   </attribute>
+   <attribute name="horizontalHeaderHighlightSections">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="horizontalHeaderMinimumSectionSize">
+    <number>260</number>
    </attribute>
    <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
     <bool>true</bool>
@@ -97,7 +103,6 @@
    <attribute name="verticalHeaderShowSortIndicator" stdset="0">
     <bool>false</bool>
    </attribute>
-   <column/>
    <column/>
    <column/>
   </widget>

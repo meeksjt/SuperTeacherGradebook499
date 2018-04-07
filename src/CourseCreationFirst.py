@@ -37,15 +37,14 @@ class CourseCreationFirst(object):
         self.CCFirst.courseNameField.setText(self.course_name)
         self.CCFirst.courseSectionField.setText(self.section_number)
         self.CCFirst.courseSemesterField.setText(self.course_semester)
-        self.CCFirst.show()
+        self.CCFirst.nextButton.clicked.connect(self.save_course_data)
+
 
         # set the functionality of the button depending on usage of class (creation vs editing)
-        if self.course_name == "":
-            self.CCFirst.nextButton.clicked.connect(self.save_course_data)
-        else:
+        if self.course_name != "":
             self.CCFirst.nextButton.setText('Save')
-            self.CCFirst.nextButton.clicked.connect(self.save_edited_course_data)
 
+        self.CCFirst.exec()
     """
     Function to call when saving course data for course creation
     Parameters:
@@ -55,22 +54,12 @@ class CourseCreationFirst(object):
     """
     def save_course_data(self):
         if self.validate_user_input():
-            self.next_screen = CourseCreationSecond()
             self.CCFirst.hide()
+            # self.next_screen = CourseCreationSecond()
 
     """
-    Function to call when saving course data for course editing
-    Parameters:
-        None
-    Returns:
-        None
-    """
-    def save_edited_course_data(self):
-        if self.validate_user_input():
-            self.CCFirst.hide()
-
-    """
-    Function that is called when the user is creating a course
+    Function that is called when the user is creating/editing a course
+    Makes sure that all of the fields have at least some value in them when we are creating a course
     Parameters:
         None
     Returns:
