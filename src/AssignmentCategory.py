@@ -1,5 +1,6 @@
 from Assignment import Assignment
 from GlobalVariables import *
+from Student import *
 import copy
 import re
 """
@@ -23,19 +24,12 @@ class AssignmentCategory:
 
         self.total_category_points = 0
 
-        # Need to check if table already exists
-        # If it does, load the contents of that table into self.assignmentList by creating new
-        # Assignment objects and reading in the grade tables for those Assignment objects
-
-
-        #cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Points`	TEXT,`DropCount`	TEXT);")
-        #connection.commit()
+        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.table_name+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
+        connection.commit()
     """
     def __reloadCategory(self):
         #Loads a category list back.
-
         #FIX THIS JACOB
-
         self.course_list.clear()  # Erase what's in the list
         # Get everything in the table
         cursor.execute("SELECT * FROM `courseList`")
@@ -55,6 +49,10 @@ class AssignmentCategory:
         Returns:
             self.dropCount : (int) the number of assignments to be dropped from this category
     """
+
+    def get_name(self):
+        return self.categoryName
+
 
     def get_drop_count(self):
         return self.drop_count
@@ -82,6 +80,9 @@ class AssignmentCategory:
         assignment = Assignment(assignment_uuid, assignment_name, total_points, student_list)
         self.assignment_list.append(assignment)
 
+        connection.execute("INSERT INTO `" + str(self.table_name) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
+        connection.commit()
+
     """
         Function to delete an Assignment from our assignmentList
         Parameters:
@@ -94,7 +95,8 @@ class AssignmentCategory:
         for assignment in self.assignment_list:
             if assignment.assignmentID == assignment_uuid:
                 self.assignment_list.remove(assignment)
-                # Add the database deletion
+                cursor.execute("DELETE FROM " + str(self.table_name) + " where assignment_uuid = '" + assignment_uuid + "';")
+                connection.commit()
                 break
 
     """
@@ -163,3 +165,7 @@ class AssignmentCategory:
 
         return max
 
+
+#students = StudentList("cs499")
+#test = AssignmentCategory("GARBAGEUUID","Homework", "5",students)
+#test.add_assignment("435346","Homework 1", "123", students)

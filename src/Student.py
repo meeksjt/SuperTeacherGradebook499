@@ -56,8 +56,8 @@ class StudentList:
 
 
 
-	def add_student(self,id,name,email):
-		newStudent = Student(self.tableName,id,name,email, uuid.uuid4())
+	def add_student(self,uuid,id,name,email):
+		newStudent = Student(self.tableName,id,name,email, uuid)
 		#connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
 		connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
 		connection.commit()
@@ -173,7 +173,8 @@ def create_test_database():
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
 #students = StudentList("cs499")
-#students.add_student("42","Jacob Houck", "YourMom@Gmail.com")
+#students.print_students()
+#students.add_student("id","name","gmail")
 #students.set_email("711bc1b8-265f-4236-a6b2-395bd2107879","HOLYMOLY@BATMAN.CSU")
 #students.set_id("711bc1b8-265f-4236-a6b2-395bd2107879","LET THE BODIES HIT THE FLOOR!")
 #students.set_name("711bc1b8-265f-4236-a6b2-395bd2107879","STAN")
