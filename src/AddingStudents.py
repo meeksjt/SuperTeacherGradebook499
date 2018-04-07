@@ -34,9 +34,6 @@ class AddingStudents(object):
 
     def add_students(self):
 
-        for i in self.studentIDs:
-            print(i, self.studentIDs[i])
-
         row_count = self.AStudents.studentTable.rowCount()
         output = []
 
@@ -49,10 +46,11 @@ class AddingStudents(object):
                     self.AStudents.studentTable.item(row, 2).text()])
 
         for i in output:
-            print(i[0], i[1], i[2], i[3])
-
-        for i in output:
             self.studentList.add_student(i[0], i[1], i[2], i[3])
+            # Might have to add creating everything for that new student
+
+
+        self.AStudents.hide()
 
 
     def setup_display(self):

@@ -1,3 +1,4 @@
+# Good for now
 from Grades import Grades
 from GlobalVariables import *
 from Student import *
@@ -65,10 +66,7 @@ class Assignment:
 		cursor.execute("SELECT * FROM `" + self.tableName + "`")
 		results = cursor.fetchall()
 		for row in results:
-			#Adds a database entry to the table.
 			self.studentGrades.set_grade(row[0],row[1])
-
-		#connection.execute("INSERT INTO "+str(self.tableName)+" VALUES("++",)")
 
 	"""
 		Function to get the totalPoints that an Assignment is worth 
@@ -97,8 +95,8 @@ class Assignment:
 		Returns:
 			grade : (float) grade of the student on this Assignment
 	"""
-	def get_student_grade(self, student_id):
-		grade = self.studentGrades.get_grade(student_id)
+	def get_student_grade(self, student_uuid):
+		grade = self.studentGrades.get_grade(student_uuid)
 		return grade
 
 	"""
@@ -109,8 +107,8 @@ class Assignment:
 		Returns:
 			None
 	"""
-	def set_student_grade(self, student_id, grade):
-		self.studentGrades.set_grade(student_id, grade)
+	def set_student_grade(self, student_uuid, grade):
+		self.studentGrades.set_grade(student_uuid, grade)
 
 	def save_grades(self):
 

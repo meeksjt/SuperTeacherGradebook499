@@ -1,3 +1,5 @@
+# Finished
+
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from Student import Student, StudentList
 import sys
@@ -16,22 +18,26 @@ class AttendanceDictionary(object):
         self.attendance_sheets = {}
         self.total_days = 0
         # add loading in from a database if the attendance dictionary already exists
+        # loads attendance sheets if already exists JACOB
 
     def add_sheet(self, dateString, studentsString):
         self.attendance_sheets[dateString] = studentsString
         # add saving to the database
 
-    def get_student_presence_count(self, student_ID):
-        name = ""
+    def get_student_presence_count(self, student_uuid):
+        #name = ""
         self.total_days = 0
         present_days = 0
-        for student in self.student_list.students:
-            if student.id == student_ID:
-                name = student.name
+
+        # Get the name of the student whose uuid we have
+        #for student in self.student_list.students:
+        #    if student.uuid == student_uuid:
+        #        name = student.name
+
 
         for day in self.attendance_sheets:
             present_students = self.attendance_sheets[day].split(';')
-            if name in present_students:
+            if student_uuid in present_students:
                 present_days += 1
             self.total_days += 1
 
@@ -40,7 +46,6 @@ class AttendanceDictionary(object):
 """
 Class for an individual Attendance Sheet
 """
-
 
 class AttendanceSheet(object):
 
@@ -53,7 +58,9 @@ class AttendanceSheet(object):
 
         # Get the current date and add our list of students
         current_date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
-        self.add_students(studentList)
+        self.add_students()
+
+        # database stuff
         self.tableName = courseUUID + "_attendance"
         cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`date`	TEXT,`students`	TEXT);")
         connection.commit()
@@ -93,6 +100,7 @@ class AttendanceSheet(object):
     def load_new_date(self):
         date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
         if date in self.attendanceDictionary:
+            self.uncheck_names()
             self.load_presence(self.attendanceDictionary[date])
         else:
             self.uncheck_names()
@@ -115,7 +123,7 @@ class AttendanceSheet(object):
 
         for row in range(0, row_count):
             if self.ASheet.studentAttendanceTable.item(row, 1).checkState() == QtCore.Qt.Checked:
-                output.append(self.ASheet.studentAttendanceTable.item(row, 0).text())
+                output.append(self.studentList.get_uuid_from_name(self.ASheet.studentAttendanceTable.item(row, 0).text()))
 
         output_string = ';'.join(output)
         date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")

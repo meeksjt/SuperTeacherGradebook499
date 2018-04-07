@@ -1,3 +1,4 @@
+# Finished
 import hashlib
 import sqlite3
 from sqlite3 import Error
@@ -12,7 +13,6 @@ def hash_credential(user_credential):
 def connect_to_db(database_name):
     conn = sqlite3.connect(database_name)
     return conn
-
 
 def create_user_table(conn):
     c = conn.cursor()
