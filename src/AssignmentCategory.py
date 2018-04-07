@@ -1,7 +1,5 @@
-# Come back to this
 from Assignment import Assignment
 from GlobalVariables import *
-from Student import *
 import copy
 import re
 """
@@ -25,23 +23,20 @@ class AssignmentCategory:
 
         self.total_category_points = 0
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.table_name+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
+        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
         connection.commit()
-    """
-    def __reloadCategory(self):
-        #Loads a category list back.
-        #FIX THIS JACOB
-        self.course_list.clear()  # Erase what's in the list
-        # Get everything in the table
-        cursor.execute("SELECT * FROM `courseList`")
-        # Our results go into this as a list, I think.
+    
+    # reload assignments, pretty sure this is right
+    def __reload_assignments(self):
+        cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
+        
         # Go through each row
         for row in results:
-            # Here, we pass the Name, Semester, and Section to the Course object, and it creates it.
-            newCategory = AssignmentCategory(row[0], row[1], row[2])
-            self.course_list.append(copy.deepcopy(newCategory))
-    """
+            assignment = Assignment(row[0], row[1], row[2], row[3])
+  
+            self.assignment_list.append(copy.deepcopy(assignment))
+    
 
     """
         Function to get the dropCount of the AssignmentCategory
@@ -50,10 +45,6 @@ class AssignmentCategory:
         Returns:
             self.dropCount : (int) the number of assignments to be dropped from this category
     """
-
-    def get_name(self):
-        return self.categoryName
-
 
     def get_drop_count(self):
         return self.drop_count
@@ -79,10 +70,11 @@ class AssignmentCategory:
 
     def add_assignment(self, assignment_uuid, assignment_name, total_points, student_list):
         assignment = Assignment(assignment_uuid, assignment_name, total_points, student_list)
-        self.assignment_list.append(assignment)
 
-        connection.execute("INSERT INTO `" + str(self.table_name) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
+        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "', '" + str(student_list) + "')")
         connection.commit()
+
+        self.__reload_assignments()
 
     """
         Function to delete an Assignment from our assignmentList
@@ -96,7 +88,7 @@ class AssignmentCategory:
         for assignment in self.assignment_list:
             if assignment.assignmentID == assignment_uuid:
                 self.assignment_list.remove(assignment)
-                cursor.execute("DELETE FROM " + str(self.table_name) + " where assignment_uuid = '" + assignment_uuid + "';")
+                cursor.execute("DELETE FROM " + str(self.tableName) + " where assignment_uuid = '" + assignment_uuid + "';")
                 connection.commit()
                 break
 
@@ -165,8 +157,3 @@ class AssignmentCategory:
                 max = i
 
         return max
-
-
-#students = StudentList("cs499")
-#test = AssignmentCategory("GARBAGEUUID","Homework", "5",students)
-#test.add_assignment("435346","Homework 1", "123", students)
