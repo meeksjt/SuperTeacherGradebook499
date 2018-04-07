@@ -1,3 +1,4 @@
+#Finished
 from PyQt5 import QtCore, QtWidgets, QtGui, uic
 import GlobalVariables
 import sys
@@ -37,9 +38,10 @@ class CreateNewStudent(object):
         # Get the values from the input fields
         student_name = self.CNStudent.studentNameField.text()
         student_email = self.CNStudent.studentEmailField.text()
+        student_id = self.CNStudent.studentIDField.text()
 
         # Make sure that the input fields contain some content
-        if student_name == "" or student_email == "":
+        if student_name == "" or student_email == "" or student_id == "":
             return
 
         conn = sqlite3.connect(GlobalVariables.all_students)
@@ -48,9 +50,9 @@ class CreateNewStudent(object):
         self.create_students_table(conn)
 
         # Make sure that we don't already have a student with that name and email
-        valid = self.check_for_existing_student(conn, student_name, student_email)
+        valid = self.check_for_existing_student(conn, student_name, student_email, student_id)
         if valid:
-            self.add_student(conn, student_name, student_email)
+            self.add_student(conn, student_name, student_id, student_email)
             self.CNStudent.hide()
         else:
             self.bad_input('Error', 'There already exists a student with that name and email')
@@ -64,7 +66,7 @@ class CreateNewStudent(object):
     Returns:
         None
     """
-    def add_student(self, conn, student_name, student_email):
+    def add_student(self, conn, student_name, student_id, student_email):
 
         # Generate a random id for the student
         id = str(uuid.uuid4())
@@ -72,7 +74,7 @@ class CreateNewStudent(object):
 
         try:
             # Create the user and tell them what we have done
-            c.execute('INSERT INTO students VALUES ("{f}", "{s}", "{t}")'.format(f=id, s=student_name, t=student_email))
+            c.execute('INSERT INTO students VALUES ("{f}", "{s}", "{t}", "{r}")'.format(f=id, s=student_id, t=student_name, r=student_email))
             conn.commit()
 
             choice = QtWidgets.QMessageBox.question(self.CNStudent, 'Congrats!', 'You successfully created the student "{0}"'
@@ -93,12 +95,12 @@ class CreateNewStudent(object):
     Returns:
         True if the student does not already exist, False otherwise
     """
-    def check_for_existing_student(self, conn, student_name, student_email):
+    def check_for_existing_student(self, conn, student_name, student_email, student_id):
         c = conn.cursor()
         try:
             count = 0
-            for line in c.execute('SELECT * FROM students WHERE name="{f}" AND email="{s}"'
-                                          .format(f=student_name, s=student_email)):
+            for line in c.execute('SELECT * FROM students WHERE name="{f}" AND email="{s}" AND id="{t}"'
+                                          .format(f=student_name, s=student_email, t=student_id)):
                 count += 1
             if count == 0:
                 return True
@@ -118,11 +120,12 @@ class CreateNewStudent(object):
     def create_students_table(self, conn):
         c = conn.cursor()
 
-        first_column = "id text NOT NULL UNIQUE"
-        second_column = "name text NOT NULL"
-        third_column = "email text NOT NULL"
+        first_column = "uuid text NOT NULL UNIQUE"
+        second_column = "id text NOT NULL UNIQUE"
+        third_column = "name text NOT NULL"
+        fourth_column = "email text NOT NULL"
         try:
-            c.execute('CREATE TABLE students ({f}, {s}, {t})'.format(f=first_column, s=second_column, t=third_column))
+            c.execute('CREATE TABLE students ({f}, {s}, {t}, {r})'.format(f=first_column, s=second_column, t=third_column, r=fourth_column))
             conn.commit()
         except sqlite3.OperationalError:
             pass
