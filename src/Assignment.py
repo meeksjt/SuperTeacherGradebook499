@@ -58,7 +58,7 @@ class Assignment:
 				#Then this person already exists.
 				print("Already in the table.")
 			else:
-				print("Adding to database")
+				#print("Adding to database")
 				connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" +str(student.get_uuid())+"','"+"-"+"')")
 				connection.commit()
 		#Now everyone is in the database. So we can reload the database.
