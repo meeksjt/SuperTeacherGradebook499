@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 import time
 from AssignmentCategory import AssignmentCategory
+from GlobalVariables import *
 
 """
 This is the class used for the third part of creating the course
@@ -27,7 +28,7 @@ class CourseCreationThird(object):
         self.CCThird.categoryTable.setHorizontalHeaderLabels(col_headers)
         self.CCThird.categoryTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
 
-        self.CCThird.show()
+        self.CCThird.exec()
 
         # Link our buttons
         self.CCThird.addCategoryButton.clicked.connect(self.add_category)
@@ -116,6 +117,9 @@ class CourseCreationThird(object):
             except ValueError:
                 self.bad_input('Error', 'You have a drop count that is not a nonnegative integer.  Please try again.')
                 return False
+
+        # global is_course_creation_wizard_complete
+        # is_course_creation_wizard_complete = True
 
         return True
 

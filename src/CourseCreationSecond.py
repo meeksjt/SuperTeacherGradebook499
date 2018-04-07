@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 from CourseCreationThird import CourseCreationThird
-
+from GlobalVariables import *
 """
 This is the class used for the second part of creating/editing the course
 It allows the user to both create and edit the grade scale for the course
@@ -15,7 +15,7 @@ class CourseCreationSecond(object):
     Parameters:
         gradeDict: (dictionary) an initial mapping of each letter to a float grade
     """
-    def __init__(self, gradeDict={'A': 0.0, 'B': 0.0, 'C': 0.0, 'D': 0.0}):
+    def __init__(self, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
 
         # get our gradeDictionary
         self.gradeDict = gradeDict.copy()
@@ -34,12 +34,13 @@ class CourseCreationSecond(object):
         self.CCSecond.gradeDField.setText(str(gradeDict['D']))
 
         # Show our beautiful GUI to the user
-        self.CCSecond.show()
         self.CCSecond.nextButton.clicked.connect(self.save_course_data)
 
         # We are using default value for gradeDict, which means we are mapping to Course Creation instead of Editing
         if gradeDict['A'] != 0:
             self.CCSecond.nextButton.setText("Save")
+
+        self.CCSecond.exec()
 
     """
     Function to call when saving course data for course creation
@@ -49,8 +50,9 @@ class CourseCreationSecond(object):
         None
     """
     def save_course_data(self):
+        self.CCSecond.hide()
         if self.validate_user_input():
-            self.CCSecond.hide()
+            pass
 
     """
     Function that is called when the user is creating a course
@@ -87,6 +89,7 @@ class CourseCreationSecond(object):
                 self.bad_input('Error', 'Make sure your grade scales are correct!')
             else:
                 return True
+
         return False
 
     """

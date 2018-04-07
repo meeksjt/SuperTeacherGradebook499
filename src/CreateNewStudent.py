@@ -19,10 +19,11 @@ class CreateNewStudent(object):
         # Create the dialog box
         self.CNStudent = QtWidgets.QDialog()
         self.ui = uic.loadUi('CreateNewStudent.ui', self.CNStudent)
-        self.CNStudent.show()
 
         # Link the button functionality
         self.CNStudent.createNewStudentButton.clicked.connect(self.create_student)
+
+        self.CNStudent.exec()
 
     """
     Function to begin creating a new student

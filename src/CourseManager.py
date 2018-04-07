@@ -44,11 +44,11 @@ class CourseManager:
         connection.execute(("INSERT INTO 'courseList' VALUES('" + str(name) + "', '" + str(semester) + "', '" + str(section) + "')"))
         connection.commit()
         self.__reload_courses()
-        #newCourse.add_student("3","Jacob","email")
-        #newCourse.add_student("5", "Matt", "email")
-        #newCourse.add_student("8", "Tyler", "email")
-        #newCourse.add_student("2", "Chris", "email")
-        #newCourse.student_list.print_students()
+        # newCourse.add_student("3","Jacob","email")
+        # newCourse.add_student("5", "Matt", "email")
+        # newCourse.add_student("8", "Tyler", "email")
+        # newCourse.add_student("2", "Chris", "email")
+        # newCourse.student_list.print_students()
         pass
 
     def delete_course(self, name):

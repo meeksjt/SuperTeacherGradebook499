@@ -1,6 +1,9 @@
 # This is the main view for the instructor grade book
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from GlobalVariables import *
+from InitialCourseScreen import *
+from CreateNewStudent import *
 
 
 # might not even need this class...
@@ -206,8 +209,12 @@ class MainDisplay(object):
 
         self.splitter.setSizes([1, 800])
 
+        # course creation wizard
+        self.cc_form = None
+        self.new_student_form = None
+
         # self.form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.form.show()
+        # self.form.show()
 
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
@@ -222,6 +229,8 @@ class MainDisplay(object):
     # if the current row that is selected has children (is a course)
     # then add a new course... else add a student
     def add_item(self):
+        global is_course_creation_wizard_complete
+
         index = self.course_tree.currentIndex()
 
         # every option adds a student
@@ -235,17 +244,26 @@ class MainDisplay(object):
             # since a course needs at least one student
             if current_item.hasChildren():
                 course = QtGui.QStandardItem("Enter Course Name")
+                self.cc_form = InitialCourseScreen()
+                self.cc_form.ICScreen.exec()
+
                 self.model.insertRow(index.row() + 1, course)
                 course.appendRow(student)
+                is_course_creation_wizard_complete = False
+
             else:
+                self.new_student_form = CreateNewStudent()
                 current_item.parent().appendRow(student)
                 # insert database logic here
 
                 #
         else:
             course = QtGui.QStandardItem("Enter Course Name")
+            self.cc_form = InitialCourseScreen()
+
             self.model.insertRow(index.row() + 1, course)
             course.appendRow(student)
+            is_course_creation_wizard_complete = True
 
         self.load_grade_sheet()
 
@@ -294,5 +312,6 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     main_display = MainDisplay()
+    main_display.form.show()
     sys.exit(app.exec_())
 
