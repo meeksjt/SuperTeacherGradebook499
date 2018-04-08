@@ -1,44 +1,74 @@
 # This is the main view for the instructor grade book
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from GlobalVariables import *
+
 from InitialCourseScreen import *
 from CreateNewStudent import *
+from CourseManager import *
+# from Course import *
 
-
-# might not even need this class...
+# This class is the underlying representation
+# for the tree view
 class CourseTree(object):
     def __init__(self):
         # parenthetical form of a tree
         self.tree_view_data = [
             ("Math", [
-                ("Bob", []),
-                ("Chris", []),
-                ("Gerard", []),
-                ("Marphi", []),
-                ("Eddie", []),
-                ("Edward", []),
-                ("Hank", []),
-                ("Lard", []),
-                ("Lawler", []),
-                ("Pinchwood", []),
+                "Bob",
+                "Chris",
+                "Gerard",
+                "Marphi",
+                "Eddie",
+                "Edward",
+                "Hank",
+                "Lard",
+                "Lawler",
+                "Pinchwood",
             ]),
             ("English", [
-                ("Jake Paul", []),
-                ("Jake Saul", []),
-                ("Jake Maul", []),
-                ("Bob Jake", [])
+                "Jake Paul",
+                "Jake Saul",
+                "Jake Maul",
+                "Bob Jake"
             ]),
             ("Biology", [
-                ("Paula Dean", []),
-                ("Michael", []),
-                ("Mark", [])
+                "Paula Dean",
+                "Michael",
+                "Mark"
             ])
         ]
 
+    # set new data
     def set_tree_data(self, tree_data):
         self.tree_view_data = tree_data
 
+    # add student to class given by class index
+    def add_student(self, class_index, student):
+        self.tree_view_data[class_index][1].append(student)
+
+    # remove student given by class index
+    def drop_student(self, class_index, student):
+        self.tree_view_data[class_index][1].remove(student)
+       # self.tree_view_data[class_index].remove(student)
+
+    def add_course(self, course):
+        self.tree_view_data.append((course, []))
+
+    def drop_course(self, course):
+        index = 0
+        for course_name, student_list in self.tree_view_data:
+            if course_name == course:
+                self.tree_view_data.pop(index)
+                return
+            index += 1
+
+    def print_tree(self):
+        print(self.tree_view_data)
+
+
+class GradeSheet(object):
+    def __init__(self, course_tree):
+        pass
 
 # a good portion of this class was auto-generated with pyuic5 to
 # convert .ui files to .py for more customization/hacking
@@ -229,8 +259,6 @@ class MainDisplay(object):
     # if the current row that is selected has children (is a course)
     # then add a new course... else add a student
     def add_item(self):
-        global is_course_creation_wizard_complete
-
         index = self.course_tree.currentIndex()
 
         # every option adds a student
@@ -243,13 +271,13 @@ class MainDisplay(object):
             # append a new course with one student
             # since a course needs at least one student
             if current_item.hasChildren():
-                course = QtGui.QStandardItem("Enter Course Name")
-                self.cc_form = InitialCourseScreen()
-                self.cc_form.ICScreen.exec()
+                course_temp = Course()
+                self.cc_form = InitialCourseScreen(course_temp)
 
-                self.model.insertRow(index.row() + 1, course)
-                course.appendRow(student)
-                is_course_creation_wizard_complete = False
+                if not course_temp.name == "":
+                    course = QtGui.QStandardItem(course_temp.name)
+                    self.model.insertRow(index.row() + 1, course)
+                    course.appendRow(student)
 
             else:
                 self.new_student_form = CreateNewStudent()
@@ -258,12 +286,13 @@ class MainDisplay(object):
 
                 #
         else:
-            course = QtGui.QStandardItem("Enter Course Name")
-            self.cc_form = InitialCourseScreen()
+            course_temp = Course()
+            self.cc_form = InitialCourseScreen(course_temp)
 
-            self.model.insertRow(index.row() + 1, course)
-            course.appendRow(student)
-            is_course_creation_wizard_complete = True
+            if not course_temp.name == "":
+                course = QtGui.QStandardItem(course_temp.name)
+                self.model.insertRow(index.row() + 1, course)
+                course.appendRow(student)
 
         self.load_grade_sheet()
 
@@ -309,9 +338,15 @@ class MainDisplay(object):
 
 
 if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    main_display = MainDisplay()
-    main_display.form.show()
-    sys.exit(app.exec_())
+   import sys
+
+   #app = QtWidgets.QApplication(sys.argv)
+   #main_display = MainDisplay()
+   #main_display.form.show()
+   #sys.exit(app.exec_())
+
+   ct = CourseTree()
+   # ct.add_student(1, "muuuuu")
+   #ct.drop_course('Math')
+
 

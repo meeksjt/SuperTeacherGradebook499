@@ -60,7 +60,7 @@ class GradeScale(object):
         #Save this stuff to the database table for grade scales.
         #Remember to use the Course UUID to find your entry on the table.
 
-    #The following functions just return a letter grade.
+    # The following functions just return a letter grade.
     def get_A_bottom_score(self):
         return self.grade_dict['A']
 

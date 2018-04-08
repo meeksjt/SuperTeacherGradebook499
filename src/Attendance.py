@@ -127,24 +127,24 @@ class AttendanceSheet(object):
 
         output_string = ';'.join(output)
         date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
-        #This is where we find the date in the database.
+        # This is where we find the date in the database.
         self.attendanceDictionary[date] = output_string
 
         for i in self.attendanceDictionary:
-            #i is the date, attendanceDicctionry[i] is the list of students
+            # i is the date, attendanceDicctionry[i] is the list of students
             print(i, self.attendanceDictionary[i])
 
-            #if the date exists, we update it's entry in the database.
+            # if the date exists, we update it's entry in the database.
             results = connection.execute("SELECT * FROM `" + self.tableName + "` WHERE date='" + i + "' ;")
             connection.commit()
             if results.rowcount>0:
-                #Then this date exists.
+                # Then this date exists.
                 query = "UPDATE " + self.tableName + " SET students = '" + str(self.attendanceDictionary[i]) + "' WHERE date = " + str(i) + ";"
                 print(query)
                 cursor.execute(query)
                 connection.commit()
-            #Else, we INSERT
+            # Else, we INSERT
             else:
-                #Add database entry
+                # Add database entry
                 connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(i) + "', '" + str(self.attendanceDictionary[i]) + "')")
                 connection.commit()
