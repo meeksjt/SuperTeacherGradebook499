@@ -66,14 +66,12 @@ class CourseManager:
     def get_course(self, course_uuid):
         return self.course_dict
 
-'''
 jacob = CourseManager()
+x=10
+while x > 1:
+    jacob.add_course("Senior Project", "399", "03", "Fall")
+    x=x-1
+    print("1")
 
-for course in jacob.course_list:
-    print("Course Name: ", course.name)
-    for student in course.student_list.students:
-        student.print_student()
-jacob.delete_course("a")
 
-jacob.add_course("1342323", "Senior Design", "CS 499", "Spring 2018", "01")
-'''
+
