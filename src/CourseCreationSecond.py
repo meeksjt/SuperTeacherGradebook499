@@ -15,7 +15,7 @@ class CourseCreationSecond(object):
     Parameters:
         gradeDict: (dictionary) an initial mapping of each letter to a float grade
     """
-    def __init__(self, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
+    def __init__(self, course, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
 
         # get our gradeDictionary
         self.gradeDict = gradeDict.copy()
@@ -40,6 +40,7 @@ class CourseCreationSecond(object):
         if gradeDict['A'] != 0:
             self.CCSecond.nextButton.setText("Save")
 
+        self.temp_course = course
         self.CCSecond.exec()
 
     """
@@ -50,9 +51,8 @@ class CourseCreationSecond(object):
         None
     """
     def save_course_data(self):
-        self.CCSecond.hide()
         if self.validate_user_input():
-            pass
+            self.CCSecond.hide()
 
     """
     Function that is called when the user is creating a course

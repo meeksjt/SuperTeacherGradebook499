@@ -19,7 +19,7 @@ class AssignmentCategoryList(object):
 
 	def add_category(self, uuid, name, points, drop_count, student_list):
 		category = AssignmentCategory(uuid, name, points, drop_count, student_list)
-        self.
+        # self.
 
 
 		self.assignment_categories.append(category)
