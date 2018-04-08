@@ -1,4 +1,3 @@
-# Good for now
 from Grades import Grades
 from GlobalVariables import *
 from Student import *
@@ -13,8 +12,6 @@ class Assignment:
 		Constructor for the Assignment Class
 		Instantiates an Assignment object
 	"""
-
-
 	def __init__(self, assignment_uuid, assignment_name, total_points, student_list):
 		self.assignmentID = assignment_uuid
 		self.assignmentName = assignment_name
@@ -52,16 +49,26 @@ class Assignment:
 	def set_assignment_name(self, new_assignment_name):
 		self.assignmentName = new_assignment_name
 
+    """
+        Function to load grades into the database
+        Parameters:
+            None
+        Returns: 
+            None
+    """
 	def __load_grades(self):
 		for student in self.studentList.students:
 			if student.get_uuid() in self.studentGrades.assignmentGrades:
-				#Then this person already exists.
+
+				# Then this person already exists.
+                # Do we need this still, or was it just for testing? Seems like we shouldn't have a print statement here.
 				print("Already in the table.")
 			else:
 				#print("Adding to database")
 				connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" +str(student.get_uuid())+"','"+"-"+"')")
 				connection.commit()
-		#Now everyone is in the database. So we can reload the database.
+
+		# Now everyone is in the database. So we can reload the database.
 		self.studentGrades.clear_grades()
 		cursor.execute("SELECT * FROM `" + self.tableName + "`")
 		results = cursor.fetchall()
@@ -110,10 +117,17 @@ class Assignment:
 	def set_student_grade(self, student_uuid, grade):
 		self.studentGrades.set_grade(student_uuid, grade)
 
+    """
+        Function to save the grades and update the database
+        Parameters:
+            None
+        Returns: 
+            None
+    """
 	def save_grades(self):
 
-		#Do the actual saving of the grades here.
-		#Loops through the grades
+		# Do the actual saving of the grades here.
+		# Loops through the grades
 		for xuuid, grade in self.studentGrades.assignmentGrades.items():
 			query = "UPDATE `" + self.tableName + "` SET grade = '" + str(grade) + "' WHERE student_uuid = '" + str(xuuid) + "';"
 			print(query)
@@ -126,4 +140,3 @@ class Assignment:
 #print(test.get_assignment_name(),test.assignmentID)
 #test.set_student_grade("1c9e45e1-a1bb-4f98-ad17-50d4f5912db3","99")
 #test.save_grades()
-
