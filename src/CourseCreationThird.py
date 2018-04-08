@@ -48,11 +48,11 @@ class CourseCreationThird(object):
         self.CCThird.categoryTable.removeRow(row)
 
     """
-    Function to add a new row to our category table
-    Parameters:
-        None
-    Returns:
-        None
+        Function to add a new row to our category table
+        Parameters:
+            None
+        Returns:
+            None
     """
     def add_category(self):
         row_insert = self.CCThird.categoryTable.rowCount()

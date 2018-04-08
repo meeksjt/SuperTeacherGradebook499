@@ -2,8 +2,11 @@ import sqlite3
 import copy
 from GlobalVariables import connection, cursor
 import uuid
-#Status: Know how to INSERT and CREATE. Learn how to UPDATE, then how to
+
+
+# Status: Know how to INSERT and CREATE. Learn how to UPDATE, then how to
 # SELECT and convert to an object.
+
 
 class StudentList:
     """Really just a wrapper for a list of Students"""
@@ -196,16 +199,16 @@ def create_test_database():
 #for row in results:
 #    newStudent = Student(row[0],row[1],row[2])
 #    students.addStudent(newStudent)
-#students.setEmail(1994, "fhouck8@hotmail.com")
-#students.printStudents()
-#students.setEmail(1, "!@#$%^&*(*&^%")
-#x = input("What student do you want to change?")
-#x = input("Enter a Student name: ")
+# students.setEmail(1994, "fhouck8@hotmail.com")
+# students.printStudents()
+# students.setEmail(1, "!@#$%^&*(*&^%")
+# x = input("What student do you want to change?")
+# x = input("Enter a Student name: ")
 
-#y = input("Enter a Student id: ")
+# y = input("Enter a Student id: ")
 
-#z = input("Enter a Student email: ")
-#students.add_student(y,x,z)
+# z = input("Enter a Student email: ")
+# students.add_student(y,x,z)
 
-#students.print_students()
-#INSERT INTO `cs499_studentList`(`ID`,`name`,`email`) VALUES (NULL,NULL,NULL);
+# students.print_students()
+# INSERT INTO `cs499_studentList`(`ID`,`name`,`email`) VALUES (NULL,NULL,NULL);

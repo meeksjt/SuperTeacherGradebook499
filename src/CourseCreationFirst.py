@@ -1,6 +1,9 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
-from CourseCreationSecond import CourseCreationSecond
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from Course import *
+
+# from CourseCreationSecond import CourseCreationSecond
+# from GlobalVariables import *
 
 """
 This is the class used for the first part of creating/editing the course
@@ -17,13 +20,14 @@ class CourseCreationFirst(object):
         section: (string) section of the course (if we are loading in a previous course
         semester: (string) semester of the course (if we are loading in a previous course)
     """
-    def __init__(self, number="", name="", section="", semester=""):
+    def __init__(self, t_course):
 
         # set class variables
-        self.course_number = number
-        self.course_name = name
-        self.course_semester = semester
-        self.section_number = section
+        self.temp_course = t_course
+        self.course_name = ""
+        self.course_number = ""
+        self.section_number = ""
+        self.course_semester = ""
 
         # next screen variable is for the CourseCreationSecond if we are creating a course
         self.next_screen = None
@@ -39,7 +43,6 @@ class CourseCreationFirst(object):
         self.CCFirst.courseSemesterField.setText(self.course_semester)
         self.CCFirst.nextButton.clicked.connect(self.save_course_data)
 
-
         # set the functionality of the button depending on usage of class (creation vs editing)
         if self.course_name != "":
             self.CCFirst.nextButton.setText('Save')
@@ -54,8 +57,14 @@ class CourseCreationFirst(object):
     """
     def save_course_data(self):
         if self.validate_user_input():
+            # save temporary created info
+            self.temp_course.name = self.course_name
+            self.temp_course.number = self.course_number
+            self.temp_course.section = self.section_number
+            self.temp_course.semester = self.course_semester
+
+            # hide current window
             self.CCFirst.hide()
-            # self.next_screen = CourseCreationSecond()
 
     """
     Function that is called when the user is creating/editing a course
@@ -106,5 +115,6 @@ class CourseCreationFirst(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    main = CourseCreationFirst()
+    course = Course()
+    main = CourseCreationFirst(course)
     sys.exit(app.exec_())

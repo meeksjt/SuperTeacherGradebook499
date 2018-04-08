@@ -10,6 +10,8 @@ import uuid
 """
 This is the class that deals with creating a new student to add to our database of all students
 """
+
+
 class CreateNewStudent(object):
 
     """

@@ -4,15 +4,15 @@ import copy
 from Course import Course
 
 from GlobalVariables import connection, cursor
-#This class will read the CourseList table, and create a Course for each object in it.
-#It will also create a Course.
+# This class will read the CourseList table, and create a Course for each object in it.
+# It will also create a Course.
 
 
 class CourseManager:
     def __init__(self):
         self.course_list = []
 
-        #Create the table if this is a new database.
+        # Create the table if this is a new database.
         cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Course_UUID`  TEXT,`Name`	TEXT,`Number`   TEXT,`Semester`	TEXT,`Section`	TEXT);")
         connection.commit()
 
@@ -20,29 +20,28 @@ class CourseManager:
         self.__reload_courses()
         pass
 
-    #Loads the course from the database.
+    # Loads the course from the database.
     def __reload_courses(self):
 
         # Clears course list variable
         self.course_list.clear()
 
-        #Get everything in the table
+        # Get everything in the table
         cursor.execute("SELECT * FROM `courseList`")
 
-        #Our results go into this as a list.
+        # Our results go into this as a list.
         results = cursor.fetchall()
 
-        #Go through each row
+        # Go through each row
         for row in results:
-            #Here, we pass the Name, Semester, and Section to the Course object, and it creates it.
+            # Here, we pass the Name, Semester, and Section to the Course object, and it creates it.
             new_course = Course(row[0], row[1], row[2], row[3], row[4])
             self.course_list.append(copy.deepcopy(new_course))
 
-    #Adds a new course to the database
-    def add_course(self, uuid, name, number, semester, section):
+    # Adds a new course to the database and course list
+    def add_course(self, new_course):
 
-        newCourse = Course(uuid, name, number, semester, section)
-        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(name) + "', '" + str(semester) + "', '" + str(section) + "')"))
+        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(new_course.name) + "', '" + str(new_course.semester) + "', '" + str(new_course.section) + "')"))
         connection.commit()
         self.__reload_courses()
         # newCourse.add_student("3","Jacob","email")
@@ -66,6 +65,7 @@ class CourseManager:
         print("Nothing to see here.")
 
 
+'''
 jacob = CourseManager()
 
 for course in jacob.course_list:
@@ -75,3 +75,4 @@ for course in jacob.course_list:
 jacob.delete_course("a")
 
 jacob.add_course("1342323", "Senior Design", "CS 499", "Spring 2018", "01")
+'''
