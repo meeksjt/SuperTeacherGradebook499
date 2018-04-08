@@ -218,7 +218,7 @@ class MainDisplay(object):
 
         self.data_tree = CourseTree()
         self.model = QtGui.QStandardItemModel()
-        self.add_items(self.model, self.data_tree.tree_view_data)
+        # self.add_items(self.model, self.data_tree.tree_view_data)
         self.course_tree.setModel(self.model)
 
         # connection for when add button is released
@@ -340,13 +340,12 @@ class MainDisplay(object):
 if __name__ == "__main__":
    import sys
 
-   #app = QtWidgets.QApplication(sys.argv)
-   #main_display = MainDisplay()
-   #main_display.form.show()
-   #sys.exit(app.exec_())
+   app = QtWidgets.QApplication(sys.argv)
+   main_display = MainDisplay()
+   main_display.form.show()
+   sys.exit(app.exec_())
 
-   ct = CourseTree()
    # ct.add_student(1, "muuuuu")
-   #ct.drop_course('Math')
+   # ct.drop_course('Math')
 
 

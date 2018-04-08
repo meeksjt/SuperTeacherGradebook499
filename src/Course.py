@@ -20,7 +20,7 @@ class Course(object):
 
         self.student_list = StudentList(self.course_uuid)
         self.grade_scale = GradeScale(self.course_uuid)
-        self.assignment_category_list = AssignmentCategoryList(self.course_uuid)
+        self.assignment_category_list = AssignmentCategoryList(self.course_uuid, self.student_list)
 
         # Add Attendance
 
