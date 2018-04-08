@@ -23,18 +23,28 @@ class AssignmentCategory:
 
         self.total_category_points = 0
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
+        cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
         connection.commit()
     
-    # reload assignments, pretty sure this is right
+    
+    """
+        Function to reload assignments
+        Parameters:
+            None
+        Returns:
+            None
+    """
+
     def __reload_assignments(self):
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
 
         # Go through each row
         for row in results:
-            assignment = Assignment(row[0], row[1], row[2],self.student_list)
-  
+            # Create an assignment
+            assignment = Assignment(row[0], row[1], row[2], row[3])
+
+            # Append assignment to the list of assignments
             self.assignment_list.append(copy.deepcopy(assignment))
     
 
@@ -71,7 +81,7 @@ class AssignmentCategory:
     def add_assignment(self, assignment_uuid, assignment_name, total_points, student_list):
         assignment = Assignment(assignment_uuid, assignment_name, total_points, student_list)
 
-        connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
+        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "', '" + str(student_list) + "')")
         connection.commit()
 
         self.__reload_assignments()
