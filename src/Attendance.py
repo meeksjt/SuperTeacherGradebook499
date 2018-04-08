@@ -13,10 +13,16 @@ were present for that date (string delimited by semicolon)
 
 class AttendanceDictionary(object):
 
-    def __init__(self, student_list):
+    def __init__(self, course_uuid, student_list):
         self.student_list = student_list
         self.attendance_sheets = {}
         self.total_days = 0
+        self.course_uuid = course_uuid
+        self.table_name = course_uuid + "_attendance"
+
+        cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.table_name + "` (`date`	TEXT,`students`	TEXT);")
+        connection.commit()
+        self.__load_attendance()
         # add loading in from a database if the attendance dictionary already exists
         # loads attendance sheets if already exists JACOB
 
@@ -24,16 +30,17 @@ class AttendanceDictionary(object):
         self.attendance_sheets[dateString] = studentsString
         # add saving to the database
 
+    def __load_attendance(self):
+        self.attendance_sheets.clear()  # Erase what's in the list
+        cursor.execute("SELECT * FROM `" + self.table_name+ "`")
+        results = cursor.fetchall()
+        for row in results:
+            self.attendance_sheets[row[0]] = row[1]
+
     def get_student_presence_count(self, student_uuid):
         #name = ""
         self.total_days = 0
         present_days = 0
-
-        # Get the name of the student whose uuid we have
-        #for student in self.student_list.students:
-        #    if student.uuid == student_uuid:
-        #        name = student.name
-
 
         for day in self.attendance_sheets:
             present_students = self.attendance_sheets[day].split(';')
