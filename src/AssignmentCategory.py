@@ -19,7 +19,7 @@ class AssignmentCategory:
 
         self.drop_count = drop_count
         self.student_list = student_list
-        self.assignment_list = []
+        self.assignment_list = {}
 
         self.total_category_points = 0
 
@@ -35,7 +35,7 @@ class AssignmentCategory:
         for row in results:
             assignment = Assignment(row[0], row[1], row[2],self.student_list)
   
-            self.assignment_list.append(copy.deepcopy(assignment))
+            self.assignment_list[row[0]] = copy.deepcopy(assignment)
     
 
     """

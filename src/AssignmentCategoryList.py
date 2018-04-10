@@ -12,7 +12,7 @@ class AssignmentCategoryList(object):
     def __init__(self, course_uuid, student_list):
         self.assignment_course_uuid = course_uuid
         self.tableName = course_uuid + "_categories"
-        self.assignment_categories = []
+        self.assignment_categories = {}
         self.student_list = student_list
         connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`uuid`	TEXT,`name` TEXT,`drop_count` TEXT);")
         connection.commit()
@@ -32,6 +32,7 @@ class AssignmentCategoryList(object):
         connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(uuid) + "', '" + str(name) + "', '" + str(drop_count) + "')")
         connection.commit()
         self.__reload_categories(student_list)
+        return uuid
 
 
         #self.assignment_categories.append(category)
@@ -49,9 +50,7 @@ class AssignmentCategoryList(object):
             # '4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
             newAssignmentCategory = AssignmentCategory(row[0], row[1], row[2], self.student_list)
 
-            self.assignment_categories.append(copy.deepcopy(newAssignmentCategory))
-            for assignmentCategory in self.assignment_categories:
-                print("Here is the BLEEPING NAME! ",assignmentCategory.category_uuid)
+            self.assignment_categories[row[0]] = copy.deepcopy(newAssignmentCategory)
 
     def set_name(self, uuid, name):
         """Sets ID in object and in database"""
