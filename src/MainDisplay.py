@@ -66,9 +66,7 @@ class CourseTree(object):
         print(self.tree_view_data)
 
 
-class GradeSheet(object):
-    def __init__(self, course_tree):
-        pass
+
 
 # a good portion of this class was auto-generated with pyuic5 to
 # convert .ui files to .py for more customization/hacking
@@ -309,10 +307,27 @@ class MainDisplay(object):
 
     def load_gradebook(self):
         # Loop through assignment categories
+        columns = []
+        cur_col = 0
         for category in self.course_manager.currentCourse.assignment_category_list:
+            newCol = []
             for assignment in category.assignment_list:
-                uuid = assignment.uuid
-                assignment_name = assignment.assignmentName
+                newCol.append(assignment.assignmentName)
+                for student_uuid, grade in assignment.studentGrades.assignmentGrades.items():
+                    new_cell = GradeCell()
+                    new_cell.set_category_uuid(category.category_uuid)
+                    new_cell.set_assignment_uuid(assignment.assignmentID)
+                    new_cell.set_student_uuid(student_uuid)
+                    new_cell.setText(grade)
+                    newCol.append(copy.deepcopy(new_cell))
+                columns.append(newCol)
+        for column in columns:
+            for row in column:
+                for cell in row:
+                    print("Grade: "+cell.grade)
+        #return columns
+
+
 
     def save_gradebook(self):
         col_count = self.grade_sheet.columnCount()
@@ -363,15 +378,56 @@ class MainDisplay(object):
         #
 
 
+class GradeCell(QtWidgets.QTableWidgetItem):
+    def __init__(self):
+
+        QtWidgets.QTableWidgetItem.__init__(self)
+        self.assignment_uuid = ""
+        self.category_uuid = ""
+        self.student_uuid = ""
+        self.current_grade = ""
+
+        pass
+
+    def setText(self, grade):
+        self.current_grade = grade
+        super(GradeCell, self).setText(self.current_grade)
+
+    def set_assignment_uuid(self, x):
+        self.assignment_uuid = x
+
+    def set_category_uuid(self, x):
+        self.category_uuid = x
+
+    def set_student_uuid(self, x):
+        self.student_uuid = x
+
+    def get_assignment_uuid(self):
+        return self.assignment_uuid
+
+    def get_category_uuid(self):
+        return self.category_uuid
+
+    def get_student_uuid(self):
+        return self.student_uuid
+
+
 if __name__ == "__main__":
    import sys
 
+   course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
+   course.student_list.add_student(str(uuid.uuid4()), "42", "Tyler Bomb", "Hotmail@gmail.com")
+   course.assignment_category_list.add_category("Red Fighter 1","jgfgjfg","0",course.student_list)
+   for category in course.assignment_category_list.assignment_categories:
+       category.add_assignment("244", "Quiz 1", "3", course.student_list)
+
+
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
+   course_uuid = main_display.course_manager.add_course()
+   main_display.load_gradebook()
    main_display.form.show()
    sys.exit(app.exec_())
 
    # ct.add_student(1, "muuuuu")
    # ct.drop_course('Math')
-
-
