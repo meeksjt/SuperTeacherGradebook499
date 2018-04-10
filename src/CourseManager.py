@@ -21,6 +21,7 @@ class CourseManager:
         # Reload existing courses if necessary
         self.__reload_courses()
         pass
+
     def get_grades(self):
         grade_list = []
         category_grades = []
@@ -56,7 +57,12 @@ class CourseManager:
 
         course_uuid = uuid.uuid4()
         newCourse = Course(str(course_uuid), name, number, section, semester)
-        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course_uuid) + "','" + str(name) + "', '" + str(number) + "', '" + str(section) + "', '" + str(semester) + "')"))
+
+        parameter_string = "INSERT INTO 'courseList' VALUES('" + str(course_uuid) + "','" + str(name) + "', '" + str(number) + "', '" + str(section) + "', '" + str(semester) + "')"
+        print(parameter_string)
+
+        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course_uuid) + "','" + str(name) + "', '" +
+                            str(number) + "', '" + str(section) + "', '" + str(semester) + "')"))
         connection.commit()
         self.__reload_courses()
         # newCourse.add_student("3","Jacob","email")
@@ -64,7 +70,6 @@ class CourseManager:
         # newCourse.add_student("8", "Tyler", "email")
         # newCourse.add_student("2", "Chris", "email")
         # newCourse.student_list.print_students()
-        pass
 
     def delete_course(self, uuid):
         for course in self.course_dict:

@@ -4,6 +4,7 @@ from GlobalVariables import *
 import copy
 import re
 
+
 class AssignmentCategoryManager:
 	def __init__(self, tableName, categoryName, weight, drop_count):
 		self.tableName = tableName+re.sub('\W+', '_',categoryName)
@@ -15,7 +16,7 @@ class AssignmentCategoryManager:
 		connection.commit()
 
 	def __reloadCategory(self):
-		#Loads a category list back.
+		# Loads a category list back.
 		self.course_list.clear()  # Erase what's in the list
 		# Get everything in the table
 		cursor.execute("SELECT * FROM `courseList`")

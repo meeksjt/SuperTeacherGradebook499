@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>394</width>
-    <height>286</height>
+    <width>440</width>
+    <height>293</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,9 +29,9 @@ background-color:  rgb(43, 48, 59);
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
-     <width>401</width>
-     <height>301</height>
+     <y>10</y>
+     <width>441</width>
+     <height>291</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -54,7 +54,7 @@ QPushButton {
 }</string>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="course_info_tab">
     <property name="autoFillBackground">
@@ -603,7 +603,7 @@ QPushButton {
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>371</width>
+       <width>420</width>
        <height>241</height>
       </rect>
      </property>
@@ -616,23 +616,23 @@ QPushButton {
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
-           <widget class="QPushButton" name="add_assignment_button">
+           <widget class="QPushButton" name="add_assignment_category_button">
             <property name="text">
-             <string>Add Assignment</string>
+             <string>Add Assignment Category</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="drop_assignment_button">
+           <widget class="QPushButton" name="drop_assignment_category_button">
             <property name="text">
-             <string>Drop Assignment</string>
+             <string>Drop Assignment Category</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="edit_assignment_button">
+           <widget class="QPushButton" name="edit_assignment_category_button">
             <property name="text">
-             <string>Edit Assignment</string>
+             <string>Edit Assignment Category</string>
             </property>
            </widget>
           </item>

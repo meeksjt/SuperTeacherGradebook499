@@ -1,22 +1,31 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 from Course import *
+from CourseManager import *
+import AssignmentCategoryEditor
+import AssignmentCategoryList
 
 
 class CourseCreatorWidget(object):
 
-    def __init__(self, in_course, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
+    def __init__(self, course_manager, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
         self.course_name = ""
         self.course_number = ""
         self.section_number = ""
         self.course_semester = ""
-        self.temp_course = in_course
+
+        self.course_manager = course_manager
 
         self.gradeDict = gradeDict.copy()
 
         self.frame = QtWidgets.QDialog()
         self.ui = uic.loadUi('CourseWizard.ui', self.frame)
         self.ui.save_course_button.clicked.connect(self.save_course_data)
+        self.ui.add_assignment_category_button.clicked.connect(self.add_category)
+        # self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
+        # self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
+
+        self.course_manager = CourseManager()
 
         self.frame.exec()
 
@@ -25,13 +34,20 @@ class CourseCreatorWidget(object):
     def save_course_data(self):
         if self.validate_course_info() and self.validate_grade_scale():
             # save temporary created info
-            self.temp_course.name = self.course_name
-            self.temp_course.number = self.course_number
-            self.temp_course.section = self.section_number
-            self.temp_course.semester = self.course_semester
+
+            self.course_manager.add_course(self.course_name, self.course_number,
+                                           self.section_number, self.course_semester)
+
+            # ideally we have a buffer for assignments if the user backs out
 
             # hide current window
             self.frame.hide()
+
+    def add_category(self):
+        student_list = StudentList(self.course_uuid)
+        category_list = AssignmentCategoryList()
+        category_editor = AssignmentCategoryEditor(category_list, )
+
 
     # returns true if the information entered int he course info tab is valid
     def validate_course_info(self):
@@ -106,9 +122,9 @@ class CourseCreatorWidget(object):
 
 class InitialCourseScreen(object):
 
-    def __init__(self, course):
+    def __init__(self, course_manager):
 
-        self.temp_course = course
+        self.course_manager = course_manager
         self.next_screen = None
         self.ICScreen = QtWidgets.QDialog()
         self.ui = uic.loadUi('InitialCourseScreen.ui', self.ICScreen)
@@ -118,7 +134,7 @@ class InitialCourseScreen(object):
 
     def create_new_course(self):
         self.ICScreen.hide()
-        self.next_screen = CourseCreatorWidget(self.temp_course)
+        self.next_screen = CourseCreatorWidget(self.course_manager)
         # self.next_screen = CourseCreationThird()
         # insert code to set table with appropriate changes
 
@@ -128,6 +144,6 @@ class InitialCourseScreen(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    course = Course()
-    main = InitialCourseScreen(course)
+    course_manager = CourseManager()
+    main = InitialCourseScreen(course_manager)
     sys.exit(app.exec_())

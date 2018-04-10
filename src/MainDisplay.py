@@ -275,10 +275,10 @@ class MainDisplay(object):
             # since a course needs at least one student
             if current_item.hasChildren():
                 course_temp = Course()
-                self.cc_form = InitialCourseScreen(course_temp)
+                self.cc_form = InitialCourseScreen(self.course_manager)
 
                 if not course_temp.name == "":
-                    course = QtGui.QStandardItem(course_temp.name)
+                    course = QtGui.QStandardItem("new course")
                     self.model.insertRow(index.row() + 1, course)
                     course.appendRow(student)
 
@@ -289,13 +289,11 @@ class MainDisplay(object):
 
                 #
         else:
-            course_temp = Course()
-            self.cc_form = InitialCourseScreen(course_temp)
+            self.cc_form = InitialCourseScreen(self.course_manager)
 
-            if not course_temp.name == "":
-                course = QtGui.QStandardItem(course_temp.name)
-                self.model.insertRow(index.row() + 1, course)
-                course.appendRow(student)
+            course = QtGui.QStandardItem("new course")
+            self.model.insertRow(index.row() + 1, course)
+            course.appendRow(student)
 
         self.load_grade_sheet()
 
@@ -325,11 +323,6 @@ class MainDisplay(object):
             for row in range(0, row_count):
                 self.student
 
-
-
-
-
-
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
         self.grade_sheet.clear()
@@ -338,7 +331,7 @@ class MainDisplay(object):
         if index.isValid() and item.hasChildren():
 
             grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
-            #grade_labels = []
+            # grade_labels = []
 
             self.grade_sheet.setColumnCount(len(grade_labels))
             self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
