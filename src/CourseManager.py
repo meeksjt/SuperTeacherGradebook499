@@ -70,6 +70,8 @@ class CourseManager:
         # newCourse.add_student("8", "Tyler", "email")
         # newCourse.add_student("2", "Chris", "email")
         # newCourse.student_list.print_students()
+        return newCourse.course_uuid
+        pass
 
     def delete_course(self, uuid):
         for course in self.course_dict:
@@ -81,6 +83,9 @@ class CourseManager:
 
     def get_course(self, course_uuid):
         return self.course_dict
+
+    def set_current_course(self, course_uuid):
+        self.currentCourse = self.course_dict[course_uuid]
 
 """
 jacob = CourseManager()
