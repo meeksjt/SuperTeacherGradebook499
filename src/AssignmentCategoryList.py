@@ -20,6 +20,12 @@ class AssignmentCategoryList(object):
         # Jacob: Need to add loading in from database and saving to database if table already exists
         # Will also need to do the loading for all the assignment categories and everything below that
 
+    def get_assignment_uuid(self, assignment_name):
+        for category in self.assignment_categories:
+            for assignment in category.assignment_list:
+                if assignment.assignmentName == assignment_name:
+                    return assignment.assignmentID
+
     def add_category(self, uuid, name, drop_count, student_list):
         category = AssignmentCategory(str(uuid), name, drop_count, self.student_list)
         connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(uuid) + "', '" + str(name) + "', '" + str(drop_count) + "')")

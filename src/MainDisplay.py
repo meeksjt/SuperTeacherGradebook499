@@ -75,6 +75,8 @@ class GradeSheet(object):
 # convert .ui files to .py for more customization/hacking
 class MainDisplay(object):
     def __init__(self):
+        self.course_manager = CourseManager()
+
         self.form = QtWidgets.QWidget()
         self.form.setObjectName("Form")
         self.form.resize(1366, 768)
@@ -306,6 +308,28 @@ class MainDisplay(object):
 
         #
 
+    def load_gradebook(self):
+        # Loop through assignment categories
+        for category in self.course_manager.currentCourse.assignment_category_list:
+            for assignment in category.assignment_list:
+                uuid = assignment.uuid
+                assignment_name = assignment.assignmentName
+
+    def save_gradebook(self):
+        col_count = self.grade_sheet.columnCount()
+        row_count = self.grade_sheet.rowCount()
+
+        for col in range(0, col_count):
+            assignment_name = self.grade_sheet.horizontalHeaderItem(col).text()
+            assignment_uuid = self.course_manager.currentCourse.assignment_category_list.get_assignment_uuid(assignment_name)
+            for row in range(0, row_count):
+                self.student
+
+
+
+
+
+
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
         self.grade_sheet.clear()
@@ -314,6 +338,8 @@ class MainDisplay(object):
         if index.isValid() and item.hasChildren():
 
             grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
+            #grade_labels = []
+
             self.grade_sheet.setColumnCount(len(grade_labels))
             self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
 
