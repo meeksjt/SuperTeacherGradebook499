@@ -14,7 +14,6 @@ class Assignment:
 		Instantiates an Assignment object
 	"""
 
-
 	def __init__(self, assignment_uuid, assignment_name, total_points, student_list):
 		self.assignmentID = assignment_uuid
 		self.assignmentName = assignment_name
@@ -98,6 +97,10 @@ class Assignment:
 	def get_student_grade(self, student_uuid):
 		grade = self.studentGrades.get_grade(student_uuid)
 		return grade
+
+	#def get_assignment_info(self):
+	#	return self.assignmentName, self.assignmentID
+
 
 	"""
 		Function to set a specific Student's grade for an Assignment
