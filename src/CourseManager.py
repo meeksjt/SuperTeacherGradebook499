@@ -21,6 +21,17 @@ class CourseManager:
         # Reload existing courses if necessary
         self.__reload_courses()
         pass
+    def get_grades(self):
+        grade_list = []
+        category_grades = []
+
+        for student in self.currentCourse.student_list:
+            for category in self.currentCourse.assignment_category_list.assignment_categories:
+                for assignment in category.assignment_list:
+                    category_grades.append(assignment.get_student_grade(student.uuid))
+            grade_list.append(category_grades)
+        # give gradelist to student and repeat
+
 
     # Loads the course from the database.
     def __reload_courses(self):
@@ -66,6 +77,7 @@ class CourseManager:
     def get_course(self, course_uuid):
         return self.course_dict
 
+"""
 jacob = CourseManager()
 x=10
 while x > 1:
@@ -75,3 +87,29 @@ while x > 1:
 
 
 
+"""
+
+
+class Cell:
+    def __init__(self):
+        self.student_uuid = 0
+        self.assignment_uuid = 0
+        self.category_uuid = 0
+        self.grade = 0
+
+    def set_grade(self,grade):
+        self.grade=grade
+
+    def get_grade(self):
+        return self.grade
+
+    def set_assignment_uuid(self,uuid):
+        self.assignment_uuid = uuid
+
+    def set_category_uuid(self,uuid):
+        self.category_uuid = uuid
+
+    def set_student_uuid(self,uuid):
+        self.student_uuid = uuid
+
+        
