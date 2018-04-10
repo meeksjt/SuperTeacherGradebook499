@@ -7,6 +7,7 @@ from CreateNewStudent import *
 from CourseManager import *
 # from Course import *
 
+
 # This class is the underlying representation
 # for the tree view
 class CourseTree(object):
