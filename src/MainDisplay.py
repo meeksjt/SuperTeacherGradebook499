@@ -270,6 +270,7 @@ class MainDisplay(object):
             current_item = self.model.itemFromIndex(index)
 
             # append a new course with one student
+
             # since a course needs at least one student
             if current_item.hasChildren():
                 course_temp = Course()
@@ -289,7 +290,7 @@ class MainDisplay(object):
         else:
             self.cc_form = InitialCourseScreen(self.course_manager)
 
-            course = QtGui.QStandardItem("new course")
+            course = QtGui.QStandardItem(main_display.course_manager.currentCourse.name)
             self.model.insertRow(index.row() + 1, course)
             course.appendRow(student)
 
@@ -306,28 +307,60 @@ class MainDisplay(object):
 
     def load_gradebook(self):
         # Loop through assignment categories
+        print("We are in the first for loop")
         columns = []
         cur_col = 0
-        for category in self.course_manager.currentCourse.assignment_category_list:
-            newCol = []
-            for assignment in category.assignment_list:
+        for category in self.course_manager.currentCourse.assignment_category_list.assignment_categories.values():
+            print("We are in the first for loop\n")
+
+            for assignment in category.assignment_list.values():
+                newCol = []
                 newCol.append(assignment.assignmentName)
                 for student_uuid, grade in assignment.studentGrades.assignmentGrades.items():
+
                     new_cell = GradeCell()
                     new_cell.set_category_uuid(category.category_uuid)
                     new_cell.set_assignment_uuid(assignment.assignmentID)
                     new_cell.set_student_uuid(student_uuid)
+                    new_cell.set_student_name(main_display.course_manager.currentCourse.student_list.get_name(new_cell.student_uuid))
+                    #print(grade)
                     new_cell.setText(grade)
-                    newCol.append(copy.deepcopy(new_cell))
+                    newCol.append(new_cell)
+
                 columns.append(newCol)
-        for column in columns:
-            for row in column:
-                for cell in row:
-                    print("Grade: "+cell.grade)
-        #return columns
 
+        return columns
 
+        #Do Loading into the actual columns
+#        col = 0
+#        row = 0
+#        for column in columns:
+#            if row == 0:
+#                self.grade_sheet.setHorizontalHeaderItem(col, QtWidgets.QTableWidgetItem(column[0]))
+#            else:
+#                row = 0
+#                for cell in column[1]:
+#                    self.grade_sheet.setItem(row, col, cell.grade)
+#                    row += 1
+#                col += 1
 
+    """        for column in columns:
+                for row in column:
+                    if isinstance(row, GradeCell):
+                        main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[row.category_uuid].assignment_list[row.assignment_uuid].set_student_grade(row.student_uuid, "26")
+                        main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[row.category_uuid].assignment_list[row.assignment_uuid].save_grades()
+                        print(row.get_student_name())
+
+                        print(row.current_grade)
+                        pass
+
+                    #If it's not a GradeCell, it's a string header.
+                    else:
+                        pass
+                        #print(row.get_student_uuid())
+                        #print(cell.student_uuid)
+                           #return columns
+    """
     def save_gradebook(self):
         col_count = self.grade_sheet.columnCount()
         row_count = self.grade_sheet.rowCount()
@@ -336,7 +369,7 @@ class MainDisplay(object):
             assignment_name = self.grade_sheet.horizontalHeaderItem(col).text()
             assignment_uuid = self.course_manager.currentCourse.assignment_category_list.get_assignment_uuid(assignment_name)
             for row in range(0, row_count):
-                self.student
+                pass
 
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
@@ -344,19 +377,47 @@ class MainDisplay(object):
         index = self.course_tree.currentIndex()
         item = self.model.itemFromIndex(index)
         if index.isValid() and item.hasChildren():
+            columns = self.load_gradebook()
 
-            grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
+            col = 0
+            row = 0
+            grade_labels = []
+            for column in columns:
+                if row == 0:
+                    grade_labels.append(column[0])
+                else:
+                    row = 0
+                    for cell in column[1]:
+                        self.grade_sheet.setItem(row, col, cell.grade)
+                        row += 1
+                    col += 1
+            #grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
             # grade_labels = []
 
             self.grade_sheet.setColumnCount(len(grade_labels))
             self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
+            print("Made it past Tyler's buggy code!")
 
             labels = []
-            self.grade_sheet.setRowCount(item.rowCount())
+
+            row_count = len(self.course_manager.currentCourse.student_list.students)
+
+            self.grade_sheet.setRowCount(row_count)
+            row = 0
+            col = 0
+
+            # This is where we left off
+
+            for column in columns:
+                self.grade_sheet.setItem(row, col, column[row])
+
+
             if item.hasChildren():
                 for row in range(0, item.rowCount()):
                     name = item.child(row).text()
+                    #This is where the student names will go.
                     labels.append(name)
+
                 self.grade_sheet.setVerticalHeaderLabels(labels)
                 self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
         else:
@@ -369,8 +430,6 @@ class MainDisplay(object):
         pass
         # insert database logic here
 
-        #
-
 
 class GradeCell(QtWidgets.QTableWidgetItem):
     def __init__(self):
@@ -380,12 +439,19 @@ class GradeCell(QtWidgets.QTableWidgetItem):
         self.category_uuid = ""
         self.student_uuid = ""
         self.current_grade = ""
+        self.student_name = ""
 
         pass
 
     def setText(self, grade):
         self.current_grade = grade
         super(GradeCell, self).setText(self.current_grade)
+
+    def set_student_name(self, x):
+        self.student_name = x
+
+    def get_student_name(self):
+        return self.student_name
 
     def set_assignment_uuid(self, x):
         self.assignment_uuid = x
@@ -409,17 +475,26 @@ class GradeCell(QtWidgets.QTableWidgetItem):
 if __name__ == "__main__":
    import sys
 
-   course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
-   course.student_list.add_student(str(uuid.uuid4()), "42", "Tyler Bomb", "Hotmail@gmail.com")
-   course.assignment_category_list.add_category("Red Fighter 1","jgfgjfg","0",course.student_list)
-   for category in course.assignment_category_list.assignment_categories:
-       category.add_assignment("244", "Quiz 1", "3", course.student_list)
+   #course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
+
+   #for category in course.assignment_category_list.assignment_categories:
+   #    category.add_assignment("244", "Quiz 1", "3", course.student_list)
 
 
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
-   course_uuid = main_display.course_manager.add_course()
-   main_display.load_gradebook()
+   course_uuid = main_display.course_manager.add_course("Senior Project","gdg","dfg","gdg")
+   main_display.course_manager.set_current_course(course_uuid)
+   main_display.course_manager.currentCourse.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
+   yo = main_display.course_manager.currentCourse.assignment_category_list.add_category("Red Fighter 1", "jgfgjfg", "0", main_display.course_manager.currentCourse.student_list)
+   main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[yo].add_assignment("AUUID", "Oceans Eleven", "24", main_display.course_manager.currentCourse.student_list)
+   main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[yo].add_assignment("AUUID2", "Hunger Games", "24", main_display.course_manager.currentCourse.student_list)
+   main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[yo].add_assignment("AUUID3", "Age of Ultron", "24", main_display.course_manager.currentCourse.student_list)
+   main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[yo].add_assignment("AUUID4", "Tylers Mom", "24", main_display.course_manager.currentCourse.student_list)
+
+
+
+   #main_display.load_gradebook()
    main_display.form.show()
    sys.exit(app.exec_())
 
