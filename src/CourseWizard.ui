@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>293</height>
+    <width>381</width>
+    <height>307</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@ background-color:  rgb(43, 48, 59);
     <rect>
      <x>0</x>
      <y>10</y>
-     <width>441</width>
+     <width>391</width>
      <height>291</height>
     </rect>
    </property>
@@ -603,16 +603,31 @@ QPushButton {
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>420</width>
+       <width>359</width>
        <height>241</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <widget class="QListView" name="listView"/>
-      </item>
-      <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);
+color:rgb(0,0,0)</string>
+          </property>
+          <column>
+           <property name="text">
+            <string>Assignment Type</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Grade Drop Count</string>
+           </property>
+          </column>
+         </widget>
+        </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
@@ -626,13 +641,6 @@ QPushButton {
            <widget class="QPushButton" name="drop_assignment_category_button">
             <property name="text">
              <string>Drop Assignment Category</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="edit_assignment_category_button">
-            <property name="text">
-             <string>Edit Assignment Category</string>
             </property>
            </widget>
           </item>

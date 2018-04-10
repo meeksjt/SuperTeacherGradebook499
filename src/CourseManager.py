@@ -49,20 +49,18 @@ class CourseManager:
         # Go through each row
         for row in results:
             # Here, we pass the UUID, Name, Number, Section, and Semester to the Course object, and it creates it.
-            new_course = Course(row[0], row[1], row[2], row[3], row[4])
+            new_course = Course(row[4], row[1], row[2], row[3], row[0])
             self.course_dict[row[0]] = copy.deepcopy(new_course)
 
     # Adds a new course to the database and course list
-    def add_course(self, name, number, section, semester):
+    def add_course(self, course):
 
-        course_uuid = uuid.uuid4()
-        newCourse = Course(str(course_uuid), name, number, section, semester)
+        # course_uuid = uuid.uuid4()
+        # newCourse = Course(name, number, section, semester, str(course_uuid))
 
-        parameter_string = "INSERT INTO 'courseList' VALUES('" + str(course_uuid) + "','" + str(name) + "', '" + str(number) + "', '" + str(section) + "', '" + str(semester) + "')"
-        print(parameter_string)
-
-        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course_uuid) + "','" + str(name) + "', '" +
-                            str(number) + "', '" + str(section) + "', '" + str(semester) + "')"))
+        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course.course_uuid) + "','" + str(course.name) +
+                            "', '" + str(course.number) + "', '" + str(course.section) + "', '" + str(course.semester) +
+                            "')"))
         connection.commit()
         self.__reload_courses()
         # newCourse.add_student("3","Jacob","email")

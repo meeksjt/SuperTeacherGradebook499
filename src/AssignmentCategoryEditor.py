@@ -85,8 +85,6 @@ class AssignmentCategoryEditor(object):
                 self.ACEditor.categoryTable.removeRow(row)
                 # Delete database table
 
-
-
     def save_table_data(self):
         row_count = self.ACEditor.categoryTable.rowCount()
         output = []
