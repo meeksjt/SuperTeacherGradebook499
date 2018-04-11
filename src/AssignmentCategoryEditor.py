@@ -2,7 +2,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 from AssignmentCategory import AssignmentCategory
-from AssignmentCategoryList import AssignmentCategoryList
+from AssignmentCategoryDict import AssignmentCategoryDict
 
 """
 This is the class used for editing the third part of creating a course
@@ -154,7 +154,7 @@ class AssignmentCategoryEditor(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    x = AssignmentCategoryList('1')
+    x = AssignmentCategoryDict('1')
     x.add_category('1', 'Tests', 0, '')
 
     main = AssignmentCategoryEditor(x)

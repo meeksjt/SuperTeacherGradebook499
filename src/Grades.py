@@ -4,7 +4,6 @@
 """
 
 
-
 class Grades:
 
     """
@@ -31,9 +30,18 @@ class Grades:
         Function to get the grade for a particular Student
         Parameters:
             student_id: (string) id of the Student we want to get the grade for
+        Return:
+            self.assignmentGrades[student_id] - (string) student grade
     """
     def get_grade(self, student_id):
         return self.assignmentGrades[student_id]
 
+    """
+        Function to clear the grades for an Assignment
+        Parameters:
+            None
+        Returns:
+            None
+    """
     def clear_grades(self):
         self.assignmentGrades.clear()

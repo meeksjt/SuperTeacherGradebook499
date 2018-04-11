@@ -4,7 +4,7 @@ import sys
 import sqlite3
 from sqlite3 import Error
 from AssignmentCategory import AssignmentCategory
-from AssignmentCategoryList import AssignmentCategoryList
+from AssignmentCategoryDict import AssignmentCategoryDict
 from Student import StudentList
 import uuid
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     #sl.add_student('1', 'A25229169', 'Tyler Meeks', 'jtm0036@uah.edu')
     #sl.add_student('2', 'A25229170', 'Tyler Geeks', 'jtm0036@uah.edu')
 
-    r = AssignmentCategoryList('testingtesting', sl)
+    r = AssignmentCategoryDict('testingtesting', sl)
     #r.add_category('1', 'Tests', 0, sl)
     #r.add_category('2', 'Homework', 0, sl)
 

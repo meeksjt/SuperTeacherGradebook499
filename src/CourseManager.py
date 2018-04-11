@@ -97,27 +97,4 @@ while x > 1:
 
 """
 
-
-class Cell:
-    def __init__(self):
-        self.student_uuid = 0
-        self.assignment_uuid = 0
-        self.category_uuid = 0
-        self.grade = 0
-
-    def set_grade(self,grade):
-        self.grade=grade
-
-    def get_grade(self):
-        return self.grade
-
-    def set_assignment_uuid(self,uuid):
-        self.assignment_uuid = uuid
-
-    def set_category_uuid(self,uuid):
-        self.category_uuid = uuid
-
-    def set_student_uuid(self,uuid):
-        self.student_uuid = uuid
-
         

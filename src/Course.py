@@ -1,7 +1,7 @@
 # Come back to this one
 import re
 import Assignment
-from AssignmentCategoryList import AssignmentCategoryList
+from AssignmentCategoryDict import AssignmentCategoryDict
 from Student import *
 from GradeScale import GradeScale
 from Attendance import AttendanceDictionary
@@ -10,16 +10,15 @@ from Attendance import AttendanceDictionary
 class Course(object):
 
     def __init__(self, name="", number="", section="", semester="", course_uuid="invalid"):
-
-        self.course_uuid = course_uuid
-        # generate an id because one doesn't exist
-        if self.course_uuid == "invalid":
-            self.course_uuid = uuid.uuid4()
-
         self.name = name
         self.number = number
         self.section = section
         self.semester = semester
+        self.course_uuid = course_uuid
+
+        # generate an id because one doesn't exist
+        if self.course_uuid == "invalid":
+            self.course_uuid = uuid.uuid4()
 
         self.student_list = None
         self.grade_scale = None
@@ -29,11 +28,11 @@ class Course(object):
     def link_with_database(self):
         self.student_list = StudentList(self.course_uuid)
         self.grade_scale = GradeScale(self.course_uuid)
-        self.assignment_category_list = AssignmentCategoryList(self.course_uuid, self.student_list)
+        self.assignment_category_list = AssignmentCategoryDict(self.course_uuid, self.student_list)
         self.attendance_dictionary = AttendanceDictionary(self.course_uuid, self.student_list)
 
-    def add_student(self, id, name, email):
-        self.student_list.add_student(id, name, email)
+    def add_student(self, student_uuid, student_id, name, email):
+        self.student_list.add_student(student_uuid, student_id, name, email)
         pass
 
     def remove_student(self, uuid):

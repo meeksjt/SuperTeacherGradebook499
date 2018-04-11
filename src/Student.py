@@ -62,8 +62,8 @@ class StudentList:
             if student.name == name:
                 return student.uuid
 
-    def add_student(self,uuid,id,name,email):
-        newStudent = Student(self.tableName,id,name,email, uuid)
+    def add_student(self, uuid, id, name, email):
+        newStudent = Student(self.tableName, id, name, email, uuid)
         #connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
         connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
         connection.commit()
