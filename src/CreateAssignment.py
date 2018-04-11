@@ -29,6 +29,8 @@ class CreateAssignment(object):
 
         self.CAssignment.createAssignmentButton.clicked.connect(self.add_assignment)
 
+        self.CAssignment.exec()
+
     def add_assignment(self):
 
         category = str(self.CAssignment.assignmentCategoryDropdown.currentText())

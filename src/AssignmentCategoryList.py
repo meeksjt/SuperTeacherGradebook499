@@ -11,8 +11,6 @@ class AssignmentCategoryList(object):
     # UUID gets passed in.
     def __init__(self, course_uuid, student_list):
         self.assignment_course_uuid = course_uuid
-        self.tableName = course_uuid + "_categories"
-        self.assignment_categories = {}
         self.student_list = student_list
         connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`uuid`	TEXT,`name` TEXT,`drop_count` TEXT);")
         connection.commit()
