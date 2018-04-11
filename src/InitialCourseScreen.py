@@ -2,77 +2,141 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import sys
 from Course import *
 from CourseManager import *
-import AssignmentCategoryEditor
-import AssignmentCategoryList
-
+from CreateAssignment import *
+from AssignmentCategoryList import *
 
 class CourseCreatorWidget(object):
 
     def __init__(self, course_manager, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
-        self.course_name = ""
-        self.course_number = ""
-        self.section_number = ""
-        self.course_semester = ""
 
+        self.categories_to_create = []
+        self.new_course = Course()
         self.course_manager = course_manager
 
         self.gradeDict = gradeDict.copy()
 
         self.frame = QtWidgets.QDialog()
         self.ui = uic.loadUi('CourseWizard.ui', self.frame)
+
+        col_headers = ['Category Name', 'Drop Count']
+        self.ui.tableWidget.setHorizontalHeaderLabels(col_headers)
+        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+
         self.ui.save_course_button.clicked.connect(self.save_course_data)
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
-        # self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
-        # self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
+        self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
 
         self.course_manager = CourseManager()
-
         self.frame.exec()
 
     # save the course data into a temporary course object and
     # hide the window iff the data is valid
     def save_course_data(self):
-        if self.validate_course_info() and self.validate_grade_scale():
+        if self.validate_course_info() and self.validate_grade_scale() and self.validate_assignment_categories():
             # save temporary created info
 
-            self.course_manager.add_course(self.course_name, self.course_number,
-                                           self.section_number, self.course_semester)
-
-            # ideally we have a buffer for assignments if the user backs out
+            self.new_course.link_with_database()
+            self.course_manager.add_course(self.new_course)
 
             # hide current window
             self.frame.hide()
 
     def add_category(self):
-        student_list = StudentList(self.course_uuid)
-        category_list = AssignmentCategoryList()
-        category_editor = AssignmentCategoryEditor(category_list, )
+        row_insert = self.ui.tableWidget.rowCount()
+        self.ui.tableWidget.insertRow(self.ui.tableWidget.rowCount())
+        self.ui.tableWidget.setItem(row_insert, 0, QtWidgets.QTableWidgetItem(""))
+        self.ui.tableWidget.setItem(row_insert, 1, QtWidgets.QTableWidgetItem(""))
 
+    def drop_category(self):
+        row = self.ui.tableWidget.currentRow()
+        self.ui.tableWidget.removeRow(row)
+
+    def save_table_data(self):
+        row_count = self.ui.tableWidget.rowCount()
+        output = []
+
+        # Loop through and get data from the table
+        for row in range(0, row_count):
+            cat_name = self.ui.tableWidget.item(row, 0).text()
+            cat_drop_count = self.ui.tableWidget.item(row, 1).text()
+            output.append([cat_name, cat_drop_count])
+
+        # Make sure that our data is valid
+        valid = self.error_checking(output)
+
+        # Add the assignmentcategorylist creation here if valid is valid
+        if valid:
+            for category in output:
+                # This is the class variable that the Course will user to create its new categories
+                self.categories_to_create.append(category[:].copy())
+
+    def validate_assignment_categories(self):
+        row_count = self.ui.tableWidget.rowCount()
+        output = []
+
+        # Loop through and get data from the table
+        for row in range(0, row_count):
+            cat_name = self.ui.tableWidget.item(row, 0).text()
+            cat_drop_count = self.ui.tableWidget.item(row, 1).text()
+            output.append([cat_name, cat_drop_count])
+
+        # Make sure that our data is valid
+        valid = self.error_checking(output)
+
+        # Add the assignmentcategorylist creation here if valid is valid
+        if valid:
+            for category in output:
+                # This is the class variable that the Course will user to create its new categories
+                self.categories_to_create.append(category[:].copy())
+
+    def error_checking(self, user_input):
+        # variables for the names, weights, and drop counts of each category
+        category_names = [user_input[i][0] for i in range(len(user_input))]
+        category_drop_counts = [user_input[j][1] for j in range(len(user_input))]
+
+        for i in category_names:
+            if i == "":
+                self.bad_input('Error', 'Please enter a category name for all categories')
+                return False
+
+        # check the drop counts
+        for i in category_drop_counts:
+
+            if "." in i:
+                return False
+
+            try:
+                x = int(i.strip())
+                if x < 0:
+                    return False
+            except ValueError:
+                self.bad_input('Error', 'You have a drop count that is not a nonnegative integer.  Please try again.')
+                return False
+
+        return True
 
     # returns true if the information entered int he course info tab is valid
     def validate_course_info(self):
 
-        # Get input field values
-        self.course_name = self.ui.course_name_line_edit.text()
-        self.course_number = self.ui.course_number_line_edit.text()
-        self.section_number = self.ui.section_number_line_edit.text()
-        self.course_semester = self.ui.course_semester_line_edit.text()
-
         # Make sure form data is valid
         # In this case, form data validity is just form data being present
-        if not self.course_number:
+        if not self.ui.course_name_line_edit.text():
             self.bad_input('Error', 'Make sure you enter a valid course number on the Course Info tab!')
             return False
-        elif not self.course_name:
+        elif not self.ui.course_number_line_edit.text():
             self.bad_input('Error', 'Make sure you enter a valid course name on the Course Info tab!')
             return False
-        elif not self.section_number:
+        elif not self.ui.section_number_line_edit.text():
             self.bad_input('Error', 'Make sure you enter a valid section number on the Course Info tab!')
             return False
-        elif not self.course_semester:
+        elif not self.ui.course_semester_line_edit.text():
             self.bad_input('Error', 'Make sure you enter a valid course semester on the Course Info tab!')
             return False
 
+        self.new_course.name = self.ui.course_name_line_edit.text()
+        self.new_course.number = self.ui.course_number_line_edit.text()
+        self.new_course.section = self.ui.section_number_line_edit.text()
+        self.new_course.semester = self.ui.course_semester_line_edit.text()
         # Add error checking to make sure EXACT course isn't already created (ignore case)
         return True
 

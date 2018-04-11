@@ -15,7 +15,7 @@ class StudentList:
         self.students = []
         #This holds the name of the course
         self.course = courseUUID
-        self.tableName = courseUUID+"_student_list"
+        self.tableName = str(courseUUID) + "_student_list"
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`uuid`	TEXT,`ID`	TEXT,`name`	TEXT,`email`	TEXT);")
         connection.commit()
         self.load_students()

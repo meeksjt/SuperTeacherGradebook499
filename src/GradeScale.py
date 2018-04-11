@@ -5,7 +5,7 @@ class GradeScale(object):
 
     def __init__(self, gs_uuid):
         self.grade_dict = {}
-        self.grade_scale_uuid = gs_uuid+"_GradeScale"
+        self.grade_scale_uuid = str(gs_uuid) + "_GradeScale"
         self.grade_dict['A'] = 12
         self.grade_dict['B'] = 23
         self.grade_dict['C'] = 23

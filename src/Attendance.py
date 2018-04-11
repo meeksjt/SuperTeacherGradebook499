@@ -18,7 +18,7 @@ class AttendanceDictionary(object):
         self.attendance_sheets = {}
         self.total_days = 0
         self.course_uuid = course_uuid
-        self.table_name = course_uuid + "_attendance"
+        self.table_name = str(course_uuid) + "_attendance"
 
         cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.table_name + "` (`date`	TEXT,`students`	TEXT);")
         connection.commit()
