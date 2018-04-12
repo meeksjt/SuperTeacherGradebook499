@@ -303,64 +303,6 @@ class MainDisplay(object):
         self.load_grade_sheet()
         # insert database logic here
 
-        #
-
-    def load_gradebook(self):
-        # Loop through assignment categories
-        print("We are in the first for loop")
-        columns = []
-        cur_col = 0
-        for category in self.course_manager.currentCourse.assignment_category_list.assignment_categories.values():
-            print("We are in the first for loop\n")
-
-            for assignment in category.assignment_list.values():
-                newCol = []
-                newCol.append(assignment.assignmentName)
-                for student_uuid, grade in assignment.studentGrades.assignmentGrades.items():
-
-                    new_cell = GradeCell()
-                    new_cell.set_category_uuid(category.category_uuid)
-                    new_cell.set_assignment_uuid(assignment.assignmentID)
-                    new_cell.set_student_uuid(student_uuid)
-                    new_cell.set_student_name(main_display.course_manager.currentCourse.student_list.get_name(new_cell.student_uuid))
-                    #print(grade)
-                    new_cell.setText(grade)
-                    newCol.append(new_cell)
-
-                columns.append(newCol)
-
-        return columns
-
-        #Do Loading into the actual columns
-#        col = 0
-#        row = 0
-#        for column in columns:
-#            if row == 0:
-#                self.grade_sheet.setHorizontalHeaderItem(col, QtWidgets.QTableWidgetItem(column[0]))
-#            else:
-#                row = 0
-#                for cell in column[1]:
-#                    self.grade_sheet.setItem(row, col, cell.grade)
-#                    row += 1
-#                col += 1
-
-    """        for column in columns:
-                for row in column:
-                    if isinstance(row, GradeCell):
-                        main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[row.category_uuid].assignment_list[row.assignment_uuid].set_student_grade(row.student_uuid, "26")
-                        main_display.course_manager.currentCourse.assignment_category_list.assignment_categories[row.category_uuid].assignment_list[row.assignment_uuid].save_grades()
-                        print(row.get_student_name())
-
-                        print(row.current_grade)
-                        pass
-
-                    #If it's not a GradeCell, it's a string header.
-                    else:
-                        pass
-                        #print(row.get_student_uuid())
-                        #print(cell.student_uuid)
-                           #return columns
-    """
     def save_gradebook(self):
         col_count = self.grade_sheet.columnCount()
         row_count = self.grade_sheet.rowCount()
@@ -371,34 +313,56 @@ class MainDisplay(object):
             for row in range(0, row_count):
                 pass
 
+    def load_gradebook(self):
+        pass
+
+    def load_header_cells(self):
+        header_list = []
+        # Loop through the assignment categories
+        for category in self.course_manager.currentCourse.assignment_category_dict:
+            # Loop through the assignments
+            for assignment in self.course_manager.currentCourse.assignment_category_dict[category].assignment_dict.values():
+                # Get the assignment details, create a new HeaderCell
+                header_list.append(HeaderCell(assignment.assignmentID, assignment.assignmentName, assignment.totalPoints, category))
+
+        return header_list
+
+    def load_vertical_header_cells(self):
+        header_list = []
+        # Loop through the students
+        for student in self.course_manager.currentCourse.student_list:
+            header_list.append(VerticalHeaderCell(student.name, student.id))
+
+        return header_list
+
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
         self.grade_sheet.clear()
         index = self.course_tree.currentIndex()
         item = self.model.itemFromIndex(index)
         if index.isValid() and item.hasChildren():
-            columns = self.load_gradebook()
-
-            col = 0
-            row = 0
-            grade_labels = []
-            for column in columns:
-                if row == 0:
-                    grade_labels.append(column[0])
-                else:
-                    row = 0
-                    for cell in column[1]:
-                        self.grade_sheet.setItem(row, col, cell.grade)
-                        row += 1
-                    col += 1
+            #columns = self.load_gradebook()
+            #col = 0
+            #row = 0
+            #grade_labels = []
+            #for column in columns:
+            #    if row == 0:
+            #        grade_labels.append(column[0])
+            #    else:
+            #        row = 0
+            #        for cell in column[1]:
+            #            self.grade_sheet.setItem(row, col, cell.grade)
+            #            row += 1
+            #        col += 1
             #grade_labels = ["HW 1", "HW 2", "HW 3", "Test 1", "Test 2", "Test 3", "Final"]
             # grade_labels = []
 
-            self.grade_sheet.setColumnCount(len(grade_labels))
-            self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
+            #self.grade_sheet.setColumnCount(len(grade_labels))
+            #self.grade_sheet.setHorizontalHeaderLabels(grade_labels)
+
             print("Made it past Tyler's buggy code!")
 
-            labels = []
+            header_labels = self.
 
             row_count = len(self.course_manager.currentCourse.student_list.students)
 
@@ -408,18 +372,18 @@ class MainDisplay(object):
 
             # This is where we left off
 
-            for column in columns:
-                self.grade_sheet.setItem(row, col, column[row])
+            #for column in columns:
+            #    self.grade_sheet.setItem(row, col, column[row])
 
 
-            if item.hasChildren():
-                for row in range(0, item.rowCount()):
-                    name = item.child(row).text()
-                    #This is where the student names will go.
-                    labels.append(name)
+            #if item.hasChildren():
+            #    for row in range(0, item.rowCount()):
+            #        name = item.child(row).text()
+            #        #This is where the student names will go.
+            #        labels.append(name)
 
-                self.grade_sheet.setVerticalHeaderLabels(labels)
-                self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
+            self.grade_sheet.setVerticalHeaderLabels(labels)
+            self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
         else:
             self.grade_sheet.setRowCount(0)
             self.grade_sheet.setColumnCount(0)
@@ -429,6 +393,59 @@ class MainDisplay(object):
     def course_or_name_change(self):
         pass
         # insert database logic here
+
+
+class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
+    def __init__(self, s_name="", s_uuid=""):
+        QtWidgets.QTableWidgetItem.__init__(self)
+        self.student_name = s_name
+        self.student_uuid = s_uuid
+
+    def setText(self, new_name):
+        self.student_name = new_name
+        super(VerticalHeaderCell, self).setText(self.student_name)
+
+    def set_student_name(self, new_name):
+        self.student_name = new_name
+
+    def get_student_name(self):
+        return self.student_name
+
+    def set_student_uuid(self, new_uuid):
+        self.student_uuid = new_uuid
+
+    def get_student_uuid(self):
+        return self.student_uuid
+
+class HeaderCell(QtWidgets.QTableWidgetItem):
+    def __init__(self, a_uuid="", a_name="", a_points="", c_uuid=""):
+        QtWidgets.QTableWidgetItem.__init__(self)
+        self.assignment_uuid = a_uuid
+        self.assignment_name = a_name
+        self.assignment_points = a_points
+        self.category_uuid = c_uuid
+
+    def setText(self, new_name):
+        self.assignment_name = new_name
+        super(HeaderCell, self).setText(self.assignment_name)
+
+    def set_assignment_uuid(self, new_uuid):
+        self.assignment_uuid = new_uuid
+
+    def get_assignment_uuid(self):
+        return self.assignment_uuid
+
+    def get_assignment_name(self):
+        return self.assignment_name
+
+    def set_assignment_points(self, new_points):
+        self.assignment_points = new_points
+
+    def set_category_uuid(self, new_cat_uuid):
+        self.category_uuid = new_cat_uuid
+
+    def get_category_uuid(self):
+        return self.category_uuid
 
 
 class GradeCell(QtWidgets.QTableWidgetItem):
