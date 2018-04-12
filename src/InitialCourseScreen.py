@@ -3,7 +3,7 @@ import sys
 from Course import *
 from CourseManager import *
 from CreateAssignment import *
-from AssignmentCategoryList import *
+from AssignmentCategoryDict import *
 
 class CourseCreatorWidget(object):
 

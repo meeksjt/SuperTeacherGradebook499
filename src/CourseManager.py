@@ -15,26 +15,12 @@ class CourseManager:
 
         self.currentCourse = None
         # Create the table if this is a new database.
-        cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Course_UUID`  TEXT,`Name`	TEXT,`Number`   TEXT,`Section`	TEXT,`Semester`	TEXT);")
+        cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name`	TEXT, `Number`   TEXT, `Section`	TEXT, `Semester`	TEXT, `Course_UUID`  TEXT);")
         connection.commit()
 
         # Reload existing courses if necessary
         self.__reload_courses()
-        pass
 
-    def get_grades(self):
-        grade_list = []
-        category_grades = []
-
-        for student in self.currentCourse.student_list:
-            for category in self.currentCourse.assignment_category_list.assignment_categories:
-                for assignment in category.assignment_list:
-                    category_grades.append(assignment.get_student_grade(student.uuid))
-            grade_list.append(category_grades)
-        # give gradelist to student and repeat
-
-
-    # Loads the course from the database.
     def __reload_courses(self):
 
         # Clears course list variable
@@ -49,7 +35,7 @@ class CourseManager:
         # Go through each row
         for row in results:
             # Here, we pass the UUID, Name, Number, Section, and Semester to the Course object, and it creates it.
-            new_course = Course(row[4], row[1], row[2], row[3], row[0])
+            new_course = Course(row[0], row[1], row[2], row[3], row[4])
             self.course_dict[row[0]] = copy.deepcopy(new_course)
 
     # Adds a new course to the database and course list
@@ -68,22 +54,23 @@ class CourseManager:
         # newCourse.add_student("8", "Tyler", "email")
         # newCourse.add_student("2", "Chris", "email")
         # newCourse.student_list.print_students()
-        return newCourse.course_uuid
-        pass
+        return course.course_uuid
 
     def delete_course(self, uuid):
         for course in self.course_dict:
             if course.course_uuid == uuid:
-                del self.course_dict[uuid]
                 cursor.execute("DELETE FROM 'courseList' where Course_UUID = '" + uuid + "';")
                 connection.commit()
                 self.__reload_courses()
 
     def get_course(self, course_uuid):
-        return self.course_dict
+        return self.course_dict[course_uuid]
 
     def set_current_course(self, course_uuid):
         self.currentCourse = self.course_dict[course_uuid]
+
+    def get_current_course_uuid(self):
+        return self.currentCourse.course_uuid
 
 """
 jacob = CourseManager()
@@ -92,32 +79,16 @@ while x > 1:
     jacob.add_course("Senior Project", "399", "03", "Fall")
     x=x-1
     print("1")
-
-
-
 """
+"""
+    def get_grades(self):
+        grade_list = []
+        category_grades = []
 
-
-class Cell:
-    def __init__(self):
-        self.student_uuid = 0
-        self.assignment_uuid = 0
-        self.category_uuid = 0
-        self.grade = 0
-
-    def set_grade(self,grade):
-        self.grade=grade
-
-    def get_grade(self):
-        return self.grade
-
-    def set_assignment_uuid(self,uuid):
-        self.assignment_uuid = uuid
-
-    def set_category_uuid(self,uuid):
-        self.category_uuid = uuid
-
-    def set_student_uuid(self,uuid):
-        self.student_uuid = uuid
-
-        
+        for student in self.currentCourse.student_list:
+            for category in self.currentCourse.assignment_category_dict.values().assignment_dict.values():
+                #for assignment in category.assignment_list:
+                    category_grades.append(assignment.get_student_grade(student.uuid))
+            grade_list.append(category_grades)
+        # give gradelist to student and repeat
+"""

@@ -2,6 +2,7 @@ from Assignment import Assignment
 from GlobalVariables import *
 import copy
 import re
+# for your grade calculations, make sure you handle "-"
 """
     Class to serve as our Base Class for various Assignment Categories
 """
@@ -12,20 +13,21 @@ class AssignmentCategory:
         Constructor for AssignmentCategoryBase
     """
     def __init__(self, category_uuid, category_name, drop_count, student_list):
-        self.categoryName = category_name
-
         self.category_uuid = category_uuid
-        self.tableName = category_uuid + '_assignments'
-
+        self.categoryName = category_name
         self.drop_count = drop_count
+
+        self.tableName = category_uuid + '_assignments'
         self.student_list = student_list
-        self.assignment_list = {}
+        self.assignment_dict = {}
 
         self.total_category_points = 0
 
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
         connection.commit()
-    
+
+        self.__reload_assignments()
+
     # reload assignments, pretty sure this is right
     def __reload_assignments(self):
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
@@ -33,10 +35,8 @@ class AssignmentCategory:
 
         # Go through each row
         for row in results:
-            assignment = Assignment(row[0], row[1], row[2],self.student_list)
-  
-            self.assignment_list[row[0]] = copy.deepcopy(assignment)
-    
+            assignment = Assignment(row[0], row[1], row[2], self.student_list)
+            self.assignment_dict[row[0]] = copy.deepcopy(assignment)
 
     """
         Function to get the dropCount of the AssignmentCategory
@@ -85,11 +85,12 @@ class AssignmentCategory:
     """
 
     def delete_assignment(self, assignment_uuid):
-        for assignment in self.assignment_list:
+        for assignment in self.assignment_dict.values():
             if assignment.assignmentID == assignment_uuid:
-                self.assignment_list.remove(assignment)
+                #del self.assignment_dict[assignment_uuid]
                 cursor.execute("DELETE FROM " + str(self.tableName) + " where assignment_uuid = '" + assignment_uuid + "';")
                 connection.commit()
+                self.__reload_assignments()
                 break
 
     """
@@ -102,14 +103,12 @@ class AssignmentCategory:
     """
 
     def get_student_category_grade(self, student_id):
-
         self.total_category_points = 0
-
         student_grades = []
         assignment_total_points = []
         assignment_score_deficits = []
 
-        for assignment in self.assignment_list:
+        for assignment in self.assignment_dict.values():
             grade = assignment.get_student_grade(student_id)
             student_grades.append(grade)
             total_points = assignment.get_total_points()
