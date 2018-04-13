@@ -25,11 +25,13 @@ class AssignmentCategory:
 
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
         connection.commit()
+        print("Creating an assignment category\n")
 
         self.__reload_assignments()
 
     # reload assignments, pretty sure this is right
     def __reload_assignments(self):
+        self.assignment_dict.clear()
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
 
