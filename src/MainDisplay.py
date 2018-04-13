@@ -367,9 +367,11 @@ class MainDisplay(object):
 
             for i in range(len(header_labels)):
                 self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i])
+                self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name())
 
             for i in range(len(vertical_labels)):
                 self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i])
+                self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
 
             for col in range(len(header_labels)):
                 assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
@@ -496,13 +498,15 @@ if __name__ == "__main__":
 
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
-   course_uuid = main_display.course_manager.add_course(Course("COURSE TEST","Senior Project","CS 499","01", "Spring 18"))
+   course_uuid = main_display.course_manager.add_course(Course("Senior Project", "CS 499", "01", "Spring 18", "COURSE TEST"))
    main_display.course_manager.set_current_course(course_uuid)
    main_display.course_manager.currentCourse.link_with_database()
    main_display.course_manager.currentCourse.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
    main_display.course_manager.currentCourse.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
    main_display.course_manager.currentCourse.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
    main_display.course_manager.currentCourse.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
+
+
 
    yo = main_display.course_manager.currentCourse.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", main_display.course_manager.currentCourse.student_list)
    main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID", "Oceans Eleven", "24", main_display.course_manager.currentCourse.student_list)
