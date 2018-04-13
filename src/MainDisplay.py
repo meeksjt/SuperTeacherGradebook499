@@ -69,6 +69,7 @@ class CourseTree(object):
 
 
 
+
 # a good portion of this class was auto-generated with pyuic5 to
 # convert .ui files to .py for more customization/hacking
 class MainDisplay(object):
@@ -373,13 +374,18 @@ class MainDisplay(object):
                 self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i])
                 self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
 
-            for col in range(len(header_labels)):
+            for col in range(0, len(header_labels)):
                 assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
+                print(assignment_id)
                 category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-                for row in range(len(vertical_labels)):
+                print(category_id)
+                for row in range(0, len(vertical_labels)):
                     student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
                     student_grade = self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
-                    self.grade_sheet.setItem(col, row, GradeCell(
+                    print(student_id)
+                    print(student_grade)
+
+                    x = GradeCell(
                         self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
                         assignment_id,
                         category_id,
@@ -387,8 +393,14 @@ class MainDisplay(object):
                         self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                         student_grade,
                         self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
-                    ))
+                    )
 
+                    r = copy.copy(x)
+                    self.grade_sheet.setItem(row, col, r)
+                    self.grade_sheet.itemAt(row, col).setTextGradeCell(str(r.current_grade))
+                    print(self.grade_sheet.itemAt(row, col).text())
+            #self.grade_sheet.itemAt(0, 0).setTextGradeCell("5")
+            self.grade_sheet.itemAt(0, 1).setTextGradeCell("20")
             self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
         else:
             self.grade_sheet.setRowCount(0)
@@ -462,15 +474,16 @@ class GradeCell(QtWidgets.QTableWidgetItem):
     def __init__(self, a_name="", a_uuid="", c_uuid="", s_uuid="", s_name="", c_grade="", c_points=""):
 
         QtWidgets.QTableWidgetItem.__init__(self)
-        self.assignment_name = ""
-        self.assignment_uuid = ""
-        self.category_uuid = ""
-        self.student_uuid = ""
-        self.student_name = ""
-        self.current_grade = ""
-        self.current_points = ""
+        self.assignment_name = a_name
+        self.assignment_uuid = a_uuid
+        self.category_uuid = c_uuid
+        self.student_uuid = s_uuid
+        self.student_name = s_name
+        self.current_grade = c_grade
+        self.current_points = c_points
 
-    def setText(self, grade):
+    def setTextGradeCell(self, grade):
+        print("Proper set text is called")
         self.current_grade = grade
         super(GradeCell, self).setText(self.current_grade)
 
@@ -528,23 +541,23 @@ if __name__ == "__main__":
 
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
-   course_uuid = main_display.course_manager.add_course(Course("Senior Project", "CS 499", "01", "Spring 18", "COURSE TEST"))
-   main_display.course_manager.set_current_course(course_uuid)
+   #course_uuid = main_display.course_manager.add_course(Course("Senior Project", "CS 499", "01", "Spring 18", "COURSE TEST"))
+   main_display.course_manager.set_current_course("COURSE TEST")
    main_display.course_manager.currentCourse.link_with_database()
-   main_display.course_manager.currentCourse.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
-   main_display.course_manager.currentCourse.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
-   main_display.course_manager.currentCourse.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
-   main_display.course_manager.currentCourse.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
+   #main_display.course_manager.currentCourse.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
+   #main_display.course_manager.currentCourse.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
+   #main_display.course_manager.currentCourse.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
+   #main_display.course_manager.currentCourse.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
 
 
 
-   yo = main_display.course_manager.currentCourse.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", main_display.course_manager.currentCourse.student_list)
-   main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID", "Oceans Eleven", "24", main_display.course_manager.currentCourse.student_list)
-   main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID2", "Hunger Games", "24", main_display.course_manager.currentCourse.student_list)
-   main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID3", "Age of Ultron", "24", main_display.course_manager.currentCourse.student_list)
-   main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID4", "Tylers Mom", "24", main_display.course_manager.currentCourse.student_list)
+   #yo = main_display.course_manager.currentCourse.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", main_display.course_manager.currentCourse.student_list)
+   #main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID", "Oceans Eleven", "24", main_display.course_manager.currentCourse.student_list)
+   #main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID2", "Hunger Games", "24", main_display.course_manager.currentCourse.student_list)
+   #main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID3", "Age of Ultron", "24", main_display.course_manager.currentCourse.student_list)
+   #main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID4", "Tylers Mom", "24", main_display.course_manager.currentCourse.student_list)
 
-   #main_display.load_gradebook()
+   main_display.load_gradebook()
    main_display.form.show()
    sys.exit(app.exec_())
 
