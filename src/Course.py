@@ -9,7 +9,7 @@ from Attendance import AttendanceDictionary
 
 class Course(object):
 
-    def __init__(self, course_uuid="invalid", name="", number="", section="", semester=""):
+    def __init__(self, name="", number="", section="", semester="", course_uuid="invalid"):
         self.name = name
         self.number = number
         self.section = section

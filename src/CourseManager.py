@@ -34,9 +34,9 @@ class CourseManager:
 
         # Go through each row
         for row in results:
-            # Here, we pass the UUID, Name, Number, Section, and Semester to the Course object, and it creates it.
+            # Here, we pass the Name, Number, Section, Semester, and UUID to the Course object, and it creates it.
             new_course = Course(row[0], row[1], row[2], row[3], row[4])
-            self.course_dict[row[0]] = copy.deepcopy(new_course)
+            self.course_dict[row[4]] = copy.deepcopy(new_course)
 
     # Adds a new course to the database and course list
     def add_course(self, course):
@@ -44,8 +44,8 @@ class CourseManager:
         # course_uuid = uuid.uuid4()
         # newCourse = Course(name, number, section, semester, str(course_uuid))
 
-        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course.course_uuid) + "','" + str(course.name) +
-                            "', '" + str(course.number) + "', '" + str(course.section) + "', '" + str(course.semester) +
+        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course.name) + "','" + str(course.number) +
+                            "', '" + str(course.section) + "', '" + str(course.semester) + "', '" + str(course.course_uuid) +
                             "')"))
         connection.commit()
         self.__reload_courses()
