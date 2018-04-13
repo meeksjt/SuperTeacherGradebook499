@@ -69,6 +69,7 @@ class CourseTree(object):
 
 
 
+
 # a good portion of this class was auto-generated with pyuic5 to
 # convert .ui files to .py for more customization/hacking
 class MainDisplay(object):
