@@ -20,6 +20,7 @@ class Assignment:
         self.assignmentName = assignment_name
         self.totalPoints = total_points
 
+
         self.tableName = assignment_uuid + '_grades'
         self.studentList = student_list
         self.studentGrades = Grades()
@@ -27,6 +28,8 @@ class Assignment:
         connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`student_uuid`	TEXT,`grade` TEXT);")
         connection.commit()
         self.__load_grades()
+        self.add_grade_to_database()
+
 
     """
         Function to get assignmentName for an Assignment
@@ -35,6 +38,13 @@ class Assignment:
         Returns:
             assignmentName : (string) name of Assignment
     """
+
+    def add_grade_to_database(self):
+        for student in self.studentList.students:
+            if student.uuid not in self.studentGrades.assignmentGrades.keys():
+                connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(student.uuid) + "','" + "-" + "')")
+                connection.commit()
+
     def get_assignment_name(self):
         return self.assignmentName
 
@@ -57,14 +67,7 @@ class Assignment:
             None
     """
     def __load_grades(self):
-        for student in self.studentList.students:
-            if student.get_uuid() in self.studentGrades.assignmentGrades:
-                #Then this person already exists.
-                print("Already in the table.")
-            else:
-                #print("Adding to database")
-                connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" +str(student.get_uuid())+"','"+"-"+"')")
-                connection.commit()
+
         #Now everyone is in the database. So we can reload the database.
         self.studentGrades.clear_grades()
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
