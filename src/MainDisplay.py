@@ -340,6 +340,7 @@ class MainDisplay(object):
         index = self.course_tree.currentIndex()
         item = self.model.itemFromIndex(index)
         if index.isValid() and item.hasChildren():
+
             row_count = self.grade_sheet.rowCount()
             col_count = self.grade_sheet.columnCount()
 
@@ -374,18 +375,15 @@ class MainDisplay(object):
                 self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i])
                 self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
 
+
             for col in range(0, len(header_labels)):
                 assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
-                print(assignment_id)
                 category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-                print(category_id)
                 for row in range(0, len(vertical_labels)):
                     student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
                     student_grade = self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
-                    print(student_id)
-                    print(student_grade)
 
-                    x = GradeCell(
+                    self.grade_sheet.setItem(row, col, GradeCell(
                         self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
                         assignment_id,
                         category_id,
@@ -393,14 +391,9 @@ class MainDisplay(object):
                         self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                         student_grade,
                         self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
-                    )
+                    ))
+                    self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
 
-                    r = copy.copy(x)
-                    self.grade_sheet.setItem(row, col, r)
-                    self.grade_sheet.itemAt(row, col).setTextGradeCell(str(r.current_grade))
-                    print(self.grade_sheet.itemAt(row, col).text())
-            #self.grade_sheet.itemAt(0, 0).setTextGradeCell("5")
-            self.grade_sheet.itemAt(0, 1).setTextGradeCell("20")
             self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
         else:
             self.grade_sheet.setRowCount(0)
