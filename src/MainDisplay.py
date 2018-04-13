@@ -379,7 +379,15 @@ class MainDisplay(object):
                 for row in range(len(vertical_labels)):
                     student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
                     student_grade = self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
-                    self.grade_sheet.setItem(col, row, QtWidgets.QTableWidgetItem(student_grade))
+                    self.grade_sheet.setItem(col, row, GradeCell(
+                        self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
+                        assignment_id,
+                        category_id,
+                        student_id,
+                        self.grade_sheet.verticalHeaderItem(row).get_student_name(),
+                        student_grade,
+                        self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
+                    ))
 
             self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
         else:
@@ -415,6 +423,7 @@ class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
     def get_student_uuid(self):
         return self.student_uuid
 
+
 class HeaderCell(QtWidgets.QTableWidgetItem):
     def __init__(self, a_uuid="", a_name="", a_points="", c_uuid=""):
         QtWidgets.QTableWidgetItem.__init__(self)
@@ -439,6 +448,9 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
     def set_assignment_points(self, new_points):
         self.assignment_points = new_points
 
+    def get_assignment_points(self):
+        return self.assignment_points
+
     def set_category_uuid(self, new_cat_uuid):
         self.category_uuid = new_cat_uuid
 
@@ -447,44 +459,62 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
 
 
 class GradeCell(QtWidgets.QTableWidgetItem):
-    def __init__(self):
+    def __init__(self, a_name="", a_uuid="", c_uuid="", s_uuid="", s_name="", c_grade="", c_points=""):
 
         QtWidgets.QTableWidgetItem.__init__(self)
+        self.assignment_name = ""
         self.assignment_uuid = ""
         self.category_uuid = ""
         self.student_uuid = ""
-        self.current_grade = ""
         self.student_name = ""
-
-        pass
+        self.current_grade = ""
+        self.current_points = ""
 
     def setText(self, grade):
         self.current_grade = grade
         super(GradeCell, self).setText(self.current_grade)
 
-    def set_student_name(self, x):
-        self.student_name = x
+    def get_assignment_name(self):
+        return self.assignment_name
 
-    def get_student_name(self):
-        return self.student_name
-
-    def set_assignment_uuid(self, x):
-        self.assignment_uuid = x
-
-    def set_category_uuid(self, x):
-        self.category_uuid = x
-
-    def set_student_uuid(self, x):
-        self.student_uuid = x
+    def set_assignment_name(self, x):
+        self.assignment_name = x
 
     def get_assignment_uuid(self):
         return self.assignment_uuid
 
+    def set_assignment_uuid(self, x):
+        self.assignment_uuid = x
+
     def get_category_uuid(self):
         return self.category_uuid
 
+    def set_category_uuid(self, x):
+        self.category_uuid = x
+
     def get_student_uuid(self):
         return self.student_uuid
+
+    def set_student_uuid(self, x):
+        self.student_uuid = x
+
+    def get_student_name(self):
+        return self.student_name
+
+    def set_student_name(self, x):
+        self.student_name = x
+
+    def get_current_grade(self):
+        return self.current_grade
+
+    def set_current_grade(self, x):
+        self.current_grade = x
+
+    def get_current_points(self):
+        return self.current_points
+
+    def set_current_points(self, x):
+        self.current_points = x
 
 
 if __name__ == "__main__":
