@@ -14,7 +14,7 @@ class DisplayStudents(object):
     Parameters:
         studentList: (StudentList) the list of students and associated variables we are displaying
     """
-    def __init__(self, studentList):
+    def __init__(self, studentList, course_name, course_semester):
 
         self.DStudents = QtWidgets.QDialog()
         self.ui = uic.loadUi('DisplayStudents.ui', self.DStudents)
@@ -23,6 +23,8 @@ class DisplayStudents(object):
         )
 
         self.studentList = studentList
+        self.course_name = course_name
+        self.course_semester = course_semester
         self.setup_display()
 
         self.DStudents.show()
@@ -38,7 +40,8 @@ class DisplayStudents(object):
             self.DStudents.studentDisplay.setItem(row_insert, 2, QtWidgets.QTableWidgetItem(student.get_email()))
 
     def save_table(self):
-        
+        pass
+        # Write table contents to a file
 
     def close(self):
         self.DStudents.close()
@@ -51,5 +54,5 @@ if __name__ == "__main__":
     x.add_student(uuid.uuid4(), "A25229170", "Gyler Meeks", "jgm0036@uah.edu")
     x.add_student(uuid.uuid4(), "A24229171", "Gyler Teeks", "jgt0036@uah.edu")
 
-    r = DisplayStudents(x)
+    r = DisplayStudents(x, "Senior Design", "Spring 2018")
     sys.exit(app.exec_())
