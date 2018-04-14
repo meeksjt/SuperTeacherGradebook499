@@ -23,7 +23,8 @@ class AddingStudents(object):
         self.AStudents = QtWidgets.QDialog()
         self.ui = uic.loadUi('AddingStudents.ui', self.AStudents)
         self.AStudents.studentTable.setHorizontalHeaderLabels(
-            ['Student ID', 'Student Name', 'Student Email', 'Add Student?'])
+            ['Student ID', 'Student Name', 'Student Email', 'Add Student?']
+        )
 
         self.studentList = studentList
         self.studentIDs = {}
