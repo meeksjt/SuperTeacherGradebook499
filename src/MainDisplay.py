@@ -419,6 +419,7 @@ class MainDisplay(object):
                             self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
                             assignment_id,
                             category_id,
+                            self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].get_drop_count(),
                             student_id,
                             self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                             student_grade,
