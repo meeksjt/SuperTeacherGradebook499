@@ -373,7 +373,10 @@ class MainDisplay(object):
                 category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
                 for row in range(row_count):
                     student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                    self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].set_student_grade(self, student_id, str(self.grade_sheet.itemAt(row, col).text()))
+                    grade = str(self.grade_sheet.item(row, col).text())
+                    if grade == "":
+                        grade = "-"
+                    self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].set_student_grade(student_id, grade)
                 self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].save_grades()
 
     # when the user clicks a course, the grade sheet changes to that course
@@ -434,7 +437,7 @@ class MainDisplay(object):
         pass
         # insert database logic here
 
-    def calculate_statistics:
+    def calculate_statistics(self):
         pass
 
 
@@ -583,52 +586,52 @@ def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, cat
 				newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName, assignment.totalPoints, newCourse.student_list)
 
 if __name__ == "__main__":
-   import sys
+    import sys
 
-   # course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
+    # course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
 
-   # for category in course.assignment_category_list.assignment_categories:
-   # category.add_assignment("244", "Quiz 1", "3", course.student_list)
+    # for category in course.assignment_category_list.assignment_categories:
+    # category.add_assignment("244", "Quiz 1", "3", course.student_list)
 
-   app = QtWidgets.QApplication(sys.argv)
-   main_display = MainDisplay()
-  
-   senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
-   senior_project.link_with_database()
-   senior_project.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
-   senior_project.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
-   senior_project.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
-   senior_project.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
-   a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-   b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-   c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
-   main_display.course_manager.add_course(senior_project)
+    app = QtWidgets.QApplication(sys.argv)
+    main_display = MainDisplay()
 
-   senior_project = Course("Algorithms", "CS 387", "02", "Spring 18")
-   senior_project.link_with_database()
-   senior_project.student_list.add_student("1", "42", "Samsa", "Hotmail@gmail.com")
-   senior_project.student_list.add_student("2", "43", "Jon Snow", "Hotmail@gmail.com")
-   senior_project.student_list.add_student("3", "44", "Tyson", "Hotmail@gmail.com")
-   senior_project.student_list.add_student("4", "45", "Tyler Tyler", "Hotmail@gmail.com")
-   a = senior_project.assignment_category_dict.add_category("Blue Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-   b = senior_project.assignment_category_dict.add_category("Blue Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-   c = senior_project.assignment_category_dict.add_category("Blue Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "U WOT M8", "24", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "I EET PIE", "24", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
-   main_display.course_manager.add_course(senior_project)
+    #senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+    #senior_project.link_with_database()
+    #senior_project.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
+    #senior_project.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
+    #senior_project.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
+    #senior_project.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
+    #a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+    #b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+    #c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+    #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+    #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+    #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
+    #main_display.course_manager.add_course(senior_project)
 
-   main_display.update_tree_view(main_display.model, main_display.course_manager.course_tree_view.course_list)
+    #senior_project = Course("Algorithms", "CS 387", "02", "Spring 18")
+    #senior_project.link_with_database()
+    #senior_project.student_list.add_student("1", "42", "Samsa", "Hotmail@gmail.com")
+    #senior_project.student_list.add_student("2", "43", "Jon Snow", "Hotmail@gmail.com")
+    #senior_project.student_list.add_student("3", "44", "Tyson", "Hotmail@gmail.com")
+    #senior_project.student_list.add_student("4", "45", "Tyler Tyler", "Hotmail@gmail.com")
+    #a = senior_project.assignment_category_dict.add_category("Blue Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+    #b = senior_project.assignment_category_dict.add_category("Blue Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+    #c = senior_project.assignment_category_dict.add_category("Blue Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+    #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "U WOT M8", "24", senior_project.student_list)
+    #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "I EET PIE", "24", senior_project.student_list)
+    #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
+    #main_display.course_manager.add_course(senior_project)
 
-   #course_uuid = main_display.course_manager.add_course(Course("Math", "MA 388", "02", "Spring 18", "Thing TEST"))
-   #main_display.course_manager.set_current_course("Thing TEST")
-   #main_display.course_manager.currentCourse.link_with_database()
+    main_display.update_tree_view(main_display.model, main_display.course_manager.course_tree_view.course_list)
 
-  main_display.form.show()
-   sys.exit(app.exec_())
+    #course_uuid = main_display.course_manager.add_course(Course("Math", "MA 388", "02", "Spring 18", "Thing TEST"))
+    #main_display.course_manager.set_current_course("Thing TEST")
+    #main_display.course_manager.currentCourse.link_with_database()
 
-   # ct.add_student(1, "muuuuu")
-   # ct.drop_course('Math')
+    main_display.form.show()
+    sys.exit(app.exec_())
+
+    # ct.add_student(1, "muuuuu")
+    # ct.drop_course('Math')
