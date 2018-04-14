@@ -10,7 +10,7 @@ class AssignmentCategoryDict(object):
     # UUID gets passed in.
     def __init__(self, course_uuid, student_list):
 
-        self.assignment_course_uuid = course_uuid
+        self.assignment_course_uuid = str(course_uuid)
         self.student_list = student_list
         self.assignment_categories = {}
 
@@ -60,7 +60,7 @@ class AssignmentCategoryDict(object):
                 #(`uuid`	TEXT,`name` TEXT,`drop_count` TEXT)
 
                 query = "UPDATE `" + self.tableName + "` SET name = '" + str(name) + "' WHERE uuid = '" + str(x.uuid) + "';"
-                print(query)
+                #print(query)
                 cursor.execute(query)
                 connection.commit()
                 self.__reload_categories()
@@ -74,7 +74,7 @@ class AssignmentCategoryDict(object):
                 #(`uuid`	TEXT,`name` TEXT,`drop_count` TEXT)
 
                 query = "UPDATE `" + self.tableName + "` SET name = '" + str(dropCount) + "' WHERE uuid = '" + str(x.uuid) + "';"
-                print(query)
+                #print(query)
                 cursor.execute(query)
                 connection.commit()
                 self.__reload_categories()

@@ -3,6 +3,9 @@ import GlobalVariables
 import sys
 from Student import Student, StudentList
 import uuid
+import os
+
+
 
 """
 Class for displaying students in a course
@@ -40,11 +43,32 @@ class DisplayStudents(object):
             self.DStudents.studentDisplay.setItem(row_insert, 2, QtWidgets.QTableWidgetItem(student.get_email()))
 
     def save_table(self):
-        pass
+        # CourseName+CourseSemester+Student_Rster+txt
+        if os.path.isfile(("../student_rosters/" + str(self.course_name)+" " +str(self.course_semester)+" Student Roster.txt")):
+            overwrite = self.display_message("Overwrite?", "Do you want to overwrite the previous student roster for this course?")
+        else:
+            overwrite = True
+        if overwrite:
+            x = QtWidgets.QMessageBox.question(self.DStudents, "Finished!",
+                                               "Your file has been saved in the 'student_rosters' directory.",
+                                               QtWidgets.QMessageBox.Ok)
+            with open(("../student_rosters/" + str(self.course_name)+" " +str(self.course_semester)+" Student Roster.txt"), 'w') as f:
+                f.write((str(self.course_name)+" - " +str(self.course_semester)+" - Student Roster\n\n"))
+                for student in self.studentList.students:
+                    f.write(student.id+"\t"+student.get_name()+"\t"+student.get_email()+"\n")
+            pass
         # Write table contents to a file
 
     def close(self):
         self.DStudents.close()
+
+    def display_message(self, window_text, window_message):
+        choice = QtWidgets.QMessageBox.question(self.DStudents, window_text, window_message, QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel)
+        if choice == QtWidgets.QMessageBox.Ok:
+            x = QtWidgets.QMessageBox.question(self.DStudents, "Finished!", "Your file has been saved in the 'student_rosters' directory.", QtWidgets.QMessageBox.Ok)
+            pass
+        else:
+            return False
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
