@@ -32,14 +32,19 @@ class CourseCreatorWidget(object):
     # save the course data into a temporary course object and
     # hide the window iff the data is valid
     def save_course_data(self):
-        if self.validate_course_info() and self.validate_grade_scale() and self.validate_assignment_categories():
-            # save temporary created info
+        if not self.validate_course_info():
+            print("failed to validate course info")
+            return
+        if not self.validate_grade_scale():
+            print("failed to validate grade scale")
+            return
+        if not self.validate_assignment_categories():
+            print("failed to validate assignment categories")
+            return
 
-            self.new_course.link_with_database()
-            self.course_manager.add_course(self.new_course)
-
-            # hide current window
-            self.frame.hide()
+        self.new_course.link_with_database()
+        self.course_manager.add_course(self.new_course)
+        self.frame.hide()
 
     def add_category(self):
         row_insert = self.ui.tableWidget.rowCount()
@@ -74,6 +79,10 @@ class CourseCreatorWidget(object):
         row_count = self.ui.tableWidget.rowCount()
         output = []
 
+        if row_count <= 0:
+            print("no rows")
+            return True
+
         # Loop through and get data from the table
         for row in range(0, row_count):
             cat_name = self.ui.tableWidget.item(row, 0).text()
@@ -81,18 +90,28 @@ class CourseCreatorWidget(object):
             output.append([cat_name, cat_drop_count])
 
         # Make sure that our data is valid
-        valid = self.error_checking(output)
+        if not self.category_error_checking(output):
+            return False
 
         # Add the assignmentcategorylist creation here if valid is valid
-        if valid:
-            for category in output:
-                # This is the class variable that the Course will user to create its new categories
-                self.categories_to_create.append(category[:].copy())
+        for category in output:
+            # This is the class variable that the Course will user to create its new categories
+            self.categories_to_create.append(category[:].copy())
 
-    def error_checking(self, user_input):
+        return True
+
+    def category_error_checking(self, user_input):
         # variables for the names, weights, and drop counts of each category
         category_names = [user_input[i][0] for i in range(len(user_input))]
         category_drop_counts = [user_input[j][1] for j in range(len(user_input))]
+
+        if not category_names:
+            self.bad_input('Error', 'no category names')
+            return False
+
+        if not category_drop_counts:
+            self.bad_input('Error', 'no drop counts')
+            return False
 
         for i in category_names:
             if i == "":
@@ -101,13 +120,13 @@ class CourseCreatorWidget(object):
 
         # check the drop counts
         for i in category_drop_counts:
-
             if "." in i:
+                self.bad_input('Error', 'enter drop count')
                 return False
-
             try:
                 x = int(i.strip())
                 if x < 0:
+                    self.bad_input('Error', 'negative drop count')
                     return False
             except ValueError:
                 self.bad_input('Error', 'You have a drop count that is not a nonnegative integer.  Please try again.')

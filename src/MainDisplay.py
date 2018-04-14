@@ -233,7 +233,7 @@ class MainDisplay(object):
         self.model = QtGui.QStandardItemModel()
 
         # set underlying model
-        self.update_tree_view(self.model, self.course_manager.course_tree_view.course_list)
+        self.update_tree_view()
 
 
         # connection for when add button is released
@@ -270,13 +270,14 @@ class MainDisplay(object):
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
     # form like ( A B ( C D ( E F G ) ) )
-    def update_tree_view(self, model, course_list):
-        for course in course_list:
+    def update_tree_view(self):
+        self.model.clear()
+        for course in self.course_manager.course_tree_view.course_list:
             item = QtGui.QStandardItem(course.course_name)
             for student in course.student_list:
                 item.appendRow(QtGui.QStandardItem(student.student_name))
-            model.appendRow(item)
-        self.course_tree.setModel(model)
+            self.model.appendRow(item)
+        self.course_tree.setModel(self.model)
 
     # if the current row that is selected has children (is a course)
     # then add a new course... else add a student
@@ -560,6 +561,7 @@ if __name__ == "__main__":
 
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
+
    senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
    senior_project.link_with_database()
    senior_project.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
@@ -588,7 +590,7 @@ if __name__ == "__main__":
    senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
    main_display.course_manager.add_course(senior_project)
 
-   main_display.update_tree_view(main_display.model, main_display.course_manager.course_tree_view.course_list)
+   main_display.update_tree_view()
 
    #course_uuid = main_display.course_manager.add_course(Course("Math", "MA 388", "02", "Spring 18", "Thing TEST"))
    #main_display.course_manager.set_current_course("Thing TEST")
