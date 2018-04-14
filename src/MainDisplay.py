@@ -169,9 +169,15 @@ class MainDisplay(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
 
-        self.save_grades = QtWidgets.QPushButton(self.layoutWidget)
-        self.save_grades.setText("Save Gradesheet")
-        self.save_grades.move(500, 500)
+
+        self.get_stats = QtWidgets.QPushButton(self.layoutWidget)
+        self.get_stats.setText("Get Statistics")
+        self.get_stats.setStyleSheet(
+            "QPushButton {"
+            "   color: rgb(255,255,255)"
+            "}"
+        )
+        self.horizontalLayout.addWidget(self.get_stats)
 
         self.del_course = QtWidgets.QPushButton(self.layoutWidget)
         self.del_course.setObjectName("del_course")
@@ -221,6 +227,15 @@ class MainDisplay(object):
         )
         self.horizontalLayout.addWidget(self.add_course)
         self.verticalLayout.addLayout(self.horizontalLayout)
+
+        self.save_grades = QtWidgets.QPushButton(self.layoutWidget)
+        self.save_grades.setText("Save Gradesheet")
+        self.save_grades.setStyleSheet(
+            "QPushButton {"
+            "   color: rgb(255,255,255)"
+            "}"
+        )
+        self.horizontalLayout.addWidget(self.save_grades)
 
         self.grade_sheet = QtWidgets.QTableWidget(self.splitter)
         self.grade_sheet.setObjectName("grade_sheet")
@@ -278,6 +293,12 @@ class MainDisplay(object):
 
         # connection for when delete button is released
         self.del_course.released.connect(self.del_selected_item)
+
+        # STATISTICS BUTTON
+        # self.get_stats.released.connect(self.)
+
+        # SAVE BUTTON
+        # self.save_grades.released.connect(self.)
 
         # connection for when a course is selected
         self.selection_model = self.course_tree.selectionModel()
@@ -595,8 +616,8 @@ if __name__ == "__main__":
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
    #course_uuid = main_display.course_manager.add_course(Course("Senior Project", "CS 499", "01", "Spring 18", "COURSE TEST"))
-   main_display.course_manager.set_current_course("COURSE TEST")
-   main_display.course_manager.currentCourse.link_with_database()
+   #main_display.course_manager.set_current_course("COURSE TEST")
+   #main_display.course_manager.currentCourse.link_with_database()
    #main_display.course_manager.currentCourse.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
    #main_display.course_manager.currentCourse.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
    #main_display.course_manager.currentCourse.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
