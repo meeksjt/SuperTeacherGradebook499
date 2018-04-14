@@ -14,7 +14,7 @@ class AssignmentCategoryDict(object):
         self.student_list = student_list
         self.assignment_categories = {}
 
-        self.tableName = course_uuid + "_categories"
+        self.tableName = str(course_uuid) + "_categories"
         connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`uuid`	TEXT,`name` TEXT,`drop_count` TEXT);")
         connection.commit()
         self.__reload_categories()
