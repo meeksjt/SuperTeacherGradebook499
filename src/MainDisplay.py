@@ -5,69 +5,102 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from InitialCourseScreen import *
 from CreateNewStudent import *
 from CourseManager import *
+from GlobalVariables import connection, cursor
 # from Course import *
+
+
+class CourseList(object):
+    def __init__(self):
+        self.course_list = []
+
+    class CourseListItem(object):
+
+        def __init__(self, course_name, course_uuid):
+            self.course_name = course_name
+            self.course_uuid = course_uuid
+            self.student_list = []
+
+        class StudentItem(object):
+            def __init__(self, student_name, student_uuid):
+                self.student_name = student_name
+                self.student_uuid = student_uuid
+
+        def add_student(self, student_name, student_uuid):
+            self.student_list.append(self.StudentItem(student_name, student_uuid))
+
+        def drop_student(self, student_uuid):
+            for i, student_item in enumerate(self.student_list):
+                if student_item.student_uuid == student_uuid:
+                    del self.student_list[i]
+                    break
+
+    def add_course(self, course_name, course_uuid):
+        self.course_list.append(self.CourseListItem(course_name, course_uuid))
+
+    def drop_course(self, course_uuid):
+        for i, course_item in enumerate(self.course_list):
+            if course_item.course_uuid == course_uuid:
+                del self.course_list[i]
+                break
+
+    def get_course_by_uuid(self, course_uuid):
+        for i, course_item in enumerate(self.course_list):
+            if course_item.course_uuid == course_uuid:
+                return self.course_list[i]
+
+    def get_course_by_index(self, index):
+        return self.course_list[index]
 
 
 # This class is the underlying representation
 # for the tree view
 class CourseTree(object):
     def __init__(self):
-        # parenthetical form of a tree
-        self.tree_view_data = [
-            ("Math", [
-                "Bob",
-                "Chris",
-                "Gerard",
-                "Marphi",
-                "Eddie",
-                "Edward",
-                "Hank",
-                "Lard",
-                "Lawler",
-                "Pinchwood",
-            ]),
-            ("English", [
-                "Jake Paul",
-                "Jake Saul",
-                "Jake Maul",
-                "Bob Jake"
-            ]),
-            ("Biology", [
-                "Paula Dean",
-                "Michael",
-                "Mark"
-            ])
-        ]
+        self.tree_view_data = []
 
     # set new data
     def set_tree_data(self, tree_data):
         self.tree_view_data = tree_data
 
     # add student to class given by class index
-    def add_student(self, class_index, student):
-        self.tree_view_data[class_index][1].append(student)
+    def add_student(self, class_index, student_uuid):
+        self.tree_view_data[class_index][1].append(student_uuid)
 
     # remove student given by class index
-    def drop_student(self, class_index, student):
-        self.tree_view_data[class_index][1].remove(student)
+    # TODO: fix this function
+    def drop_student(self, course_uuid, student_uuid):
+        pass
+       # self.tree_view_data[course_uuid][1].remove(student_uuid)
        # self.tree_view_data[class_index].remove(student)
 
-    def add_course(self, course):
-        self.tree_view_data.append((course, []))
+    def add_course(self, course_uuid):
+        self.tree_view_data.append((course_uuid, []))
 
-    def drop_course(self, course):
+    def drop_course(self, course_uuid):
         index = 0
-        for course_name, student_list in self.tree_view_data:
-            if course_name == course:
+        for existing_course_uuid, student_list in self.tree_view_data:
+            if existing_course_uuid == course_uuid:
                 self.tree_view_data.pop(index)
                 return
             index += 1
 
+    def get_course_name(self, course_uuid):
+        cursor.execute("SELECT * FROM `courseList`")
+        results = cursor.fetchall()
+        for row in results:
+            if row[0] == course_uuid:
+                return row[1]
+
+    def get_student_name(self, course_uuid, student_uuid):
+        ex_str = "SELECT student_name FROM `courseList_student_list` WHERE student_id=" + "\"" + student_uuid + "\""
+        cursor.execute(ex_str)
+        results = cursor.fetchall()
+        for row in results:
+            if row[0] == student_uuid:
+                return row[2]
+
     def print_tree(self):
         print(self.tree_view_data)
-
-
-
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -135,6 +168,10 @@ class MainDisplay(object):
         self.verticalLayout.addWidget(self.course_tree)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+
+        self.save_grades = QtWidgets.QPushButton(self.layoutWidget)
+        self.save_grades.setText("Save Gradesheet")
+        self.save_grades.move(500, 500)
 
         self.del_course = QtWidgets.QPushButton(self.layoutWidget)
         self.del_course.setObjectName("del_course")
@@ -218,9 +255,22 @@ class MainDisplay(object):
             "QHeaderView::section:checked { background-color: #bf616a}"
         )
 
-        self.data_tree = CourseTree()
         self.model = QtGui.QStandardItemModel()
-        # self.add_items(self.model, self.data_tree.tree_view_data)
+
+        self.course_data = CourseList()
+        self.course_data.add_course("Math", "1")
+        self.course_data.add_course("English", "2")
+        self.course_data.add_course("Science", "3")
+        self.course_data.add_course("Math2", "4")
+        self.course_data.add_course("Math3", "5")
+        self.course_data.get_course_by_uuid("2").add_student("bob", "500")
+        self.course_data.get_course_by_uuid("2").add_student("b234fob", "500")
+        self.course_data.get_course_by_uuid("2").add_student("bosdjf8jb", "500")
+        self.course_data.get_course_by_uuid("2").add_student("b2fjjob", "500")
+        self.course_data.get_course_by_uuid("2").add_student("bo23f8b", "500")
+        self.course_data.get_course_by_uuid("3").add_student("boook", "700")
+        self.add_items(self.model, self.course_data.course_list)
+
         self.course_tree.setModel(self.model)
 
         # connection for when add button is released
@@ -251,12 +301,12 @@ class MainDisplay(object):
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
     # form like ( A B ( C D ( E F G ) ) )
-    def add_items(self, parent, elements):
-        for text, children in elements:
-            item = QtGui.QStandardItem(text)
-            parent.appendRow(item)
-            if children:
-                self.add_items(item, children)
+    def add_items(self, model, course_list):
+        for course in course_list:
+            item = QtGui.QStandardItem(course.course_name)
+            for student in course.student_list:
+                item.appendRow(QtGui.QStandardItem(student.student_name))
+            model.appendRow(item)
 
     # if the current row that is selected has children (is a course)
     # then add a new course... else add a student
@@ -291,7 +341,10 @@ class MainDisplay(object):
         else:
             self.cc_form = InitialCourseScreen(self.course_manager)
 
-            course = QtGui.QStandardItem(main_display.course_manager.currentCourse.name)
+            if self.course_manager.currentCourse is None:
+                pass
+            else:
+                course = QtGui.QStandardItem(main_display.course_manager.currentCourse.name)
             self.model.insertRow(index.row() + 1, course)
             course.appendRow(student)
 
@@ -355,7 +408,13 @@ class MainDisplay(object):
     def load_grade_sheet(self):
         self.grade_sheet.clear()
         index = self.course_tree.currentIndex()
-        item = self.model.itemFromIndex(index)
+        if index.isValid():
+            item = self.model.itemFromIndex(index)
+            if item.hasChildren():
+                cc = self.course_data.get_course_by_index(index.row())
+                print(cc.course_uuid)
+        # self.course_manager.currentCourse = self.course_manager.currentCourse
+        '''
         if index.isValid() and item.hasChildren():
 
             header_labels = self.load_header_cells()
@@ -398,6 +457,7 @@ class MainDisplay(object):
         else:
             self.grade_sheet.setRowCount(0)
             self.grade_sheet.setColumnCount(0)
+        '''
 
     # when a user edits the name of a tree view row
     # update accordingly
@@ -526,10 +586,10 @@ class GradeCell(QtWidgets.QTableWidgetItem):
 if __name__ == "__main__":
    import sys
 
-   #course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
+   # course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
 
-   #for category in course.assignment_category_list.assignment_categories:
-   #    category.add_assignment("244", "Quiz 1", "3", course.student_list)
+   # for category in course.assignment_category_list.assignment_categories:
+   # category.add_assignment("244", "Quiz 1", "3", course.student_list)
 
 
    app = QtWidgets.QApplication(sys.argv)
@@ -541,8 +601,6 @@ if __name__ == "__main__":
    #main_display.course_manager.currentCourse.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
    #main_display.course_manager.currentCourse.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
    #main_display.course_manager.currentCourse.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
-
-
 
    #yo = main_display.course_manager.currentCourse.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", main_display.course_manager.currentCourse.student_list)
    #main_display.course_manager.currentCourse.assignment_category_dict.assignment_categories[yo].add_assignment("AUUID", "Oceans Eleven", "24", main_display.course_manager.currentCourse.student_list)
