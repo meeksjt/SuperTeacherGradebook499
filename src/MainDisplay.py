@@ -6,6 +6,7 @@ from InitialCourseScreen import *
 from CreateNewStudent import *
 from CourseManager import *
 from GlobalVariables import connection, cursor
+import Statistics
 # from Course import *
 
 
@@ -298,7 +299,7 @@ class MainDisplay(object):
         # self.get_stats.released.connect(self.)
 
         # SAVE BUTTON
-        # self.save_grades.released.connect(self.)
+        self.save_grades.released.connect(self.save_grade_sheet)
 
         # connection for when a course is selected
         self.selection_model = self.course_tree.selectionModel()
@@ -423,7 +424,8 @@ class MainDisplay(object):
                 category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
                 for row in range(row_count):
                     student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                    self.course_manager.currentCourse.assignment_category_dict[category_id].assignment_categories[assignment_id].set_student_grade(self, student_id, str(self.grade_sheet.itemAt(row, col).text()))
+                    self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].set_student_grade(self, student_id, str(self.grade_sheet.itemAt(row, col).text()))
+                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].save_grades()
 
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
@@ -467,6 +469,7 @@ class MainDisplay(object):
                         self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
                         assignment_id,
                         category_id,
+                        # Add the category_drop_count
                         student_id,
                         self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                         student_grade,
@@ -485,6 +488,9 @@ class MainDisplay(object):
     def course_or_name_change(self):
         pass
         # insert database logic here
+
+    def calculate_statistics:
+        pass
 
 
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
@@ -545,12 +551,13 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
 
 
 class GradeCell(QtWidgets.QTableWidgetItem):
-    def __init__(self, a_name="", a_uuid="", c_uuid="", s_uuid="", s_name="", c_grade="", c_points=""):
+    def __init__(self, a_name="", a_uuid="", c_uuid="", c_drop_count="", s_uuid="", s_name="", c_grade="", c_points=""):
 
         QtWidgets.QTableWidgetItem.__init__(self)
         self.assignment_name = a_name
         self.assignment_uuid = a_uuid
         self.category_uuid = c_uuid
+        self.category_drop_count = c_drop_count
         self.student_uuid = s_uuid
         self.student_name = s_name
         self.current_grade = c_grade
@@ -641,9 +648,9 @@ if __name__ == "__main__":
 
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
-   #course_uuid = main_display.course_manager.add_course(Course("Senior Project", "CS 499", "01", "Spring 18", "COURSE TEST"))
-   #main_display.course_manager.set_current_course("COURSE TEST")
-   #main_display.course_manager.currentCourse.link_with_database()
+   #course_uuid = main_display.course_manager.add_course(Course("Senior Project", "CS 499", "01", "Spring 18", "COURSE TEST3"))
+   main_display.course_manager.set_current_course("COURSE TEST3")
+   main_display.course_manager.currentCourse.link_with_database()
    #main_display.course_manager.currentCourse.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
    #main_display.course_manager.currentCourse.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
    #main_display.course_manager.currentCourse.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
