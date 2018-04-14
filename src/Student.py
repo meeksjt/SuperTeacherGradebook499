@@ -4,37 +4,48 @@ from GlobalVariables import connection, cursor
 import uuid
 
 
-# Status: Know how to INSERT and CREATE. Learn how to UPDATE, then how to
-# SELECT and convert to an object.
 
 
 class StudentList:
     """Really just a wrapper for a list of Students"""
+
+    #Takes the Course UUID so we can access the correct database table.
     def __init__(self, courseUUID):
 
+        # A list of Student objects
         self.students = []
-        #This holds the name of the course
+
+        # This holds the course uuid
         self.course = courseUUID
+
+        #Creates the table name for the database.
         self.tableName = str(courseUUID) + "_student_list"
+
+        #If the table doesn't exist, create it.
         cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`uuid`	TEXT,`ID`	TEXT,`name`	TEXT,`email`	TEXT);")
+        #Actually commit the SQL commands to the database
         connection.commit()
+
+        #Load in the students
         self.load_students()
 
-
-    def set_email(self,uuid,email):
+    #Sets an email address
+    def set_email(self, uuid, email):
         for student in self.students:
             if student.uuid == uuid:
                 print("Found one!")
                 student.set_email(email)
                 self.load_students()
 
-    def set_name(self,uuid,name):
+    #Sets a student name
+    def set_name(self, uuid, name):
         for student in self.students:
             if student.uuid == uuid:
                 print("Found one!")
                 student.set_name(name)
                 self.load_students()
 
+    #Sets the Student's A-Number
     def set_id(self,uuid,id):
         for student in self.students:
             if student.uuid == uuid:
@@ -57,38 +68,48 @@ class StudentList:
             if student.uuid == uuid:
                 return student.get_id()
 
+    #Get the UUID from the student's name, which we may need to be able to do.
     def get_uuid_from_name(self, name):
         for student in self.students:
             if student.name == name:
                 return student.uuid
 
+    #Add a student to the StudentList.
     def add_student(self, uuid, id, name, email):
+        #Create a new Student
         newStudent = Student(self.tableName, id, name, email, uuid)
-        #connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
+        #Add the student to the database
         connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
         connection.commit()
+
+        #Adds the new Student to the list.
         self.__add_student(newStudent)
 
     def __add_student(self,dstudent):
+        #Does a deep copy, so we don't end up with nasty pointer problems
         self.students.append(copy.deepcopy(dstudent))
 
+    #Tells a student to save itself to the database.
     def save_students(self):
         for student in self.students:
             student.save_student()
 
+    #Tells a student to commit harikari
     def remove_student(self,uuid):
         for student in self.students:
             if student.uuid == uuid:
                 student.remove_student()
+                # Now we refresh the database.
                 self.load_students()
 
+    # Refreshes the list of Students from the database
     def load_students(self):
-        self.students.clear() #Erase what's in the list
+
+        # Clear the list first off, so we don't have any deleted students hanging around
+        self.students.clear()
         cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = cursor.fetchall()
         for row in results:
-            # print("Here is the row:", row)
-            #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
             newStudent = Student(self.tableName, row[1], row[2], row[3], row[0])
             self.students.append(copy.deepcopy(newStudent))
 
@@ -97,16 +118,13 @@ class StudentList:
             sstudent.print_student()
 
 class Student:
-#Need to reload students after setting name.
-    def __init__(self,tableName,id,name,email, uuid):
-        #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
+    def __init__(self,tableName, id, name, email, uuid):
         self.tableName = tableName
         self.name = name
         self.email = email
         self.id = id
         self.uuid = uuid
 
-    #connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
 
     def get_email(self):
         return self.email
@@ -133,7 +151,7 @@ class Student:
         self.name=name
         # I used a query to make it easier by creating our string, and just passing it to the cursor.
         query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
+        #print(query)
         cursor.execute(query)
         connection.commit()
 
@@ -159,23 +177,12 @@ class Student:
         print("UUID: ",self.uuid)
         print("Email: ", self.email)
 
+    #Removes a particular student
     def remove_student(self):
         query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.id) + "';"
         print(query)
         cursor.execute(query)
         connection.commit()
-
-
-def create_test_database():
-    """A simple testing function for just this class"""
-    print("Entered testing function...")
-
-    cursor.execute('CREATE TABLE IF NOT EXISTS `cs499_studentList` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);')
-    connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
-    connection.execute("INSERT INTO cs499_studentList VALUES(4, 'Matt', 'jeh0029@uah.edu')")
-    connection.execute("INSERT INTO cs499_studentList VALUES(3, 'Tyler Meeks', 'yomoma@hotmail.com')")
-    connection.execute("INSERT INTO cs499_studentList VALUES(2, 'Chris Christopher', 'chris42@uah.edu')")
-    connection.commit()
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
 #students = StudentList("cs499")

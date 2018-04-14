@@ -123,9 +123,8 @@ class Assignment:
         Returns:
             None
     """
+    #Saves all the grades for an assignment
     def save_grades(self):
-        #Do the actual saving of the grades here.
-        #Loops through the grades
         for xuuid, grade in self.studentGrades.assignmentGrades.items():
             query = "UPDATE `" + self.tableName + "` SET grade = '" + str(grade) + "' WHERE student_uuid = '" + str(xuuid) + "';"
             #print(query)

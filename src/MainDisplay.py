@@ -503,7 +503,7 @@ class GradeCell(QtWidgets.QTableWidgetItem):
         self.current_points = c_points
 
     def setTextGradeCell(self, grade):
-        print("Proper set text is called")
+        #print("Proper set text is called")
         self.current_grade = grade
         super(GradeCell, self).setText(self.current_grade)
 
