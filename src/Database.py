@@ -7,7 +7,7 @@ class Database:
         self.cursor = self.connection.cursor()
 
     def execute(self, string):
-        print(string)
+        #print(string)
         self.cursor.execute(string)
         self.connection.commit()
         results = self.cursor.fetchall()
