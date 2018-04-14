@@ -45,7 +45,7 @@ class CreateAssignment(object):
             new_assignment_category = self.assignmentCategoryList.get_category(category)
             new_assignment_category.add_assignment(str(uuid.uuid4()), name, point_value, self.studentList)
 
-        print(category, name, points)
+        #print(category, name, points)
 
 
     """
