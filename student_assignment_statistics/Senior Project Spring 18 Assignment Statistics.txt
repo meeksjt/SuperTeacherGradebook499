@@ -1,0 +1,4 @@
+Assignment Name - Assignment Points - Mean - Median - Mode - Standard Deviation
+Oceans Eleven          24             83.75   100.0   100.0   32.5    
+Hunger Games           24             73.75   80.0    80.0    27.5    
+Age of Ultron          24             71.5    78.0    No Mode 27.42869543622761

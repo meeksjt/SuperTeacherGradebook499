@@ -4,6 +4,7 @@ from PyQt5 import QtGui
 from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
+
 import GlobalVariables
 from Student import *
 
@@ -191,7 +192,7 @@ class MainDisplay(object):
         self.del_course.released.connect(self.del_selected_item)
 
         # STATISTICS BUTTON
-        # self.get_stats.released.connect(self.)
+        self.get_stats.released.connect(self.calculate_statistics)
 
         # SAVE BUTTON
         self.save_grades.released.connect(self.save_grade_sheet)
@@ -431,7 +432,7 @@ class MainDisplay(object):
         # insert database logic here
 
     def calculate_statistics(self):
-        pass
+        self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list, self.grade_sheet, self.course_manager.currentCourse.name, self.course_manager.currentCourse.semester)
 
 
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
