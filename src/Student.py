@@ -62,6 +62,13 @@ class StudentList:
         GlobalVariables.database.connection.commit()
         self.__add_student(student)
 
+    def add_student_and_create_object(self,uuid,id,name,email):
+        newStudent = Student(self.tableName,id,name,email, uuid)
+        #connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
+        GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
+        GlobalVariables.database.connection.commit()
+        self.__add_student(newStudent)
+
     def __add_student(self,dstudent):
         self.students.append(copy.deepcopy(dstudent))
 

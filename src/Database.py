@@ -13,8 +13,8 @@ class Database(object):
         self.connection.commit()
 
     def add_course(self, course):
-        query = "INSERT INTO 'courseList' VALUES(?, ?, ?, ?, ?)"
-        self.cursor.execute(query, (course.name, course.number, course.section, course.semester, course.course_uuid))
+        query = "INSERT INTO 'courseList' VALUES(?, ?, ?, ?, ?, ?)"
+        self.cursor.execute(query, (course.name, course.number, course.section, course.semester, course.course_uuid, course.attendance_points))
         self.connection.commit()
 
     def drop_course(self, course):
