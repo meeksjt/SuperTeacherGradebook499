@@ -6,6 +6,7 @@ from CreateNewStudent import *
 from CourseManager import *
 from Student import *
 import GlobalVariables
+from Student import *
 
 
 # a good portion of this class was auto-generated with pyuic5 to

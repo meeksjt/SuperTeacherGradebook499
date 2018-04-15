@@ -1,6 +1,7 @@
 import sqlite3
 from Course import *
 
+
 class Database(object):
     def __init__(self, databaseName):
         self.connection = sqlite3.connect("../databases/" + str(databaseName) + ".db")
@@ -34,14 +35,15 @@ class Database(object):
     def get_course(self, course_uuid):
         query = "SELECT * FROM 'courseList' WHERE Course_UUID = ?"
         self.cursor.execute(query, (course_uuid,))
-        row = self.cursor.fetchall()
-        _course = Course(row[0], row[1], row[2], row[3], row[4])
-        _course.link_with_database()
-        return _course
+        row = list(self.cursor.fetchall()[0])
+        course = Course(row[0], row[1], row[2], row[3], row[4])
+        course.link_with_database()
+        return course
 
+    '''
     def add_student(self, student):
-        query = "INSERT INTO ? VALUES(?, ?, ?);"
-        self.cursor.execute(query, (student.tableName, student.id, student.name, student.email))
+        query = "INSERT INTO " + student.tableName + " VALUES(?, ?, ?);"
+        self.cursor.execute(query, (student.id, student.name, student.email))
         self.connection.commit()
 
     def drop_student(self, student):
@@ -53,4 +55,5 @@ class Database(object):
         query = "UPDATE ? SET '" + str(property) + "' = ? WHERE uuid = ?;"
         self.cursor.execute(query, (student.tableName, new_value, student.uuid))
         self.connection.commit()
+    '''
 
