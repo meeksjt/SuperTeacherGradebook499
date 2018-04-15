@@ -121,18 +121,18 @@ class Student:
 
     def set_email(self,email):
         self.email = email
-        query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
-        GlobalVariables.database.cursor.execute(query)
+        #query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
+        GlobalVariables.database.cursor.execute("UPDATE ? SET email = '?' WHERE uuid = '?';",
+                                                (self.tableName, self.email, self.uuid))
         GlobalVariables.database.connection.commit()
 
     def set_name(self,name):
         """Tested"""
         self.name=name
         # I used a query to make it easier by creating our string, and just passing it to the cursor.
-        query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
-        GlobalVariables.database.cursor.execute(query)
+        #query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE uuid = '" + str(self.uuid) + "';"
+        GlobalVariables.database.cursor.execute("UPDATE ? SET name = '?' WHERE uuid = '?';",
+                                                (self.tableName, self.name, self.uuid))
         GlobalVariables.database.connection.commit()
 
     def set_id(self,id):
@@ -146,7 +146,9 @@ class Student:
 
     def save_student(self):
         """Not needed, since set functions do this for us. Will be removed soon"""
-        GlobalVariables.database.connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(self.id) + ", '" + str(self.name) + "', '" + str(self.email) + "')")
+        #GlobalVariables.database.connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(self.id) + ", '" + str(self.name) + "', '" + str(self.email) + "')")
+        GlobalVariables.database.connection.execute("INSERT INTO ? VALUES(?, ?, ?)",
+                                                    (self.tableName, self.id, self.name, self.email))
         GlobalVariables.database.connection.commit()
         #This will save the student to the GlobalVariables.GlobalVariables.database.
         #Either UPDATE or INSERT here, depending on if the student exists or not.

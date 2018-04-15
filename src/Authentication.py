@@ -20,7 +20,7 @@ def create_user_table(conn):
     first_column = "username text NOT NULL UNIQUE"
     second_column = "password text NOT NULL"
     try:
-        c.execute('CREATE TABLE users ({f}, {s})'.format(f=first_column, s=second_column))
+        c.execute('CREATE TABLE users (?, ?)', (first_column, second_column))
         conn.commit()
     except sqlite3.OperationalError:
         pass
@@ -32,7 +32,7 @@ def add_login_credentials(conn, username, password):
 
     c = conn.cursor()
     try:
-        c.execute('INSERT INTO users VALUES ("{f}", "{s}")'.format(f=username_hash, s=password_hash))
+        c.execute('INSERT INTO users VALUES (?, ?)', (username_hash, password_hash))
         conn.commit()
         return True
         # Auto-generate the various tables necessary
@@ -48,8 +48,7 @@ def validate_login_credentials(conn, username, password):
     c = conn.cursor()
     try:
         count = 0
-        for line in c.execute('SELECT * FROM users WHERE username="{f}" AND password="{s}"'
-                                      .format(f=username_hash, s=password_hash)):
+        for _ in c.execute('SELECT * FROM users WHERE username=? AND password=?', (username_hash, password_hash)):
             count += 1
         if count == 1:
             return True

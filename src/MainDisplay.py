@@ -253,7 +253,10 @@ class MainDisplay(object):
             else:
                 self.model.insertRow(index.row() + 1, course)
                 cc = self.course_manager.course_tree_labels.course_list[index.row()]
-                self.course_manager.course_tree_labels.add_course_at(index.row() + 1, cc.course_name, cc.course_uuid, cc.student_list)
+                self.course_manager.course_tree_labels.add_course_at(index.row() + 1,
+                                                                     cc.course_name,
+                                                                     cc.course_uuid,
+                                                                     cc.student_list)
                 temp = self.course_manager.course_tree_labels.course_list[-1]
                 self.course_manager.course_tree_labels.course_list[index.row() + 1] = temp
                 del self.course_manager.course_tree_labels.course_list[-1]

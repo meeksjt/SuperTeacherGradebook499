@@ -16,8 +16,6 @@ class GradeScale(object):
         # So use 'SELECT * where UUID = courseUUID', but check that the row doesn't return anything.
         # If it doesn't return, add a row.
         GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `" + str(self.grade_scale_uuid) + "` (`A`	TEXT,`B`	TEXT,`C`	TEXT,`D`	TEXT);")
-
-
         GlobalVariables.database.connection.commit()
 
         self.__reload()

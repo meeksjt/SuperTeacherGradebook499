@@ -76,8 +76,7 @@ class CourseManager:
         self.currentCourse = None
         self.current_index = 0
         # Create the table if this is a new GlobalVariables.database.
-        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name`	TEXT, `Number` TEXT, `Section` TEXT, `Semester`	TEXT, `Course_UUID` TEXT);")
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name` TEXT, `Number` TEXT, `Section` TEXT, `Semester` TEXT, `Course_UUID` TEXT);")
 
         # Reload existing courses if necessary
         self.__reload_courses()
@@ -99,8 +98,6 @@ class CourseManager:
 
         # Get everything in the table
         GlobalVariables.database.cursor.execute("SELECT * FROM `courseList`")
-
-        # Our results go into this as a list.
         results = GlobalVariables.database.cursor.fetchall()
 
         # Go through each row
@@ -113,10 +110,7 @@ class CourseManager:
 
     # Adds a new course to the database and course list
     def add_course(self, course):
-        GlobalVariables.database.connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course.name) + "','" + str(course.number) +
-                            "', '" + str(course.section) + "', '" + str(course.semester) + "', '" + str(course.course_uuid) +
-                            "')"))
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.add_course(course)
         self.__reload_courses()
         return course.course_uuid
 
@@ -128,8 +122,7 @@ class CourseManager:
         if found_course is None:
             return False
 
-        GlobalVariables.database.cursor.execute("DELETE FROM 'courseList' WHERE Course_UUID = '" + uuid + "';")
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.drop_course(found_course)
 
         self.__reload_courses()
 

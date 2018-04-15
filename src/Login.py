@@ -42,9 +42,6 @@ class Ui_IGPLogin(object):
                 self.bad_input('Error', 'There is no user with the login credentials you entered.  Please try again.')
             else:
                 print("Legit credentials")
-               #  GlobalVariables.database_name = '../databases/{}.db'.format(username)
-               #  GlobalVariables.connection = sqlite3.connect(GlobalVariables.database_name)
-               #  GlobalVariables.cursor = connection.cursor()
                 GlobalVariables.database = Database(username)
                 self.IGPLogin.close()
                 self.main_window = MainDisplay()
