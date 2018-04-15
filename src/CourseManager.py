@@ -8,6 +8,7 @@ from GlobalVariables import connection, cursor
 from PyQt5 import QtGui
 
 # these three classes represent the underlying data structure of the tree view
+# that the user manges courses with
 class StudentItem(object):
     def __init__(self, student_name, student_uuid):
         self.student_name = student_name
@@ -80,7 +81,7 @@ class CourseManager:
         self.currentCourse = None
         self.current_index = 0
         # Create the table if this is a new database.
-        cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name`	TEXT, `Number`   TEXT, `Section`	TEXT, `Semester`	TEXT, `Course_UUID`  TEXT);")
+        cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name`	TEXT, `Number` TEXT, `Section` TEXT, `Semester`	TEXT, `Course_UUID` TEXT);")
         connection.commit()
 
         # Reload existing courses if necessary
@@ -122,11 +123,6 @@ class CourseManager:
                             "')"))
         connection.commit()
         self.__reload_courses()
-        # newCourse.add_student("3","Jacob","email")
-        # newCourse.add_student("5", "Matt", "email")
-        # newCourse.add_student("8", "Tyler", "email")
-        # newCourse.add_student("2", "Chris", "email")
-        # newCourse.student_list.print_students()
         return course.course_uuid
 
     def delete_course(self, uuid):
@@ -164,25 +160,3 @@ class CourseManager:
             return True
 
         return False
-
-
-"""
-jacob = CourseManager()
-x=10
-while x > 1:
-    jacob.add_course("Senior Project", "399", "03", "Fall")
-    x=x-1
-    print("1")
-"""
-"""
-    def get_grades(self):
-        grade_list = []
-        category_grades = []
-
-        for student in self.currentCourse.student_list:
-            for category in self.currentCourse.assignment_category_dict.values().assignment_dict.values():
-                #for assignment in category.assignment_list:
-                    category_grades.append(assignment.get_student_grade(student.uuid))
-            grade_list.append(category_grades)
-        # give gradelist to student and repeat
-"""

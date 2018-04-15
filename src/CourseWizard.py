@@ -16,7 +16,7 @@ class CourseCreatorWidget(object):
         self.gradeDict = gradeDict.copy()
 
         self.frame = QtWidgets.QDialog()
-        self.ui = uic.loadUi('CourseWizard.ui', self.frame)
+        self.ui = uic.loadUi('../assets/ui/CourseWizard.ui', self.frame)
 
         col_headers = ['Category Name', 'Drop Count']
         self.ui.tableWidget.setHorizontalHeaderLabels(col_headers)
@@ -99,11 +99,6 @@ class CourseCreatorWidget(object):
         for category in output:
             # This is the class variable that the Course will user to create its new categories
             self.categories_to_create.append(category[:].copy())
-
-
-        # senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "I EET PIE", "24", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
-
         return True
 
     def category_error_checking(self, user_input):
@@ -216,7 +211,7 @@ class InitialCourseScreen(object):
         self.course_manager = course_manager
         self.next_screen = None
         self.ICScreen = QtWidgets.QDialog()
-        self.ui = uic.loadUi('InitialCourseScreen.ui', self.ICScreen)
+        self.ui = uic.loadUi('../assets/ui/CourseWizardFirst.ui', self.ICScreen)
         self.ICScreen.newCourseButton.clicked.connect(self.create_new_course)
         self.ICScreen.newTemplateCourseButton.clicked.connect(self.create_new_template_course)
         self.ICScreen.exec()
@@ -224,8 +219,6 @@ class InitialCourseScreen(object):
     def create_new_course(self):
         self.ICScreen.hide()
         self.next_screen = CourseCreatorWidget(self.course_manager)
-        # self.next_screen = CourseCreationThird()
-        # insert code to set table with appropriate changes
 
     def create_new_template_course(self):
         pass

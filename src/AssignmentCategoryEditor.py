@@ -24,7 +24,7 @@ class AssignmentCategoryEditor(object):
         self.categories_to_create = []
 
         self.ACEditor = QtWidgets.QDialog()
-        self.ui = uic.loadUi('AssignmentCategoryEditor.ui', self.ACEditor)
+        self.ui = uic.loadUi('../assets/ui/AssignmentCategoryEditor.ui', self.ACEditor)
         self.ACEditor.categoryTable.setHorizontalHeaderLabels(col_headers)
         self.ACEditor.categoryTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
 

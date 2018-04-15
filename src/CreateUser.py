@@ -20,7 +20,7 @@ class Ui_IGPCreateUser(object):
         self.IGPCreateUser = QtWidgets.QDialog()
 
         # Display Window
-        self.ui = uic.loadUi('CreateUser.ui', self.IGPCreateUser)
+        self.ui = uic.loadUi('../assets/ui/CreateUser.ui', self.IGPCreateUser)
         self.IGPCreateUser.show()
 
         # Link buttons

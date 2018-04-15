@@ -11,7 +11,7 @@ class Ui_IGPLogin(object):
     def __init__(self):
 
         self.IGPLogin = QtWidgets.QDialog()
-        self.ui = uic.loadUi('Login.ui', self.IGPLogin)
+        self.ui = uic.loadUi('../assets/ui/Login.ui', self.IGPLogin)
         self.IGPLogin.show()
         self.IGPLogin.loginButton.clicked.connect(self.login_button_clicked)
         self.IGPLogin.quitButton.clicked.connect(self.IGPLogin.close)

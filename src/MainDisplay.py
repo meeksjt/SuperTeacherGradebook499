@@ -2,64 +2,11 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from InitialCourseScreen import *
+from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
 from GlobalVariables import connection, cursor
 # from Course import *
-
-
-
-
-# This class is the underlying representation
-# for the tree view
-class CourseTree(object):
-    def __init__(self):
-        self.tree_view_data = []
-
-    # set new data
-    def set_tree_data(self, tree_data):
-        self.tree_view_data = tree_data
-
-    # add student to class given by class index
-    def add_student(self, class_index, student_uuid):
-        self.tree_view_data[class_index][1].append(student_uuid)
-
-    # remove student given by class index
-    # TODO: fix this function
-    def drop_student(self, course_uuid, student_uuid):
-        pass
-       # self.tree_view_data[course_uuid][1].remove(student_uuid)
-       # self.tree_view_data[class_index].remove(student)
-
-    def add_course(self, course_uuid):
-        self.tree_view_data.append((course_uuid, []))
-
-    def drop_course(self, course_uuid):
-        index = 0
-        for existing_course_uuid, student_list in self.tree_view_data:
-            if existing_course_uuid == course_uuid:
-                self.tree_view_data.pop(index)
-                return
-            index += 1
-
-    def get_course_name(self, course_uuid):
-        cursor.execute("SELECT * FROM `courseList`")
-        results = cursor.fetchall()
-        for row in results:
-            if row[0] == course_uuid:
-                return row[1]
-
-    def get_student_name(self, course_uuid, student_uuid):
-        ex_str = "SELECT student_name FROM `courseList_student_list` WHERE student_id=" + "\"" + student_uuid + "\""
-        cursor.execute(ex_str)
-        results = cursor.fetchall()
-        for row in results:
-            if row[0] == student_uuid:
-                return row[2]
-
-    def print_tree(self):
-        print(self.tree_view_data)
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -283,7 +230,7 @@ class MainDisplay(object):
         self.course_manager.currentCourse = Course()
 
         index = self.course_tree_view.currentIndex()
-        if not index.isValid():
+        if not index.isValid() and self.model.rowCount() >= 0:
             self.course_tree_view.setCurrentIndex(0)
 
         current_item = self.model.itemFromIndex(index)
@@ -296,7 +243,7 @@ class MainDisplay(object):
             course = QtGui.QStandardItem(self.course_manager.currentCourse.name)
 
 
-            if index.row() == self.model.rowCount():
+            if index.row() == self.model.rowCount() or index.row() == -1:
                 self.model.appendRow(course)
             else:
                 self.model.insertRow(index.row() + 1, course)
@@ -573,55 +520,24 @@ class GradeCell(QtWidgets.QTableWidgetItem):
 
 if __name__ == "__main__":
    import sys
-
-   # course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
-
-   # for category in course.assignment_category_list.assignment_categories:
-   # category.add_assignment("244", "Quiz 1", "3", course.student_list)
-
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
 
-   #senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
-   #senior_project.link_with_database()
-   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
-   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
-   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
-   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
-   #a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-   #b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-   #c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-   #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
-   #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
-   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
-   #main_display.course_manager.add_course(senior_project)
-   #main_display.update_tree_view()
-
-   # senior_project = Course("Algorithms", "CS 387", "02", "Spring 18")
+   # senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
    # senior_project.link_with_database()
-   # senior_project.student_list.add_student("1", "42", "Samsa", "Hotmail@gmail.com")
-   # senior_project.student_list.add_student("2", "43", "Jon Snow", "Hotmail@gmail.com")
-   # senior_project.student_list.add_student("3", "44", "Tyson", "Hotmail@gmail.com")
-   # senior_project.student_list.add_student("4", "45", "Tyler Tyler", "Hotmail@gmail.com")
-   # a = senior_project.assignment_category_dict.add_category("Blue Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-   # b = senior_project.assignment_category_dict.add_category("Blue Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-   # c = senior_project.assignment_category_dict.add_category("Blue Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-   # senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "U WOT M8", "24", senior_project.student_list)
-   # senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "I EET PIE", "24", senior_project.student_list)
-   # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
+   # senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+   # senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+   # senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+   # senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+   # a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+   # b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+   # c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+   # senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+   # senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+   # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
    # main_display.course_manager.add_course(senior_project)
-
-   #course_uuid = main_display.course_manager.add_course(Course("Math", "MA 388", "02", "Spring 18", "Thing TEST"))
-   #main_display.course_manager.set_current_course("Thing TEST")
-   #main_display.course_manager.currentCourse.link_with_database()
-
+   # main_display.update_tree_view()
 
    main_display.form.show()
-
-   #if main_display.form.isHidden():
-   # main_display.update_tree_view() # update model
-
    sys.exit(app.exec_())
 
-   # ct.add_student(1, "muuuuu")
-   # ct.drop_course('Math')

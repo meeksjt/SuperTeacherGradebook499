@@ -58,7 +58,7 @@ class AttendanceSheet(object):
 
     def __init__(self, attendanceDictionary, studentList, courseUUID):
         self.ASheet = QtWidgets.QDialog()
-        self.ui = uic.loadUi('Attendance.ui', self.ASheet)
+        self.ui = uic.loadUi('../assets/ui/Attendance.ui', self.ASheet)
         self.ASheet.studentAttendanceTable.setHorizontalHeaderLabels(['Student Name', 'Present?'])
         self.attendanceDictionary = attendanceDictionary
         self.studentList = studentList
