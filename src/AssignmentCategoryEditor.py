@@ -1,7 +1,6 @@
 # Need to add database removal/editing for modified categories
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from PyQt5 import QtCore, QtWidgets, uic
 import sys
-from AssignmentCategory import AssignmentCategory
 from AssignmentCategoryDict import AssignmentCategoryDict
 
 """
@@ -41,6 +40,7 @@ class AssignmentCategoryEditor(object):
         self.ACEditor.addCategoryButton.clicked.connect(self.add_category)
         self.ACEditor.removeSelectedCategory.clicked.connect(self.remove_category)
         self.ACEditor.saveCategoriesButton.clicked.connect(self.save_table_data)
+        self.ACEditor.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
 
         self.ACEditor.show()
 

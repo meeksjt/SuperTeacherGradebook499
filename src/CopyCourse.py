@@ -1,5 +1,3 @@
-from GlobalVariables import *
-from Course import *
 from MainDisplay import *
 
 #Already existing CourseObject that has been linked with the database, and three booloans

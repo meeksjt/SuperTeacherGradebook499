@@ -1,9 +1,9 @@
 import sqlite3
 
 
-class Database:
+class Database(object):
     def __init__(self, databaseName):
-        self.connection = sqlite3.connect("../databases/" + str(databaseName))
+        self.connection = sqlite3.connect("../databases/" + str(databaseName) + ".db")
         self.cursor = self.connection.cursor()
 
     def execute(self, string):
@@ -11,10 +11,9 @@ class Database:
         self.cursor.execute(string)
         self.connection.commit()
         results = self.cursor.fetchall()
-
         return results
 
 
-connection = sqlite3.connect('../databases/jacobstest.db')
-cursor = connection.cursor()
-currentDatabase = ""
+#connection = sqlite3.connect('../databases/jacobstest.db')
+#cursor = connection.cursor()
+#currentDatabase = ""

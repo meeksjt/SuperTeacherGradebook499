@@ -1,7 +1,6 @@
 from Assignment import Assignment
-from GlobalVariables import *
+import GlobalVariables
 import copy
-import re
 # for your grade calculations, make sure you handle "-"
 """
     Class to serve as our Base Class for various Assignment Categories
@@ -23,16 +22,16 @@ class AssignmentCategory:
 
         self.total_category_points = 0
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
-        connection.commit()
+        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
+        GlobalVariables.database.connection.commit()
 
         self.__reload_assignments()
 
     # reload assignments, pretty sure this is right
     def __reload_assignments(self):
         self.assignment_dict.clear()
-        cursor.execute("SELECT * FROM `" + self.tableName + "`")
-        results = cursor.fetchall()
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
+        results = GlobalVariables.database.cursor.fetchall()
 
         # Go through each row
         for row in results:
@@ -72,8 +71,8 @@ class AssignmentCategory:
     def add_assignment(self, assignment_uuid, assignment_name, total_points, student_list):
         assignment = Assignment(assignment_uuid, assignment_name, total_points, student_list)
 
-        connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
-        connection.commit()
+        GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
+        GlobalVariables.database.connection.commit()
 
         self.__reload_assignments()
 
@@ -89,8 +88,8 @@ class AssignmentCategory:
         for assignment in self.assignment_dict.values():
             if assignment.assignmentID == assignment_uuid:
                 #del self.assignment_dict[assignment_uuid]
-                cursor.execute("DELETE FROM " + str(self.tableName) + " where assignment_uuid = '" + assignment_uuid + "';")
-                connection.commit()
+                GlobalVariables.database.cursor.execute("DELETE FROM " + str(self.tableName) + " where assignment_uuid = '" + assignment_uuid + "';")
+                GlobalVariables.database.connection.commit()
                 self.__reload_assignments()
                 break
 

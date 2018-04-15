@@ -1,12 +1,10 @@
 # Finished for Right Now
 # Might have to add creating new assignments/grades for each added student
-from PyQt5 import QtCore, QtWidgets, QtGui, uic
+from PyQt5 import QtCore, QtWidgets, uic
 import GlobalVariables
 import sys
 import sqlite3
-from sqlite3 import Error
 from Student import Student, StudentList
-import uuid
 
 """
 Class for the adding of new students to a course
@@ -30,6 +28,7 @@ class AddingStudents(object):
         self.studentIDs = {}
         self.setup_display()
 
+        self.AStudents.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.AStudents.show()
         self.AStudents.addSelectedStudentsButton.clicked.connect(self.add_students)
 

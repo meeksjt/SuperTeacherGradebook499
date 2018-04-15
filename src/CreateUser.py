@@ -1,5 +1,5 @@
 # Finished
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from PyQt5 import QtCore, QtWidgets, uic
 import sys
 import Authentication
 
@@ -21,6 +21,7 @@ class Ui_IGPCreateUser(object):
 
         # Display Window
         self.ui = uic.loadUi('../assets/ui/CreateUser.ui', self.IGPCreateUser)
+        self.IGPCreateUser.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.IGPCreateUser.show()
 
         # Link buttons
@@ -55,7 +56,7 @@ class Ui_IGPCreateUser(object):
             added = Authentication.add_login_credentials(conn, username, password)
 
             if not added:
-                self.bad_input('Error', 'User is already in the database.\nPlease select a new username.')
+                self.bad_input('Error', 'User is already in the GlobalVariables.database.\nPlease select a new username.')
             else:
                 print("Credentials added")
                 print("This is where we return to our Login Gui Frame")

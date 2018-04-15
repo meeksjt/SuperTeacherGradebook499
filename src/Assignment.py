@@ -1,8 +1,5 @@
-# Good for now
-#
 from Grades import Grades
-from GlobalVariables import *
-from Student import *
+import GlobalVariables
 
 """
     Class for each Assignment in the AssignmentCategoryBase
@@ -25,8 +22,8 @@ class Assignment:
         self.studentList = student_list
         self.studentGrades = Grades()
 
-        connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`student_uuid`	TEXT,`grade` TEXT);")
-        connection.commit()
+        GlobalVariables.database.connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`student_uuid`	TEXT,`grade` TEXT);")
+        GlobalVariables.database.connection.commit()
         self.__load_grades()
         self.add_grade_to_database()
 
@@ -42,8 +39,8 @@ class Assignment:
     def add_grade_to_database(self):
         for student in self.studentList.students:
             if student.uuid not in self.studentGrades.assignmentGrades.keys():
-                connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(student.uuid) + "','" + "-" + "')")
-                connection.commit()
+                GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(student.uuid) + "','" + "-" + "')")
+                GlobalVariables.database.connection.commit()
 
     def get_assignment_name(self):
         return self.assignmentName
@@ -68,10 +65,10 @@ class Assignment:
     """
     def __load_grades(self):
 
-        #Now everyone is in the database. So we can reload the database.
+        #Now everyone is in the GlobalVariables.database. So we can reload the GlobalVariables.database.
         self.studentGrades.clear_grades()
-        cursor.execute("SELECT * FROM `" + self.tableName + "`")
-        results = cursor.fetchall()
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
+        results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             self.studentGrades.set_grade(row[0], row[1])
 
@@ -129,8 +126,8 @@ class Assignment:
         for xuuid, grade in self.studentGrades.assignmentGrades.items():
             query = "UPDATE `" + self.tableName + "` SET grade = '" + str(grade) + "' WHERE student_uuid = '" + str(xuuid) + "';"
             #print(query)
-            cursor.execute(query)
-            connection.commit()
+            GlobalVariables.database.cursor.execute(query)
+            GlobalVariables.database.connection.commit()
 
 """
 #students = StudentList("cs499")

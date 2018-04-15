@@ -1,9 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-import sys
-from Course import *
 from CourseManager import *
 from CreateAssignment import *
-from AssignmentCategoryDict import *
 
 class CourseCreatorWidget(object):
 
@@ -26,6 +22,7 @@ class CourseCreatorWidget(object):
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
         self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
 
+        self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()
 
     # save the course data into a temporary course object and
@@ -214,6 +211,7 @@ class InitialCourseScreen(object):
         self.ui = uic.loadUi('../assets/ui/CourseWizardFirst.ui', self.ICScreen)
         self.ICScreen.newCourseButton.clicked.connect(self.create_new_course)
         self.ICScreen.newTemplateCourseButton.clicked.connect(self.create_new_template_course)
+        self.ICScreen.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.ICScreen.exec()
 
     def create_new_course(self):

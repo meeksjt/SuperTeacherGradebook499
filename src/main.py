@@ -1,5 +1,4 @@
 from Login import *
-from CourseManager import *
 
 if __name__ == "__main__":
     import sys

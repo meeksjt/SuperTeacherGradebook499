@@ -1,12 +1,7 @@
 # Come back to this
-import sqlite3
 import copy
 from Course import Course
-import uuid
-
-from GlobalVariables import connection, cursor
-from PyQt5 import QtGui
-
+import GlobalVariables
 # these three classes represent the underlying data structure of the tree view
 # that the user manges courses with
 class StudentItem(object):
@@ -80,9 +75,9 @@ class CourseManager:
 
         self.currentCourse = None
         self.current_index = 0
-        # Create the table if this is a new database.
-        cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name`	TEXT, `Number` TEXT, `Section` TEXT, `Semester`	TEXT, `Course_UUID` TEXT);")
-        connection.commit()
+        # Create the table if this is a new GlobalVariables.database.
+        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name`	TEXT, `Number` TEXT, `Section` TEXT, `Semester`	TEXT, `Course_UUID` TEXT);")
+        GlobalVariables.database.connection.commit()
 
         # Reload existing courses if necessary
         self.__reload_courses()
@@ -103,10 +98,10 @@ class CourseManager:
         self.course_tree_labels.course_list.clear()
 
         # Get everything in the table
-        cursor.execute("SELECT * FROM `courseList`")
+        GlobalVariables.database.cursor.execute("SELECT * FROM `courseList`")
 
         # Our results go into this as a list.
-        results = cursor.fetchall()
+        results = GlobalVariables.database.cursor.fetchall()
 
         # Go through each row
         for row in results:
@@ -118,10 +113,10 @@ class CourseManager:
 
     # Adds a new course to the database and course list
     def add_course(self, course):
-        connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course.name) + "','" + str(course.number) +
+        GlobalVariables.database.connection.execute(("INSERT INTO 'courseList' VALUES('" + str(course.name) + "','" + str(course.number) +
                             "', '" + str(course.section) + "', '" + str(course.semester) + "', '" + str(course.course_uuid) +
                             "')"))
-        connection.commit()
+        GlobalVariables.database.connection.commit()
         self.__reload_courses()
         return course.course_uuid
 
@@ -133,8 +128,8 @@ class CourseManager:
         if found_course is None:
             return False
 
-        cursor.execute("DELETE FROM 'courseList' WHERE Course_UUID = '" + uuid + "';")
-        connection.commit()
+        GlobalVariables.database.cursor.execute("DELETE FROM 'courseList' WHERE Course_UUID = '" + uuid + "';")
+        GlobalVariables.database.connection.commit()
 
         self.__reload_courses()
 

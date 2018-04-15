@@ -1,9 +1,5 @@
-from PyQt5 import QtCore, QtWidgets, QtGui, uic
-import GlobalVariables
+from PyQt5 import QtCore, QtWidgets, uic
 import sys
-import sqlite3
-from sqlite3 import Error
-from AssignmentCategory import AssignmentCategory
 from AssignmentCategoryDict import AssignmentCategoryDict
 from Student import StudentList
 import uuid
@@ -18,6 +14,7 @@ class CreateAssignment(object):
     def __init__(self, assignment_category_list, studentList):
         self.CAssignment = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/CreateAssignment.ui', self.CAssignment)
+        self.CAssignment.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.CAssignment.show()
 
         self.studentList = studentList
@@ -29,6 +26,7 @@ class CreateAssignment(object):
 
         self.CAssignment.createAssignmentButton.clicked.connect(self.add_assignment)
 
+        self.CAssignment.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.CAssignment.exec()
 
     def add_assignment(self):

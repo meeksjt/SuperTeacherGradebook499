@@ -1,5 +1,5 @@
 #Finished
-from PyQt5 import QtCore, QtWidgets, QtGui, uic
+from PyQt5 import QtCore, QtWidgets, uic
 import GlobalVariables
 import sys
 import sqlite3
@@ -26,6 +26,7 @@ class CreateNewStudent(object):
         # Link the button functionality
         self.CNStudent.createNewStudentButton.clicked.connect(self.create_student)
 
+        self.CNStudent.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.CNStudent.exec()
 
     """

@@ -1,13 +1,10 @@
 # This is the main view for the instructor grade book
-
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtGui
 
 from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
-from GlobalVariables import connection, cursor
-import Statistics
-# from Course import *
+import GlobalVariables
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -21,6 +18,7 @@ class MainDisplay(object):
         self.update_tree_view()
 
         self.form = QtWidgets.QWidget()
+        self.form.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.form.setObjectName("Form")
         self.form.resize(1366, 768)
 
@@ -164,9 +162,12 @@ class MainDisplay(object):
             "   background-color: black;"
             "}"
         )
+        self.grade_sheet.viewportSizeHint()
 
         self.horizontal_header_view = self.grade_sheet.horizontalHeader()
         self.vertical_header_view = self.grade_sheet.verticalHeader()
+        self.horizontal_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.vertical_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.horizontal_header_view.setStyleSheet(
             "QHeaderView::section{ border: none; background-color: #c0c5ce}"
             "QHeaderView::section:checked { background-color: #bf616a}"
@@ -210,9 +211,6 @@ class MainDisplay(object):
         self.cc_form = None
         self.new_student_form = None
 
-        # self.form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        # self.form.show()
-
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
     # form like ( A B ( C D ( E F G ) ) )
@@ -231,12 +229,18 @@ class MainDisplay(object):
         self.course_manager.currentCourse = Course()
 
         index = self.course_tree_view.currentIndex()
-        if not index.isValid() and self.model.rowCount() >= 0:
-            self.course_tree_view.setCurrentIndex(0)
+        if not index.isValid():
+            self.cc_form = InitialCourseScreen(self.course_manager)
+            if self.course_manager.currentCourse.is_complete is False:
+                return
+            course = QtGui.QStandardItem(self.course_manager.currentCourse.name)
+            self.model.appendRow(course)
+            self.grade_sheet.setColumnCount(0)
+            self.grade_sheet.setRowCount(0)
+            return
 
         current_item = self.model.itemFromIndex(index)
         if current_item.parent() is None: # no parent means this is a course
-
             self.cc_form = InitialCourseScreen(self.course_manager)
             if self.course_manager.currentCourse.is_complete is False:
                 return
@@ -244,7 +248,7 @@ class MainDisplay(object):
             course = QtGui.QStandardItem(self.course_manager.currentCourse.name)
 
 
-            if index.row() == self.model.rowCount() or index.row() == -1:
+            if index.row() == self.model.rowCount():
                 self.model.appendRow(course)
             else:
                 self.model.insertRow(index.row() + 1, course)
@@ -254,12 +258,9 @@ class MainDisplay(object):
                 self.course_manager.course_tree_labels.course_list[index.row() + 1] = temp
                 del self.course_manager.course_tree_labels.course_list[-1]
 
-            for course in self.course_manager.course_tree_labels.course_list:
-                print(course.course_name)
-
             self.grade_sheet.setColumnCount(0)
             self.grade_sheet.setRowCount(0)
-        else:
+        else: # then a student was selected
             student = QtGui.QStandardItem("Enter Student Name")
             self.new_student_form = CreateNewStudent()
             current_item.parent().appendRow(student)
@@ -559,20 +560,23 @@ if __name__ == "__main__":
    app = QtWidgets.QApplication(sys.argv)
    main_display = MainDisplay()
 
-   senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
-   senior_project.link_with_database()
-   senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
-   senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
-   senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
-   senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
-   a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-   b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-   c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
-   senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
-   main_display.course_manager.add_course(senior_project)
-   main_display.update_tree_view()
+   #senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+   #senior_project.link_with_database()
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+   #a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+   #b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+   #c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID4", "Age of Notron", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "I tell you hwat", "24", senior_project.student_list)
+   #main_display.course_manager.add_course(senior_project)
+   #main_display.update_tree_view()
 
    main_display.form.show()
    sys.exit(app.exec_())

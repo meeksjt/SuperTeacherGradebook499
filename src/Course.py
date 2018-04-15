@@ -1,6 +1,4 @@
 # Delete Course
-import re
-import Assignment
 from AssignmentCategoryDict import AssignmentCategoryDict
 from Student import *
 from GradeScale import GradeScale
