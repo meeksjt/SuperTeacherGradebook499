@@ -1,11 +1,6 @@
-import sqlite3
 import copy
-from GlobalVariables import connection, cursor
+import GlobalVariables
 import uuid
-
-
-# Status: Know how to INSERT and CREATE. Learn how to UPDATE, then how to
-# SELECT and convert to an object.
 
 
 class StudentList:
@@ -16,8 +11,8 @@ class StudentList:
         #This holds the name of the course
         self.course = courseUUID
         self.tableName = str(courseUUID) + "_student_list"
-        cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`uuid`	TEXT,`ID`	TEXT,`name`	TEXT,`email`	TEXT);")
-        connection.commit()
+        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`uuid`	TEXT,`ID`	TEXT,`name`	TEXT,`email`	TEXT);")
+        GlobalVariables.database.connection.commit()
         self.load_students()
 
 
@@ -62,12 +57,10 @@ class StudentList:
             if student.name == name:
                 return student.uuid
 
-    def add_student(self, uuid, id, name, email):
-        newStudent = Student(self.tableName, id, name, email, uuid)
-        #connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
-        connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
-        connection.commit()
-        self.__add_student(newStudent)
+    def add_student(self, student):
+        GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(student.uuid) + "','" + str(student.id) + "', '" + str(student.name) + "', '" + str(student.email) + "')"))
+        GlobalVariables.database.connection.commit()
+        self.__add_student(student)
 
     def __add_student(self,dstudent):
         self.students.append(copy.deepcopy(dstudent))
@@ -76,16 +69,20 @@ class StudentList:
         for student in self.students:
             student.save_student()
 
-    def remove_student(self,uuid):
+    def remove_student(self, uuid):
         for student in self.students:
             if student.uuid == uuid:
-                student.remove_student()
+                query = "DELETE FROM `"+self.tableName+"` WHERE uuid='" + str(student.uuid) + "';"
+                GlobalVariables.database.cursor.execute(query)
+                GlobalVariables.database.connection.commit()
                 self.load_students()
+                return True
+        return False
 
     def load_students(self):
         self.students.clear() #Erase what's in the list
-        cursor.execute("SELECT * FROM `" + self.tableName + "`")
-        results = cursor.fetchall()
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
+        results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             # print("Here is the row:", row)
             #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
@@ -98,13 +95,14 @@ class StudentList:
 
 class Student:
 #Need to reload students after setting name.
-    def __init__(self,tableName,id,name,email, uuid):
-        #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
+    def __init__(self, tableName="", id="", name="", email="", xuuid="invalid"):
         self.tableName = tableName
         self.name = name
         self.email = email
         self.id = id
-        self.uuid = uuid
+        self.uuid = xuuid
+        if self.uuid == "invalid":
+            self.uuid = str(uuid.uuid4())
 
     #connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
 
@@ -123,19 +121,19 @@ class Student:
 
     def set_email(self,email):
         self.email = email
-        query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
-        cursor.execute(query)
-        connection.commit()
+        #query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
+        GlobalVariables.database.cursor.execute("UPDATE ? SET email = '?' WHERE uuid = '?';",
+                                                (self.tableName, self.email, self.uuid))
+        GlobalVariables.database.connection.commit()
 
     def set_name(self,name):
         """Tested"""
         self.name=name
         # I used a query to make it easier by creating our string, and just passing it to the cursor.
-        query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
-        cursor.execute(query)
-        connection.commit()
+        #query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE uuid = '" + str(self.uuid) + "';"
+        GlobalVariables.database.cursor.execute("UPDATE ? SET name = '?' WHERE uuid = '?';",
+                                                (self.tableName, self.name, self.uuid))
+        GlobalVariables.database.connection.commit()
 
     def set_id(self,id):
         """Sets ID in object and in database"""
@@ -143,14 +141,16 @@ class Student:
 
         query = "UPDATE "+self.tableName+" SET id = '" + str(self.id) + "' WHERE uuid = '" + str(self.uuid) + "';"
         print(query)
-        cursor.execute(query)
-        connection.commit()
+        GlobalVariables.database.cursor.execute(query)
+        GlobalVariables.database.connection.commit()
 
     def save_student(self):
         """Not needed, since set functions do this for us. Will be removed soon"""
-        connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(self.id) + ", '" + str(self.name) + "', '" + str(self.email) + "')")
-        connection.commit()
-        #This will save the student to the database.
+        #GlobalVariables.database.connection.execute("INSERT INTO " + str(self.tableName) + " VALUES(" + str(self.id) + ", '" + str(self.name) + "', '" + str(self.email) + "')")
+        GlobalVariables.database.connection.execute("INSERT INTO ? VALUES(?, ?, ?)",
+                                                    (self.tableName, self.id, self.name, self.email))
+        GlobalVariables.database.connection.commit()
+        #This will save the student to the GlobalVariables.GlobalVariables.database.
         #Either UPDATE or INSERT here, depending on if the student exists or not.
 
     def print_student(self):
@@ -160,22 +160,22 @@ class Student:
         print("Email: ", self.email)
 
     def remove_student(self):
-        query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.id) + "';"
+        query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.uuid) + "';"
         print(query)
-        cursor.execute(query)
-        connection.commit()
+        GlobalVariables.GlobalVariables.database.cursor.execute(query)
+        GlobalVariables.GlobalVariables.database.connection.commit()
 
 
 def create_test_database():
     """A simple testing function for just this class"""
     print("Entered testing function...")
 
-    cursor.execute('CREATE TABLE IF NOT EXISTS `cs499_studentList` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);')
-    connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
-    connection.execute("INSERT INTO cs499_studentList VALUES(4, 'Matt', 'jeh0029@uah.edu')")
-    connection.execute("INSERT INTO cs499_studentList VALUES(3, 'Tyler Meeks', 'yomoma@hotmail.com')")
-    connection.execute("INSERT INTO cs499_studentList VALUES(2, 'Chris Christopher', 'chris42@uah.edu')")
-    connection.commit()
+    GlobalVariables.database.cursor.execute('CREATE TABLE IF NOT EXISTS `cs499_studentList` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);')
+    GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
+    GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(4, 'Matt', 'jeh0029@uah.edu')")
+    GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(3, 'Tyler Meeks', 'yomoma@hotmail.com')")
+    GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(2, 'Chris Christopher', 'chris42@uah.edu')")
+    GlobalVariables.database.connection.commit()
 #Remember to find memes for the presentation. Be sure to get a HP one.
 
 #students = StudentList("cs499")

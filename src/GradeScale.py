@@ -1,4 +1,4 @@
-from GlobalVariables import *
+import GlobalVariables
 
 
 class GradeScale(object):
@@ -15,10 +15,8 @@ class GradeScale(object):
         # Now you want to find this GradeScale's row in the table.
         # So use 'SELECT * where UUID = courseUUID', but check that the row doesn't return anything.
         # If it doesn't return, add a row.
-        cursor.execute("CREATE TABLE IF NOT EXISTS `" + str(self.grade_scale_uuid) + "` (`A`	TEXT,`B`	TEXT,`C`	TEXT,`D`	TEXT);")
-
-
-        connection.commit()
+        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `" + str(self.grade_scale_uuid) + "` (`A`	TEXT,`B`	TEXT,`C`	TEXT,`D`	TEXT);")
+        GlobalVariables.database.connection.commit()
 
         self.__reload()
 
@@ -26,14 +24,14 @@ class GradeScale(object):
         #query = "UPDATE " + self.tableName + " SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
         #print(query)
         #connection.execute(("UPDATE '" + str(self.grade_scale_uuid) + "' VALUES('" + str(self.grade_dict["A"]) + "','" + str(self.grade_dict["B"]) + "', '" + str(self.grade_dict["C"]) + "', '" + str(self.grade_dict["D"]) + "')"))
-        cursor.execute("SELECT * FROM `" + self.grade_scale_uuid + "`")
-        results = cursor.fetchall()
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.grade_scale_uuid + "`")
+        results = GlobalVariables.database.cursor.fetchall()
         if results:
             for row in results:
                 self.set_grade_scale(row[0], row[1], row[2], row[3])
         else:
-            connection.execute(("INSERT INTO '" + str(self.grade_scale_uuid) + "' VALUES('90','80', '70', '60')"))
-            connection.commit()
+            GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.grade_scale_uuid) + "' VALUES('90','80', '70', '60')"))
+            GlobalVariables.database.connection.commit()
 
 
     def set_grade_scale(self,a,b,c,d):
@@ -44,17 +42,17 @@ class GradeScale(object):
 
         query = "UPDATE `" + self.grade_scale_uuid + "` SET `A` = '" + str(self.grade_dict['A']) + "';"
         #print(query)
-        cursor.execute(query)
+        GlobalVariables.database.cursor.execute(query)
         query = "UPDATE `" + self.grade_scale_uuid + "` SET `B` = '" + str(self.grade_dict['B']) + "';"
         #print(query)
-        cursor.execute(query)
+        GlobalVariables.database.cursor.execute(query)
         query = "UPDATE `" + self.grade_scale_uuid + "` SET `C` = '" + str(self.grade_dict['C']) + "';"
         #print(query)
-        cursor.execute(query)
+        GlobalVariables.database.cursor.execute(query)
         query = "UPDATE `" + self.grade_scale_uuid + "` SET `D` = '" + str(self.grade_dict['D']) + "';"
         #print(query)
-        cursor.execute(query)
-        connection.commit()
+        GlobalVariables.database.cursor.execute(query)
+        GlobalVariables.database.connection.commit()
 
         ##******** DATABASE STUFF
         #Save this stuff to the database table for grade scales.

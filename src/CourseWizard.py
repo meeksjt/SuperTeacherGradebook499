@@ -1,9 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-import sys
-from Course import *
 from CourseManager import *
 from CreateAssignment import *
-from AssignmentCategoryDict import *
 
 class CourseCreatorWidget(object):
 
@@ -16,7 +12,7 @@ class CourseCreatorWidget(object):
         self.gradeDict = gradeDict.copy()
 
         self.frame = QtWidgets.QDialog()
-        self.ui = uic.loadUi('CourseWizard.ui', self.frame)
+        self.ui = uic.loadUi('../assets/ui/CourseWizard.ui', self.frame)
 
         col_headers = ['Category Name', 'Drop Count']
         self.ui.tableWidget.setHorizontalHeaderLabels(col_headers)
@@ -26,20 +22,27 @@ class CourseCreatorWidget(object):
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
         self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
 
-        self.course_manager = CourseManager()
+        self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()
 
     # save the course data into a temporary course object and
     # hide the window iff the data is valid
     def save_course_data(self):
-        if self.validate_course_info() and self.validate_grade_scale() and self.validate_assignment_categories():
-            # save temporary created info
+        if not self.validate_course_info():
+            print("failed to validate course info")
+            return
+        if not self.validate_grade_scale():
+            print("failed to validate grade scale")
+            return
+        if not self.validate_assignment_categories():
+            print("failed to validate assignment categories")
+            return
 
-            self.new_course.link_with_database()
-            self.course_manager.add_course(self.new_course)
+        self.course_manager.add_course(self.new_course)
+        self.course_manager.set_current_course(self.new_course.course_uuid)
+        self.course_manager.currentCourse.is_complete = True
 
-            # hide current window
-            self.frame.hide()
+        self.frame.hide()
 
     def add_category(self):
         row_insert = self.ui.tableWidget.rowCount()
@@ -69,10 +72,15 @@ class CourseCreatorWidget(object):
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
                 self.categories_to_create.append(category[:].copy())
+                self.new_course.assignment_category_dict.add_category(category)
 
     def validate_assignment_categories(self):
         row_count = self.ui.tableWidget.rowCount()
         output = []
+
+        if row_count <= 0:
+            print("no rows")
+            return True
 
         # Loop through and get data from the table
         for row in range(0, row_count):
@@ -81,18 +89,27 @@ class CourseCreatorWidget(object):
             output.append([cat_name, cat_drop_count])
 
         # Make sure that our data is valid
-        valid = self.error_checking(output)
+        if not self.category_error_checking(output):
+            return False
 
         # Add the assignmentcategorylist creation here if valid is valid
-        if valid:
-            for category in output:
-                # This is the class variable that the Course will user to create its new categories
-                self.categories_to_create.append(category[:].copy())
+        for category in output:
+            # This is the class variable that the Course will user to create its new categories
+            self.categories_to_create.append(category[:].copy())
+        return True
 
-    def error_checking(self, user_input):
+    def category_error_checking(self, user_input):
         # variables for the names, weights, and drop counts of each category
         category_names = [user_input[i][0] for i in range(len(user_input))]
         category_drop_counts = [user_input[j][1] for j in range(len(user_input))]
+
+        if not category_names:
+            self.bad_input('Error', 'no category names')
+            return False
+
+        if not category_drop_counts:
+            self.bad_input('Error', 'no drop counts')
+            return False
 
         for i in category_names:
             if i == "":
@@ -101,13 +118,13 @@ class CourseCreatorWidget(object):
 
         # check the drop counts
         for i in category_drop_counts:
-
             if "." in i:
+                self.bad_input('Error', 'enter drop count')
                 return False
-
             try:
                 x = int(i.strip())
                 if x < 0:
+                    self.bad_input('Error', 'negative drop count')
                     return False
             except ValueError:
                 self.bad_input('Error', 'You have a drop count that is not a nonnegative integer.  Please try again.')
@@ -137,6 +154,7 @@ class CourseCreatorWidget(object):
         self.new_course.number = self.ui.course_number_line_edit.text()
         self.new_course.section = self.ui.section_number_line_edit.text()
         self.new_course.semester = self.ui.course_semester_line_edit.text()
+        self.new_course.link_with_database()
         # Add error checking to make sure EXACT course isn't already created (ignore case)
         return True
 
@@ -187,20 +205,18 @@ class CourseCreatorWidget(object):
 class InitialCourseScreen(object):
 
     def __init__(self, course_manager):
-
         self.course_manager = course_manager
         self.next_screen = None
         self.ICScreen = QtWidgets.QDialog()
-        self.ui = uic.loadUi('InitialCourseScreen.ui', self.ICScreen)
+        self.ui = uic.loadUi('../assets/ui/CourseWizardFirst.ui', self.ICScreen)
         self.ICScreen.newCourseButton.clicked.connect(self.create_new_course)
         self.ICScreen.newTemplateCourseButton.clicked.connect(self.create_new_template_course)
+        self.ICScreen.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.ICScreen.exec()
 
     def create_new_course(self):
         self.ICScreen.hide()
         self.next_screen = CourseCreatorWidget(self.course_manager)
-        # self.next_screen = CourseCreationThird()
-        # insert code to set table with appropriate changes
 
     def create_new_template_course(self):
         pass

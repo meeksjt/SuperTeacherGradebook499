@@ -1,6 +1,5 @@
-from Assignment import Assignment
 from AssignmentCategory import *
-from GlobalVariables import *
+import GlobalVariables
 import copy
 import re
 
@@ -8,20 +7,19 @@ import re
 class AssignmentCategoryManager:
 	def __init__(self, tableName, categoryName, weight, drop_count):
 		self.tableName = tableName+re.sub('\W+', '_',categoryName)
-		print(self.tableName)
 		self.weight = weight
 		self.dropCount = drop_count
 		self.assignmentList = []
-		cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Weight`	TEXT,`DropCount`	TEXT);")
-		connection.commit()
+		GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Weight`	TEXT,`DropCount`	TEXT);")
+		GlobalVariables.database.connection.commit()
 
 	def __reloadCategory(self):
 		# Loads a category list back.
 		self.course_list.clear()  # Erase what's in the list
 		# Get everything in the table
-		cursor.execute("SELECT * FROM `courseList`")
+		GlobalVariables.database.cursor.execute("SELECT * FROM `courseList`")
 		# Our results go into this as a list, I think.
-		results = cursor.fetchall()
+		results = GlobalVariables.database.cursor.fetchall()
 		# Go through each row
 		for row in results:
 			# Here, we pass the Name, Semester, and Section to the Course object, and it creates it.

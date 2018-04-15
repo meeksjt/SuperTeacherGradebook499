@@ -1,9 +1,5 @@
-from PyQt5 import QtCore, QtWidgets, QtGui, uic
-import GlobalVariables
+from PyQt5 import QtCore, QtWidgets, uic
 import sys
-import sqlite3
-from sqlite3 import Error
-from AssignmentCategory import AssignmentCategory
 from AssignmentCategoryDict import AssignmentCategoryDict
 from Student import StudentList
 import uuid
@@ -17,7 +13,8 @@ class CreateAssignment(object):
 
     def __init__(self, assignment_category_list, studentList):
         self.CAssignment = QtWidgets.QDialog()
-        self.ui = uic.loadUi('CreateAssignment.ui', self.CAssignment)
+        self.ui = uic.loadUi('../assets/ui/CreateAssignment.ui', self.CAssignment)
+        self.CAssignment.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.CAssignment.show()
 
         self.studentList = studentList
@@ -29,6 +26,7 @@ class CreateAssignment(object):
 
         self.CAssignment.createAssignmentButton.clicked.connect(self.add_assignment)
 
+        self.CAssignment.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.CAssignment.exec()
 
     def add_assignment(self):
@@ -44,9 +42,6 @@ class CreateAssignment(object):
             point_value = float(points)
             new_assignment_category = self.assignmentCategoryList.get_category(category)
             new_assignment_category.add_assignment(str(uuid.uuid4()), name, point_value, self.studentList)
-
-        #print(category, name, points)
-
 
     """
     Function to make sure that the string input can be turned into a float
@@ -80,14 +75,7 @@ class CreateAssignment(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-
     sl = StudentList('testingtesting')
-    #sl.add_student('1', 'A25229169', 'Tyler Meeks', 'jtm0036@uah.edu')
-    #sl.add_student('2', 'A25229170', 'Tyler Geeks', 'jtm0036@uah.edu')
-
     r = AssignmentCategoryDict('testingtesting', sl)
-    #r.add_category('1', 'Tests', 0, sl)
-    #r.add_category('2', 'Homework', 0, sl)
-
     x = CreateAssignment(r, sl)
     sys.exit(app.exec_())
