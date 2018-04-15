@@ -5,6 +5,7 @@ from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
 import GlobalVariables
+from Student import *
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -210,6 +211,24 @@ class MainDisplay(object):
         # course creation wizard
         self.cc_form = None
         self.new_student_form = None
+
+        senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+        senior_project.link_with_database()
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+        a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+        b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+        c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID4", "Age of Notron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "I tell you hwat", "24", senior_project.student_list)
+        self.course_manager.add_course(senior_project)
+        self.update_tree_view()
 
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list

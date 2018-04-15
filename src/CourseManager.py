@@ -89,7 +89,6 @@ class CourseManager:
             student_list_items.append(StudentItem(student.name, student.uuid))
         self.course_tree_labels.add_course(course.name, course.course_uuid, student_list_items)
 
-
     def __reload_courses(self):
 
         # Clears course list variable
