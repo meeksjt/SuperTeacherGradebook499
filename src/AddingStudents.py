@@ -46,9 +46,9 @@ class AddingStudents(object):
                     self.AStudents.studentTable.item(row, 2).text()])
 
         for i in output:
-            self.studentList.add_student(i[0], i[1], i[2], i[3])
+            print(i[0], i[1], i[2], i[3])
+            self.studentList.add_student(Student(i[0], i[1], i[2], i[3]))
             # Might have to add creating everything for that new student
-
 
         self.AStudents.hide()
 

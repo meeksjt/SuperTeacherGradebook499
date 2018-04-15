@@ -15,10 +15,11 @@ class Course(object):
         self.section = section
         self.semester = semester
         self.course_uuid = course_uuid
+        self.is_complete = False
 
         # generate an id because one doesn't exist
         if self.course_uuid == "invalid":
-            self.course_uuid = uuid.uuid4()
+            self.course_uuid = str(uuid.uuid4())
 
         self.student_list = None
         self.grade_scale = None
@@ -31,11 +32,13 @@ class Course(object):
         self.assignment_category_dict = AssignmentCategoryDict(self.course_uuid, self.student_list)
         self.attendance_dictionary = AttendanceDictionary(self.course_uuid, self.student_list)
 
-    def add_student(self, student_uuid, student_id, name, email):
-        self.student_list.add_student(student_uuid, student_id, name, email)
+    def add_student(self, student):
+        self.student_list.add_student(student)
 
     def remove_student(self, uuid):
-        self.student_list.remove_student(uuid)
+        if self.student_list.remove_student(uuid):
+            return True
+        return False
 
     def set_grade_scale(self, a, b, c, d):
         self.grade_scale.set_grade_scale(a, b, c, d)

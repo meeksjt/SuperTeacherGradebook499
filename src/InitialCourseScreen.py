@@ -26,7 +26,6 @@ class CourseCreatorWidget(object):
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
         self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
 
-        self.course_manager = CourseManager()
         self.frame.exec()
 
     # save the course data into a temporary course object and
@@ -42,8 +41,10 @@ class CourseCreatorWidget(object):
             print("failed to validate assignment categories")
             return
 
-        self.new_course.link_with_database()
         self.course_manager.add_course(self.new_course)
+        self.course_manager.set_current_course(self.new_course.course_uuid)
+        self.course_manager.currentCourse.is_complete = True
+
         self.frame.hide()
 
     def add_category(self):
@@ -74,6 +75,7 @@ class CourseCreatorWidget(object):
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
                 self.categories_to_create.append(category[:].copy())
+                self.new_course.assignment_category_dict.add_category(category)
 
     def validate_assignment_categories(self):
         row_count = self.ui.tableWidget.rowCount()
@@ -97,6 +99,10 @@ class CourseCreatorWidget(object):
         for category in output:
             # This is the class variable that the Course will user to create its new categories
             self.categories_to_create.append(category[:].copy())
+
+
+        # senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "I EET PIE", "24", senior_project.student_list)
+        # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
 
         return True
 
@@ -156,6 +162,7 @@ class CourseCreatorWidget(object):
         self.new_course.number = self.ui.course_number_line_edit.text()
         self.new_course.section = self.ui.section_number_line_edit.text()
         self.new_course.semester = self.ui.course_semester_line_edit.text()
+        self.new_course.link_with_database()
         # Add error checking to make sure EXACT course isn't already created (ignore case)
         return True
 
@@ -206,7 +213,6 @@ class CourseCreatorWidget(object):
 class InitialCourseScreen(object):
 
     def __init__(self, course_manager):
-
         self.course_manager = course_manager
         self.next_screen = None
         self.ICScreen = QtWidgets.QDialog()

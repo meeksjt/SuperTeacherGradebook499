@@ -8,7 +8,6 @@ import re
 class AssignmentCategoryManager:
 	def __init__(self, tableName, categoryName, weight, drop_count):
 		self.tableName = tableName+re.sub('\W+', '_',categoryName)
-		print(self.tableName)
 		self.weight = weight
 		self.dropCount = drop_count
 		self.assignmentList = []

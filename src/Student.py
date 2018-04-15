@@ -62,12 +62,10 @@ class StudentList:
             if student.name == name:
                 return student.uuid
 
-    def add_student(self, uuid, id, name, email):
-        newStudent = Student(self.tableName, id, name, email, uuid)
-        #connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
-        connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
+    def add_student(self, student):
+        connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(student.uuid) + "','" + str(student.id) + "', '" + str(student.name) + "', '" + str(student.email) + "')"))
         connection.commit()
-        self.__add_student(newStudent)
+        self.__add_student(student)
 
     def __add_student(self,dstudent):
         self.students.append(copy.deepcopy(dstudent))
@@ -76,11 +74,15 @@ class StudentList:
         for student in self.students:
             student.save_student()
 
-    def remove_student(self,uuid):
+    def remove_student(self, uuid):
         for student in self.students:
             if student.uuid == uuid:
-                student.remove_student()
+                query = "DELETE FROM `"+self.tableName+"` WHERE uuid='" + str(student.uuid) + "';"
+                cursor.execute(query)
+                connection.commit()
                 self.load_students()
+                return True
+        return False
 
     def load_students(self):
         self.students.clear() #Erase what's in the list
@@ -98,13 +100,15 @@ class StudentList:
 
 class Student:
 #Need to reload students after setting name.
-    def __init__(self,tableName,id,name,email, uuid):
+    def __init__(self, tableName="", id="", name="", email="", xuuid="invalid"):
         #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
         self.tableName = tableName
         self.name = name
         self.email = email
         self.id = id
-        self.uuid = uuid
+        self.uuid = xuuid
+        if self.uuid == "invalid":
+            self.uuid = str(uuid.uuid4())
 
     #connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
 
@@ -160,7 +164,7 @@ class Student:
         print("Email: ", self.email)
 
     def remove_student(self):
-        query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.id) + "';"
+        query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.uuid) + "';"
         print(query)
         cursor.execute(query)
         connection.commit()
