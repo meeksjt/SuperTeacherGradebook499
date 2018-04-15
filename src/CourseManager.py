@@ -10,7 +10,6 @@ class StudentItem(object):
         self.student_uuid = student_uuid
 
 class CourseListItem(object):
-
     def __init__(self, course_name, course_uuid, student_list):
         self.course_name = course_name
         self.course_uuid = course_uuid
@@ -89,7 +88,6 @@ class CourseManager:
             student_list_items.append(StudentItem(student.name, student.uuid))
         self.course_tree_labels.add_course(course.name, course.course_uuid, student_list_items)
 
-
     def __reload_courses(self):
 
         # Clears course list variable
@@ -136,6 +134,9 @@ class CourseManager:
 
     def get_current_course_uuid(self):
         return self.currentCourse.course_uuid
+
+    def add_student_to_course(self, course, student):
+        course.add_student(student)
 
     def drop_student_from_course(self, course_uuid, student_uuid):
         found_course = self.course_dict[course_uuid]

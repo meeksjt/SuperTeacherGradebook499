@@ -93,7 +93,7 @@ class StudentList:
         for sstudent in self.students:
             sstudent.print_student()
 
-class Student:
+class Student(object):
 #Need to reload students after setting name.
     def __init__(self, tableName="", id="", name="", email="", xuuid="invalid"):
         self.tableName = tableName
