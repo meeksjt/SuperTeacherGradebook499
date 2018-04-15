@@ -6,6 +6,7 @@ from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
 from GlobalVariables import connection, cursor
+import Statistics
 # from Course import *
 
 
@@ -191,7 +192,7 @@ class MainDisplay(object):
         # self.get_stats.released.connect(self.)
 
         # SAVE BUTTON
-        # self.save_grades.released.connect(self.)
+        self.save_grades.released.connect(self.save_grade_sheet)
 
         # connection for when a course is selected
         self.selection_model = self.course_tree_view.selectionModel()
@@ -338,7 +339,11 @@ class MainDisplay(object):
             category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
             for row in range(row_count):
                 student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                self.course_manager.currentCourse.assignment_category_dict[category_id].assignment_categories[assignment_id].set_student_grade(self, student_id, str(self.grade_sheet.itemAt(row, col).text()))
+                grade = str(self.grade_sheet.item(row, col).text())
+                if grade == "":
+                    grade = "-"
+                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].set_student_grade(student_id, grade)
+            self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].save_grades()
 
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
@@ -383,6 +388,7 @@ class MainDisplay(object):
                         self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
                         assignment_id,
                         category_id,
+                        self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].get_drop_count(),
                         student_id,
                         self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                         student_grade,
@@ -400,6 +406,9 @@ class MainDisplay(object):
     def course_or_name_change(self):
         pass
         # insert database logic here
+
+    def calculate_statistics(self):
+        pass
 
 
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
@@ -460,12 +469,13 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
 
 
 class GradeCell(QtWidgets.QTableWidgetItem):
-    def __init__(self, a_name="", a_uuid="", c_uuid="", s_uuid="", s_name="", c_grade="", c_points=""):
+    def __init__(self, a_name="", a_uuid="", c_uuid="", c_drop_count="", s_uuid="", s_name="", c_grade="", c_points=""):
 
         QtWidgets.QTableWidgetItem.__init__(self)
         self.assignment_name = a_name
         self.assignment_uuid = a_uuid
         self.category_uuid = c_uuid
+        self.category_drop_count = c_drop_count
         self.student_uuid = s_uuid
         self.student_name = s_name
         self.current_grade = c_grade
@@ -517,6 +527,32 @@ class GradeCell(QtWidgets.QTableWidgetItem):
     def set_current_points(self, x):
         self.current_points = x
 
+#Already existing CourseObject that has been linked with the database, and three booloans
+def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, categories_bool, assignments_bool):
+    #OK, so I need to check this stuff.
+    newCourse.link_with_database()
+
+    #Gets the Course we want to copy from.
+    old_course = main_display.course_manager.get_course(course_uuid)
+    # We want to copy the gradeScale.
+    if grade_scale_bool:
+        #Copes the gradescale
+        newCourse.grade_scale.set_grade_scale(old_course.get_A_bottom_score(), old_course.get_B_bottom_score(), old_course.get_C_bottom_score(), old_course.get_D_bottom_score)
+
+    #We only want to copy the categories.
+    if categories_bool and assignments_bool:
+        #Loops through category_dict and creates a new category for each one it finds.
+        for category_uuid, category in old_course.assignment_category_dict.items:
+            newCourse.assignment_category_dict.add_category(uuid.uuid4(), category.categoryName, category.drop_count, newCourse.student_list)
+
+    #We want to copy the categories and assignments.
+    if categories_bool and assignments_bool:
+        #Loops through category_dict and creates a new category for each one it finds.
+        for category_uuid, category in old_course.assignment_category_dict.items:
+            temp_uuid = uuid.uuid4()
+            newCourse.assignment_category_dict.add_category(temp_uuid, category.categoryName, category.drop_count, newCourse.student_list)
+            for assignment_uuid, assignment in category.assignment_dict.items():
+                newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName, assignment.totalPoints, newCourse.student_list)
 
 if __name__ == "__main__":
    import sys
@@ -540,4 +576,3 @@ if __name__ == "__main__":
 
    main_display.form.show()
    sys.exit(app.exec_())
-
