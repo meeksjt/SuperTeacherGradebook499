@@ -1,76 +1,26 @@
 # This is the main view for the instructor grade book
+from PyQt5 import QtGui
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-
-from InitialCourseScreen import *
+from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
-from GlobalVariables import connection, cursor
-import Statistics
-from AssignmentStats import AssignmentStats
-# from Course import *
 
-
-
-
-# This class is the underlying representation
-# for the tree view
-class CourseTree(object):
-    def __init__(self):
-        self.tree_view_data = []
-
-    # set new data
-    def set_tree_data(self, tree_data):
-        self.tree_view_data = tree_data
-
-    # add student to class given by class index
-    def add_student(self, class_index, student_uuid):
-        self.tree_view_data[class_index][1].append(student_uuid)
-
-    # remove student given by class index
-    # TODO: fix this function
-    def drop_student(self, course_uuid, student_uuid):
-        pass
-       # self.tree_view_data[course_uuid][1].remove(student_uuid)
-       # self.tree_view_data[class_index].remove(student)
-
-    def add_course(self, course_uuid):
-        self.tree_view_data.append((course_uuid, []))
-
-    def drop_course(self, course_uuid):
-        index = 0
-        for existing_course_uuid, student_list in self.tree_view_data:
-            if existing_course_uuid == course_uuid:
-                self.tree_view_data.pop(index)
-                return
-            index += 1
-
-    def get_course_name(self, course_uuid):
-        cursor.execute("SELECT * FROM `courseList`")
-        results = cursor.fetchall()
-        for row in results:
-            if row[0] == course_uuid:
-                return row[1]
-
-    def get_student_name(self, course_uuid, student_uuid):
-        ex_str = "SELECT student_name FROM `courseList_student_list` WHERE student_id=" + "\"" + student_uuid + "\""
-        cursor.execute(ex_str)
-        results = cursor.fetchall()
-        for row in results:
-            if row[0] == student_uuid:
-                return row[2]
-
-    def print_tree(self):
-        print(self.tree_view_data)
+import GlobalVariables
+from Student import *
 
 
 # a good portion of this class was auto-generated with pyuic5 to
 # convert .ui files to .py for more customization/hacking
 class MainDisplay(object):
     def __init__(self):
+        self.model = QtGui.QStandardItemModel()
+        self.course_tree_view = QtWidgets.QTreeView()
+        self.course_tree_view.setModel(self.model)
         self.course_manager = CourseManager()
+        self.update_tree_view()
 
         self.form = QtWidgets.QWidget()
+        self.form.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.form.setObjectName("Form")
         self.form.resize(1366, 768)
 
@@ -93,10 +43,9 @@ class MainDisplay(object):
            "background-color: #2b303b;"
         )
 
-        self.course_tree = QtWidgets.QTreeView()
-        self.course_tree.setAnimated(True)
-        self.course_tree.setObjectName("course_tree")
-        self.course_tree.setStyleSheet(
+        self.course_tree_view.setAnimated(True)
+        self.course_tree_view.setObjectName("course_tree")
+        self.course_tree_view.setStyleSheet(
             "QTreeView { "
                 "border: none;"
                 "color: #eff1f5; "
@@ -126,7 +75,7 @@ class MainDisplay(object):
             "}"
         )
 
-        self.verticalLayout.addWidget(self.course_tree)
+        self.verticalLayout.addWidget(self.course_tree_view)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
 
@@ -215,9 +164,12 @@ class MainDisplay(object):
             "   background-color: black;"
             "}"
         )
+        self.grade_sheet.viewportSizeHint()
 
         self.horizontal_header_view = self.grade_sheet.horizontalHeader()
         self.vertical_header_view = self.grade_sheet.verticalHeader()
+        self.horizontal_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.vertical_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.horizontal_header_view.setStyleSheet(
             "QHeaderView::section{ border: none; background-color: #c0c5ce}"
             "QHeaderView::section:checked { background-color: #bf616a}"
@@ -232,11 +184,6 @@ class MainDisplay(object):
         )
 
         # create underlying model
-        self.model = QtGui.QStandardItemModel()
-
-        # set underlying model
-        self.update_tree_view(self.model, self.course_manager.course_tree_view.course_list)
-
 
         # connection for when add button is released
         self.add_course.released.connect(self.add_item)
@@ -251,14 +198,14 @@ class MainDisplay(object):
         self.save_grades.released.connect(self.save_grade_sheet)
 
         # connection for when a course is selected
-        self.selection_model = self.course_tree.selectionModel()
+        self.selection_model = self.course_tree_view.selectionModel()
         self.selection_model.selectionChanged.connect(self.load_grade_sheet)
 
         # connection for when a tree item is renamed
-        self.model.itemChanged.connect(self.course_or_name_change)
+        # self.model.itemChanged.connect(self.course_or_name_change)
 
-        self.course_tree.setHeaderHidden(True)
-        self.course_tree.setUniformRowHeights(True)
+        self.course_tree_view.setHeaderHidden(True)
+        self.course_tree_view.setUniformRowHeights(True)
 
         self.splitter.setSizes([1, 800])
 
@@ -266,68 +213,107 @@ class MainDisplay(object):
         self.cc_form = None
         self.new_student_form = None
 
-        # self.form.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        # self.form.show()
+        senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+        senior_project.link_with_database()
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+        a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+        b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+        c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID4", "Age of Notron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "I tell you hwat", "24", senior_project.student_list)
+        self.course_manager.add_course(senior_project)
+        self.update_tree_view()
 
     # creates the underlying tree structure for the course view
     # by reading a tree structure represented in parenthetical/list
     # form like ( A B ( C D ( E F G ) ) )
-    def update_tree_view(self, model, course_list):
-        for course in course_list:
+    def update_tree_view(self):
+        self.model.clear()
+        for course in self.course_manager.course_tree_labels.course_list:
             item = QtGui.QStandardItem(course.course_name)
             for student in course.student_list:
                 item.appendRow(QtGui.QStandardItem(student.student_name))
-            model.appendRow(item)
-        self.course_tree.setModel(model)
+            self.model.appendRow(item)
+        # self.course_tree_view.setModel(self.model)
 
     # if the current row that is selected has children (is a course)
     # then add a new course... else add a student
     def add_item(self):
-        index = self.course_tree.currentIndex()
+        self.course_manager.currentCourse = Course()
 
-        # every option adds a student
-        student = QtGui.QStandardItem("Enter Student Name")
-
-        # if the current index is invalid, always add a course
-        if index.isValid():
-            current_item = self.model.itemFromIndex(index)
-
-            # append a new course with one student
-
-            # since a course needs at least one student
-            if current_item.hasChildren():
-                course_temp = Course()
-                self.cc_form = InitialCourseScreen(self.course_manager)
-
-                if not course_temp.name == "":
-                    course = QtGui.QStandardItem("new course")
-                    self.model.insertRow(index.row() + 1, course)
-                    course.appendRow(student)
-
-            else:
-                self.new_student_form = CreateNewStudent()
-                current_item.parent().appendRow(student)
-                # insert database logic here
-
-                #
-        else:
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
             self.cc_form = InitialCourseScreen(self.course_manager)
+            if self.course_manager.currentCourse.is_complete is False:
+                return
+            course = QtGui.QStandardItem(self.course_manager.currentCourse.name)
+            self.model.appendRow(course)
+            self.grade_sheet.setColumnCount(0)
+            self.grade_sheet.setRowCount(0)
+            return
 
-            if self.course_manager.currentCourse is None:
-                pass
+        current_item = self.model.itemFromIndex(index)
+        if current_item.parent() is None: # no parent means this is a course
+            self.cc_form = InitialCourseScreen(self.course_manager)
+            if self.course_manager.currentCourse.is_complete is False:
+                return
+
+            course = QtGui.QStandardItem(self.course_manager.currentCourse.name)
+
+
+            if index.row() == self.model.rowCount():
+                self.model.appendRow(course)
             else:
-                course = QtGui.QStandardItem(main_display.course_manager.currentCourse.name)
-            self.model.insertRow(index.row() + 1, course)
-            course.appendRow(student)
+                self.model.insertRow(index.row() + 1, course)
+                cc = self.course_manager.course_tree_labels.course_list[index.row()]
+                self.course_manager.course_tree_labels.add_course_at(index.row() + 1,
+                                                                     cc.course_name,
+                                                                     cc.course_uuid,
+                                                                     cc.student_list)
+                temp = self.course_manager.course_tree_labels.course_list[-1]
+                self.course_manager.course_tree_labels.course_list[index.row() + 1] = temp
+                del self.course_manager.course_tree_labels.course_list[-1]
 
+            self.grade_sheet.setColumnCount(0)
+            self.grade_sheet.setRowCount(0)
+        else: # then a student was selected
+            student = QtGui.QStandardItem("Enter Student Name")
+            self.new_student_form = CreateNewStudent()
+            current_item.parent().appendRow(student)
+
+        # self.update_tree_view()
         self.load_grade_sheet()
 
     # delete selected item (row or student) from tree view
     def del_selected_item(self):
-        index = self.course_tree.currentIndex()
-        self.model.removeRow(index.row(), index.parent())
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
+           return
+        item = self.model.itemFromIndex(index)
+        if item.parent() is None: # no parent? must be a course
+            course_uuid = str(self.course_manager.course_tree_labels.get_course_by_index(index.row()).course_uuid)
+            if self.course_manager.delete_course(course_uuid):
+                self.grade_sheet.setRowCount(0)
+                self.grade_sheet.setColumnCount(0)
+                self.model.removeRow(index.row())
+        else:
+            course = self.course_manager.course_tree_labels.get_course_by_index(item.parent().row())
+            student = course.student_list[item.row()]
+            print(student.student_uuid)
+            if self.course_manager.drop_student_from_course(str(course.course_uuid), str(student.student_uuid)):
+                self.model.removeRow(index.row(), index.parent())
+
+        # self.update_tree_view()
+        self.course_manager.course_tree_labels.print_tree_view()
         self.load_grade_sheet()
-        # insert database logic here
+
 
     def save_gradebook(self):
         col_count = self.grade_sheet.columnCount()
@@ -362,76 +348,82 @@ class MainDisplay(object):
         return header_list
 
     def save_grade_sheet(self):
-        index = self.course_tree.currentIndex()
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
+            return
+
         item = self.model.itemFromIndex(index)
-        if index.isValid() and item.hasChildren():
+        if item.parent(): # if there is a parent, then there is nothing to save
+            return
 
-            row_count = self.grade_sheet.rowCount()
-            col_count = self.grade_sheet.columnCount()
-
-            for col in range(col_count):
-                assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
-                category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-                for row in range(row_count):
-                    student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                    grade = str(self.grade_sheet.item(row, col).text())
-                    if grade == "":
-                        grade = "-"
-                    self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].set_student_grade(student_id, grade)
-                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].save_grades()
+        row_count = self.grade_sheet.rowCount()
+        col_count = self.grade_sheet.columnCount()
+        for col in range(col_count):
+            assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
+            category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
+            for row in range(row_count):
+                student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
+                grade = str(self.grade_sheet.item(row, col).text())
+                if grade == "":
+                    grade = "-"
+                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].set_student_grade(student_id, grade)
+            self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].save_grades()
 
     # when the user clicks a course, the grade sheet changes to that course
     def load_grade_sheet(self):
         self.grade_sheet.clear()
-        index = self.course_tree.currentIndex()
-        if index.isValid():
-            item = self.model.itemFromIndex(index)
-            if item.hasChildren():
-                max = len(self.course_manager.course_tree_view.course_list)
-                cc = self.course_manager.course_tree_view.get_course_by_index(index.row() % max)
-                self.course_manager.set_current_course(cc.course_uuid)
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
+            return
+        self.course_manager.current_index = index.row()
+        item = self.model.itemFromIndex(index)
 
-                header_labels = self.load_header_cells()
-                vertical_labels = self.load_vertical_header_cells()
+        if item.parent() is None: # no parent? then this is a course, so load the grade sheet
+            max = len(self.course_manager.course_tree_labels.course_list)
+            cc = self.course_manager.course_tree_labels.get_course_by_index(index.row() % max)
+            self.course_manager.set_current_course(cc.course_uuid)
 
-                row_count = len(vertical_labels)
-                col_count = len(header_labels)
+            header_labels = self.load_header_cells()
+            vertical_labels = self.load_vertical_header_cells()
 
-                self.grade_sheet.setRowCount(row_count)
-                self.grade_sheet.setColumnCount(col_count)
+            row_count = len(vertical_labels)
+            col_count = len(header_labels)
 
-                for i in range(len(header_labels)):
-                    self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i])
-                    self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name())
+            self.grade_sheet.setRowCount(row_count)
+            self.grade_sheet.setColumnCount(col_count)
 
-                for i in range(len(vertical_labels)):
-                    self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i])
-                    self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
+            for i in range(len(header_labels)):
+                self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i])
+                self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name())
+
+            for i in range(len(vertical_labels)):
+                self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i])
+                self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
 
 
-                for col in range(0, len(header_labels)):
-                    assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
-                    category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-                    for row in range(0, len(vertical_labels)):
-                        student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                        student_grade = self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
+            for col in range(0, len(header_labels)):
+                assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
+                category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
+                for row in range(0, len(vertical_labels)):
+                    student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
+                    student_grade = self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
 
-                        self.grade_sheet.setItem(row, col, GradeCell(
-                            self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
-                            assignment_id,
-                            category_id,
-                            self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].get_drop_count(),
-                            student_id,
-                            self.grade_sheet.verticalHeaderItem(row).get_student_name(),
-                            student_grade,
-                            # self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
-                        ))
-                        self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
+                    self.grade_sheet.setItem(row, col, GradeCell(
+                        self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
+                        assignment_id,
+                        category_id,
+                        self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].get_drop_count(),
+                        student_id,
+                        self.grade_sheet.verticalHeaderItem(row).get_student_name(),
+                        student_grade,
+                        # self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
+                    ))
+                    self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
 
-                self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
-            else:
-                self.grade_sheet.setRowCount(0)
-                self.grade_sheet.setColumnCount(0)
+            self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
+        else:
+            self.grade_sheet.setRowCount(0)
+            self.grade_sheet.setColumnCount(0)
 
     # when a user edits the name of a tree view row
     # update accordingly
@@ -514,7 +506,6 @@ class GradeCell(QtWidgets.QTableWidgetItem):
         self.current_points = c_points
 
     def setTextGradeCell(self, grade):
-        print("Proper set text is called")
         self.current_grade = grade
         super(GradeCell, self).setText(self.current_grade)
 
@@ -568,18 +559,18 @@ def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, cat
     #Gets the Course we want to copy from.
     old_course = main_display.course_manager.get_course(course_uuid)
     # We want to copy the gradeScale.
-    if grade_scale_bool == True:
+    if grade_scale_bool:
         #Copes the gradescale
         newCourse.grade_scale.set_grade_scale(old_course.get_A_bottom_score(), old_course.get_B_bottom_score(), old_course.get_C_bottom_score(), old_course.get_D_bottom_score)
 
     #We only want to copy the categories.
-    if categories_bool == True and assignments_bool == False:
+    if categories_bool and assignments_bool:
         #Loops through category_dict and creates a new category for each one it finds.
         for category_uuid, category in old_course.assignment_category_dict.items:
             newCourse.assignment_category_dict.add_category(uuid.uuid4(), category.categoryName, category.drop_count, newCourse.student_list)
 
     #We want to copy the categories and assignments.
-    if categories_bool == True and assignments_bool == True:
+    if categories_bool and assignments_bool:
         #Loops through category_dict and creates a new category for each one it finds.
         for category_uuid, category in old_course.assignment_category_dict.items:
             temp_uuid = uuid.uuid4()
@@ -588,52 +579,27 @@ def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, cat
                 newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName, assignment.totalPoints, newCourse.student_list)
 
 if __name__ == "__main__":
-    import sys
+   import sys
+   app = QtWidgets.QApplication(sys.argv)
+   main_display = MainDisplay()
 
-    # course = Course("Senior Project", "sg", "jtyjt", "4645754", "4343")
+   #senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+   #senior_project.link_with_database()
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+   #senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+   #a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
+   #b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
+   #c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID4", "Age of Notron", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "24", senior_project.student_list)
+   #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "I tell you hwat", "24", senior_project.student_list)
+   #main_display.course_manager.add_course(senior_project)
+   #main_display.update_tree_view()
 
-    # for category in course.assignment_category_list.assignment_categories:
-    # category.add_assignment("244", "Quiz 1", "3", course.student_list)
-
-    app = QtWidgets.QApplication(sys.argv)
-    main_display = MainDisplay()
-
-    #senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
-    #senior_project.link_with_database()
-    #senior_project.student_list.add_student("1", "42", "Tyler Bomb", "Hotmail@gmail.com")
-    #senior_project.student_list.add_student("2", "43", "Tyler Bomba", "Hotmail@gmail.com")
-    #senior_project.student_list.add_student("3", "44", "Tyler Bombas", "Hotmail@gmail.com")
-    #senior_project.student_list.add_student("4", "45", "Tyler Bombast", "Hotmail@gmail.com")
-    #a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-    #b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-    #c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-    #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
-    #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
-    #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
-    #main_display.course_manager.add_course(senior_project)
-
-    #senior_project = Course("Algorithms", "CS 387", "02", "Spring 18")
-    #senior_project.link_with_database()
-    #senior_project.student_list.add_student("1", "42", "Samsa", "Hotmail@gmail.com")
-    #senior_project.student_list.add_student("2", "43", "Jon Snow", "Hotmail@gmail.com")
-    #senior_project.student_list.add_student("3", "44", "Tyson", "Hotmail@gmail.com")
-    #senior_project.student_list.add_student("4", "45", "Tyler Tyler", "Hotmail@gmail.com")
-    #a = senior_project.assignment_category_dict.add_category("Blue Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-    #b = senior_project.assignment_category_dict.add_category("Blue Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-    #c = senior_project.assignment_category_dict.add_category("Blue Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-    #senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "U WOT M8", "24", senior_project.student_list)
-    #senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "I EET PIE", "24", senior_project.student_list)
-    #senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultra STOOPID", "24", senior_project.student_list)
-    #main_display.course_manager.add_course(senior_project)
-
-    main_display.update_tree_view(main_display.model, main_display.course_manager.course_tree_view.course_list)
-
-    #course_uuid = main_display.course_manager.add_course(Course("Math", "MA 388", "02", "Spring 18", "Thing TEST"))
-    #main_display.course_manager.set_current_course("Thing TEST")
-    #main_display.course_manager.currentCourse.link_with_database()
-
-    main_display.form.show()
-    sys.exit(app.exec_())
-
-    # ct.add_student(1, "muuuuu")
-    # ct.drop_course('Math')
+   main_display.form.show()
+   sys.exit(app.exec_())

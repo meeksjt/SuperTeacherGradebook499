@@ -1,12 +1,10 @@
 # Finished for Right Now
 # Might have to add creating new assignments/grades for each added student
-from PyQt5 import QtCore, QtWidgets, QtGui, uic
+from PyQt5 import QtCore, QtWidgets, uic
 import GlobalVariables
 import sys
 import sqlite3
-from sqlite3 import Error
 from Student import Student, StudentList
-import uuid
 
 """
 Class for the adding of new students to a course
@@ -21,7 +19,7 @@ class AddingStudents(object):
     def __init__(self, studentList):
 
         self.AStudents = QtWidgets.QDialog()
-        self.ui = uic.loadUi('AddingStudents.ui', self.AStudents)
+        self.ui = uic.loadUi('../assets/ui/AddingStudents.ui', self.AStudents)
         self.AStudents.studentTable.setHorizontalHeaderLabels(
             ['Student ID', 'Student Name', 'Student Email', 'Add Student?']
         )
@@ -30,6 +28,7 @@ class AddingStudents(object):
         self.studentIDs = {}
         self.setup_display()
 
+        self.AStudents.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.AStudents.show()
         self.AStudents.addSelectedStudentsButton.clicked.connect(self.add_students)
 
@@ -47,9 +46,9 @@ class AddingStudents(object):
                     self.AStudents.studentTable.item(row, 2).text()])
 
         for i in output:
-            self.studentList.add_student(i[0], i[1], i[2], i[3])
+            print(i[0], i[1], i[2], i[3])
+            self.studentList.add_student(Student(i[0], i[1], i[2], i[3]))
             # Might have to add creating everything for that new student
-
 
         self.AStudents.hide()
 

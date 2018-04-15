@@ -1,23 +1,23 @@
-# Finished
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-import sys
 import Authentication
 from MainDisplay import *
 from CreateUser import Ui_IGPCreateUser
-
+import GlobalVariables
+from Database import Database
 
 class Ui_IGPLogin(object):
 
     def __init__(self):
 
         self.IGPLogin = QtWidgets.QDialog()
-        self.ui = uic.loadUi('Login.ui', self.IGPLogin)
-        self.IGPLogin.show()
+        self.ui = uic.loadUi('../assets/ui/Login.ui', self.IGPLogin)
         self.IGPLogin.loginButton.clicked.connect(self.login_button_clicked)
         self.IGPLogin.quitButton.clicked.connect(self.IGPLogin.close)
         self.IGPLogin.newUserButton.clicked.connect(self.new_user_button_clicked)
 
-        self.main_window = MainDisplay()
+        self.IGPLogin.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        self.IGPLogin.show()
+
+        self.main_window = None
 
     def new_user_button_clicked(self):
         self.myOtherWindow = Ui_IGPCreateUser()
@@ -31,10 +31,8 @@ class Ui_IGPLogin(object):
 
         if not username:
             self.bad_input('Error', 'You need to enter a username')
-
         elif not password:
             self.bad_input('Error', 'You need to enter a password')
-
         else:
             conn = Authentication.connect_to_db('../databases/users.db')
             Authentication.create_user_table(conn)
@@ -44,9 +42,9 @@ class Ui_IGPLogin(object):
                 self.bad_input('Error', 'There is no user with the login credentials you entered.  Please try again.')
             else:
                 print("Legit credentials")
-                GlobalVariables.connection = sqlite3.connect('../databases/{}.db'.format(username))
-                GlobalVariables.cursor = GlobalVariables.connection.cursor()
+                GlobalVariables.database = Database(username)
                 self.IGPLogin.close()
+                self.main_window = MainDisplay()
                 self.main_window.form.show()
 
     def bad_input(self, window_text, error_message):

@@ -1,9 +1,6 @@
 # Finished
-
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from Student import Student, StudentList
-import sys
-from GlobalVariables import *
+from PyQt5 import QtCore, QtWidgets, uic
+import GlobalVariables
 
 """
 Wrapper class for a dictionary that maps attendance dates (string) to the students that
@@ -20,8 +17,8 @@ class AttendanceDictionary(object):
         self.course_uuid = course_uuid
         self.table_name = str(course_uuid) + "_attendance"
 
-        cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.table_name + "` (`date`	TEXT,`students`	TEXT);")
-        connection.commit()
+        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.table_name + "` (`date`	TEXT,`students`	TEXT);")
+        GlobalVariables.database.connection.commit()
         self.__load_attendance()
         # add loading in from a database if the attendance dictionary already exists
         # loads attendance sheets if already exists JACOB
@@ -32,8 +29,8 @@ class AttendanceDictionary(object):
 
     def __load_attendance(self):
         self.attendance_sheets.clear()  # Erase what's in the list
-        cursor.execute("SELECT * FROM `" + self.table_name+ "`")
-        results = cursor.fetchall()
+        GlobalVariables.database.execute("SELECT * FROM `" + self.table_name+ "`")
+        results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             self.attendance_sheets[row[0]] = row[1]
 
@@ -58,7 +55,7 @@ class AttendanceSheet(object):
 
     def __init__(self, attendanceDictionary, studentList, courseUUID):
         self.ASheet = QtWidgets.QDialog()
-        self.ui = uic.loadUi('Attendance.ui', self.ASheet)
+        self.ui = uic.loadUi('../assets/ui/Attendance.ui', self.ASheet)
         self.ASheet.studentAttendanceTable.setHorizontalHeaderLabels(['Student Name', 'Present?'])
         self.attendanceDictionary = attendanceDictionary
         self.studentList = studentList
@@ -69,13 +66,13 @@ class AttendanceSheet(object):
 
         # database stuff
         self.tableName = courseUUID + "_attendance"
-        cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`date`	TEXT,`students`	TEXT);")
-        connection.commit()
+        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`date`	TEXT,`students`	TEXT);")
+        GlobalVariables.database.connection.commit()
         self.__load_attendance()
         # If the user is trying to modify the date they are currently in
         if current_date in self.attendanceDictionary:
             self.load_presence(self.attendanceDictionary[current_date])
-
+        self.ASheet.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.ASheet.show()
         self.ASheet.saveAttendanceButton.clicked.connect(self.save_attendance)
         self.ASheet.attendanceCalendar.clicked[QtCore.QDate].connect(self.load_new_date)
@@ -119,8 +116,8 @@ class AttendanceSheet(object):
 
     def __load_attendance(self):
         self.attendanceDictionary.clear()  # Erase what's in the list
-        cursor.execute("SELECT * FROM `" + self.tableName + "`")
-        results = cursor.fetchall()
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
+        results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             self.attendanceDictionary[row[0]] = row[1]
 
@@ -134,24 +131,24 @@ class AttendanceSheet(object):
 
         output_string = ';'.join(output)
         date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
-        # This is where we find the date in the database.
+        # This is where we find the date in the GlobalVariables.database.
         self.attendanceDictionary[date] = output_string
 
         for i in self.attendanceDictionary:
             # i is the date, attendanceDicctionry[i] is the list of students
             print(i, self.attendanceDictionary[i])
 
-            # if the date exists, we update it's entry in the database.
-            results = connection.execute("SELECT * FROM `" + self.tableName + "` WHERE date='" + i + "' ;")
-            connection.commit()
+            # if the date exists, we update it's entry in the GlobalVariables.database.
+            results = GlobalVariables.database.connection.execute("SELECT * FROM `" + self.tableName + "` WHERE date='" + i + "' ;")
+            GlobalVariables.database.connection.commit()
             if results.rowcount>0:
                 # Then this date exists.
                 query = "UPDATE " + self.tableName + " SET students = '" + str(self.attendanceDictionary[i]) + "' WHERE date = " + str(i) + ";"
                 print(query)
-                cursor.execute(query)
-                connection.commit()
+                GlobalVariables.database.cursor.execute(query)
+                GlobalVariables.database.connection.commit()
             # Else, we INSERT
             else:
                 # Add database entry
-                connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(i) + "', '" + str(self.attendanceDictionary[i]) + "')")
-                connection.commit()
+                GlobalVariables.database.connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(i) + "', '" + str(self.attendanceDictionary[i]) + "')")
+                GlobalVariables.database.connection.commit()

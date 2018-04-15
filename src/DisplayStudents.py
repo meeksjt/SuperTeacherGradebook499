@@ -1,8 +1,6 @@
 from PyQt5 import QtCore, QtWidgets, uic
-import GlobalVariables
 import sys
 from Student import Student, StudentList
-import uuid
 import os
 
 
@@ -20,7 +18,7 @@ class DisplayStudents(object):
     def __init__(self, studentList, course_name, course_semester):
 
         self.DStudents = QtWidgets.QDialog()
-        self.ui = uic.loadUi('DisplayStudents.ui', self.DStudents)
+        self.ui = uic.loadUi('../assets/ui/DisplayStudents.ui', self.DStudents)
         self.DStudents.studentDisplay.setHorizontalHeaderLabels(
             ['Student Name', 'Student ID', 'Student Email']
         )
@@ -30,6 +28,7 @@ class DisplayStudents(object):
         self.course_semester = course_semester
         self.setup_display()
 
+        self.DStudents.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.DStudents.show()
         self.DStudents.returnButton.clicked.connect(self.close)
         self.DStudents.saveStudentInfoButton.clicked.connect(self.save_table)
@@ -74,9 +73,12 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
     x = StudentList('test5')
-    x.add_student(uuid.uuid4(), "A25229169", "Tyler Geeks", "jtm0036@uah.edu")
-    x.add_student(uuid.uuid4(), "A25229170", "Gyler Meeks", "jgm0036@uah.edu")
-    x.add_student(uuid.uuid4(), "A24229171", "Gyler Teeks", "jgt0036@uah.edu")
+    # add Student objects now like this: Student(tablename, id, name, email, uuid)
+    # table name could be anything since the student list supplies the table name
+
+    x.add_student(Student("tbl", "A25229169", "Tyler Geeks", "jtm0036@uah.edu"))
+    x.add_student(Student("tbl", "A252291h3", "Tyler Teeks", "jtm0227@uah.edu"))
+    x.add_student(Student("tbl", "A25229122", "Tyler Seeks", "jtm0083@uah.edu"))
 
     r = DisplayStudents(x, "Senior Design", "Spring 2018")
     sys.exit(app.exec_())
