@@ -66,7 +66,7 @@ class DisplayStudents(object):
         choice = QtWidgets.QMessageBox.question(self.DStudents, window_text, window_message, QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel)
         if choice == QtWidgets.QMessageBox.Ok:
             x = QtWidgets.QMessageBox.question(self.DStudents, "Finished!", "Your file has been saved in the 'student_rosters' directory.", QtWidgets.QMessageBox.Ok)
-            pass
+            return True
         else:
             return False
 

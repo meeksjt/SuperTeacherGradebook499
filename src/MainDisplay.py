@@ -7,6 +7,7 @@ from CreateNewStudent import *
 from CourseManager import *
 from GlobalVariables import connection, cursor
 import Statistics
+from AssignmentStats import AssignmentStats
 # from Course import *
 
 
@@ -244,7 +245,7 @@ class MainDisplay(object):
         self.del_course.released.connect(self.del_selected_item)
 
         # STATISTICS BUTTON
-        # self.get_stats.released.connect(self.)
+        self.get_stats.released.connect(self.calculate_statistics)
 
         # SAVE BUTTON
         self.save_grades.released.connect(self.save_grade_sheet)
@@ -439,7 +440,7 @@ class MainDisplay(object):
         # insert database logic here
 
     def calculate_statistics(self):
-        pass
+        self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list, self.grade_sheet, self.course_manager.currentCourse.name, self.course_manager.currentCourse.semester)
 
 
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
@@ -561,30 +562,30 @@ class GradeCell(QtWidgets.QTableWidgetItem):
 
 #Already existing CourseObject that has been linked with the database, and three booloans
 def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, categories_bool, assignments_bool):
-	#OK, so I need to check this stuff.
-	newCourse.link_with_database()
+    #OK, so I need to check this stuff.
+    newCourse.link_with_database()
 
-	#Gets the Course we want to copy from.
-	old_course = main_display.course_manager.get_course(course_uuid)
-	# We want to copy the gradeScale.
-	if grade_scale_bool == True:
-		#Copes the gradescale
-		newCourse.grade_scale.set_grade_scale(old_course.get_A_bottom_score(), old_course.get_B_bottom_score(), old_course.get_C_bottom_score(), old_course.get_D_bottom_score)
+    #Gets the Course we want to copy from.
+    old_course = main_display.course_manager.get_course(course_uuid)
+    # We want to copy the gradeScale.
+    if grade_scale_bool == True:
+        #Copes the gradescale
+        newCourse.grade_scale.set_grade_scale(old_course.get_A_bottom_score(), old_course.get_B_bottom_score(), old_course.get_C_bottom_score(), old_course.get_D_bottom_score)
 
-	#We only want to copy the categories.
-	if categories_bool == True and assignments_bool == False:
-		#Loops through category_dict and creates a new category for each one it finds.
-		for category_uuid, category in old_course.assignment_category_dict.items:
-			newCourse.assignment_category_dict.add_category(uuid.uuid4(), category.categoryName, category.drop_count, newCourse.student_list)
+    #We only want to copy the categories.
+    if categories_bool == True and assignments_bool == False:
+        #Loops through category_dict and creates a new category for each one it finds.
+        for category_uuid, category in old_course.assignment_category_dict.items:
+            newCourse.assignment_category_dict.add_category(uuid.uuid4(), category.categoryName, category.drop_count, newCourse.student_list)
 
-	#We want to copy the categories and assignments.
-	if categories_bool == True and assignments_bool == True:
-		#Loops through category_dict and creates a new category for each one it finds.
-		for category_uuid, category in old_course.assignment_category_dict.items:
-			temp_uuid = uuid.uuid4()
-			newCourse.assignment_category_dict.add_category(temp_uuid, category.categoryName, category.drop_count, newCourse.student_list)
-			for assignment_uuid, assignment in category.assignment_dict.items():
-				newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName, assignment.totalPoints, newCourse.student_list)
+    #We want to copy the categories and assignments.
+    if categories_bool == True and assignments_bool == True:
+        #Loops through category_dict and creates a new category for each one it finds.
+        for category_uuid, category in old_course.assignment_category_dict.items:
+            temp_uuid = uuid.uuid4()
+            newCourse.assignment_category_dict.add_category(temp_uuid, category.categoryName, category.drop_count, newCourse.student_list)
+            for assignment_uuid, assignment in category.assignment_dict.items():
+                newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName, assignment.totalPoints, newCourse.student_list)
 
 if __name__ == "__main__":
     import sys
