@@ -128,13 +128,80 @@ class MainDisplay(object):
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
 
+        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Grades", self.add_course)
+        calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
+        calculate_grades_sub.triggered.connect(self.calculate_grade)
+
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
         menu.addAction(edit_assignment_sub)
         menu.addAction(edit_student_sub)
 
+        menu.addAction(calculate_grades_sub)
+
         self.add_course.setMenu(menu)
+
+        '''
+        menu = QtWidgets.QMenu()
+
+        del_course_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Delete Course", self.del_course)
+        del_course_sub.setStatusTip("Add new course to the grade book")
+        del_course_sub.triggered.connect(self.del_selected_item)
+
+        del_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Delete Student", self.del_course)
+        del_student_sub.setStatusTip("Add new student to a course")
+        del_student_sub.triggered.connect(self.del_selected_item)
+
+        menu.addAction(del_course_sub)
+        menu.addAction(del_student_sub)
+        '''
+
+        # self.del_course.setMenu(menu)
+        # create underlying model
+
+        #connections
+        # self.add_course.released.connect(self.add_item)
+        self.get_stats.released.connect(self.calculate_statistics)
+        self.del_course.released.connect(self.del_selected_item)
+        self.get_stats.released.connect(self.menu_event)
+        self.save_grades.released.connect(self.save_grade_sheet)
+
+        # connection for when a course is selected
+        self.selection_model = self.course_tree_view.selectionModel()
+        self.selection_model.selectionChanged.connect(self.load_grade_sheet)
+
+        # connection for when a tree item is renamed
+        # self.model.itemChanged.connect(self.course_or_name_change)
+
+        self.course_tree_view.setHeaderHidden(True)
+        self.course_tree_view.setUniformRowHeights(True)
+
+        self.splitter.setSizes([1, 800])
+
+        # course creation wizard
+        self.cc_form = None
+        self.new_student_form = None
+
+        """
+        senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+        senior_project.link_with_database()
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+        a = senior_project.assignment_category_dict.add_category("1", "Homework", "1", senior_project.student_list)
+        b = senior_project.assignment_category_dict.add_category("2", "Quizzes", "2", senior_project.student_list)
+        c = senior_project.assignment_category_dict.add_category("3", "Tests", "0", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "10", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID2", "Hunger Games", "15", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID3", "Age of Ultron", "25", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID4", "Age of Notron", "25", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "40", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID6", "I tell you hwat", "40", senior_project.student_list)
+        self.course_manager.add_course(senior_project)
+        """
+    
         self.update_tree_view()
 
     # updates the data model for the QTreeView with the CourseList from CourseManager
@@ -209,6 +276,73 @@ class MainDisplay(object):
 
             self.load_grade_sheet()
 
+    def calculate_grade(self):
+        # Loop through each row in the grade sheet
+        drop_counts = {}
+        for row in range(1, self.grade_sheet.rowCount()):
+            studentID = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
+            student_grades = {}
+            for col in range(1, self.grade_sheet.columnCount() - 2):
+                student_grade = self.grade_sheet.item(row, col).text()
+                if student_grade == "-":
+                    student_grade = 0
+                else:
+                    student_grade = float(student_grade)
+                possible_points = self.grade_sheet.item(row, col).get_current_points()
+                assignment_cat_uuid = self.grade_sheet.item(row, col).get_category_uuid()
+                if assignment_cat_uuid not in drop_counts:
+                    drop_counts[assignment_cat_uuid] = self.grade_sheet.item(row, col).get_drop_count()
+                if assignment_cat_uuid not in student_grades:
+                    student_grades[assignment_cat_uuid] = []
+                student_grades[assignment_cat_uuid].append([student_grade, float(possible_points)])
+            student_points = 0
+            total_points = 0
+            for i in student_grades:
+                temp = self.calculate_category_grade(int(drop_counts[i]), student_grades[i])
+                student_points = student_points + temp[0]
+                total_points = total_points + temp[1]
+            final_grade = student_points / total_points * 100
+            letter_grade = self.course_manager.currentCourse.grade_scale.get_letter_grade(final_grade)
+
+            self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 2, QtWidgets.QTableWidgetItem(str(student_points)))
+            self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 1, QtWidgets.QTableWidgetItem(letter_grade))
+            
+    def calculate_category_grade(self, drop_count, student_grades):
+        deficits = []
+
+        for i in range(len(student_grades)):
+            deficits.append(student_grades[i][1] - student_grades[i][0])
+
+        for i in range(drop_count):
+            index = int(self.get_max_deficit(deficits))
+            del student_grades[index]
+            del deficits[index]
+
+        total_points = 0
+        student_points = 0
+        for i in range(len(student_grades)):
+            student_points = student_points + student_grades[i][0]
+            total_points = total_points + student_grades[i][1]
+
+        return [student_points, total_points]
+
+    """
+        Function to get the lowest score of a student for a particular list of scores
+        Parameters:
+            assignment_scores: (list) list of student scores
+        Returns:
+            min: (int) index of the lowest score in the student assignment list
+    """
+    def get_max_deficit(self, assignment_score_deficits):
+
+        max_index = 0
+        max_val = assignment_score_deficits[0]
+        for i in range(len(assignment_score_deficits)):
+            if assignment_score_deficits[i] > max_val:
+                max_index = i
+                max_val = assignment_score_deficits[max_index]
+
+        return max_index
 
     def edit_assignment_fn(self):
         checked_indices = []
@@ -321,7 +455,7 @@ class MainDisplay(object):
 
         row_count = self.grade_sheet.rowCount()
         col_count = self.grade_sheet.columnCount()
-        for col in range(1, col_count):
+        for col in range(1, col_count - 2):
             assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
             category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
             for row in range(1, row_count):
@@ -355,7 +489,7 @@ class MainDisplay(object):
 
             for i in range(1, col_count):
                 self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i - 1])
-                self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name())
+                self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points()+")")
 
             for i in range(1, row_count):
                 self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
@@ -393,10 +527,15 @@ class MainDisplay(object):
                         student_id,
                         self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                         student_grade,
-                        self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
+                        self.grade_sheet.horizontalHeaderItem(col).get_assignment_points()
                     ))
                     self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
 
+            # Create the final grade and letter grade columns
+            self.grade_sheet.insertColumn(col_count)
+            self.grade_sheet.insertColumn(col_count)
+            self.grade_sheet.setHorizontalHeaderItem(col_count, QtWidgets.QTableWidgetItem("Final Points"))
+            self.grade_sheet.setHorizontalHeaderItem(col_count + 1, QtWidgets.QTableWidgetItem("Final Letter Grade"))
             self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
         else:
             self.grade_sheet.setRowCount(0)
@@ -525,6 +664,12 @@ class GradeCell(QtWidgets.QTableWidgetItem):
 
     def set_current_points(self, x):
         self.current_points = x
+
+    def set_drop_count(self, x):
+        self.category_drop_count = x
+
+    def get_drop_count(self):
+        return self.category_drop_count
 
 #Already existing CourseObject that has been linked with the database, and three booloans
 def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, categories_bool, assignments_bool):
