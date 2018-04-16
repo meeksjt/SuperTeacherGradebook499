@@ -7,12 +7,13 @@ from Attendance import AttendanceDictionary
 
 class Course(object):
 
-    def __init__(self, name="", number="", section="", semester="", course_uuid="invalid"):
+    def __init__(self, name="", number="", section="", semester="", course_uuid="invalid", attendance_points=0):
         self.name = name
         self.number = number
         self.section = section
         self.semester = semester
         self.course_uuid = course_uuid
+        self.attendance_points = attendance_points
         self.is_complete = False
 
         # generate an id because one doesn't exist
@@ -40,7 +41,3 @@ class Course(object):
 
     def set_grade_scale(self, a, b, c, d):
         self.grade_scale.set_grade_scale(a, b, c, d)
-
-    def delete_course(self):
-        # Will be implemented later
-        pass

@@ -69,15 +69,16 @@ class CourseList(object):
 class CourseManager:
     def __init__(self):
         self.course_tree_labels = CourseList() # data structure to change labels based on database
-
         self.course_dict = {}
-
         self.currentCourse = None
-        self.current_index = 0
-        # Create the table if this is a new GlobalVariables.database.
-        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name` TEXT, `Number` TEXT, `Section` TEXT, `Semester` TEXT, `Course_UUID` TEXT);")
-
-        # Reload existing courses if necessary
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS courseList ("
+                                         "Name TEXT, "
+                                         "Number TEXT, "
+                                         "Section TEXT, "
+                                         "Semester TEXT, "
+                                         "Course_UUID TEXT, "
+                                         "Attendance_Points TEXT"
+                                         ");")
         self.__reload_courses()
 
     def add_to_course_tree_labels(self, course):
@@ -101,7 +102,8 @@ class CourseManager:
         # Go through each row
         for row in results:
             # Here, we pass the Name, Number, Section, Semester, and UUID to the Course object, and it creates it.
-            new_course = Course(row[0], row[1], row[2], row[3], row[4])
+            print(row[3])
+            new_course = Course(row[0], row[1], row[2], row[3], row[4], row[5])
             new_course.link_with_database()
             self.add_to_course_tree_labels(new_course)
             self.course_dict[row[4]] = copy.deepcopy(new_course)
@@ -119,11 +121,8 @@ class CourseManager:
         found_course = self.course_dict[uuid]
         if found_course is None:
             return False
-
         GlobalVariables.database.drop_course(found_course)
-
         self.__reload_courses()
-
         return True
 
     def get_course(self, course_uuid):
