@@ -10,7 +10,6 @@ class StudentItem(object):
         self.student_uuid = student_uuid
 
 class CourseListItem(object):
-
     def __init__(self, course_name, course_uuid, student_list):
         self.course_name = course_name
         self.course_uuid = course_uuid
@@ -70,15 +69,16 @@ class CourseList(object):
 class CourseManager:
     def __init__(self):
         self.course_tree_labels = CourseList() # data structure to change labels based on database
-
         self.course_dict = {}
-
         self.currentCourse = None
-        self.current_index = 0
-        # Create the table if this is a new GlobalVariables.database.
-        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS `courseList` (`Name` TEXT, `Number` TEXT, `Section` TEXT, `Semester` TEXT, `Course_UUID` TEXT, `attendance_points` TEXT);")
-
-        # Reload existing courses if necessary
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS courseList ("
+                                         "Name TEXT, "
+                                         "Number TEXT, "
+                                         "Section TEXT, "
+                                         "Semester TEXT, "
+                                         "Course_UUID TEXT, "
+                                         "Attendance_Points TEXT"
+                                         ");")
         self.__reload_courses()
 
     def add_to_course_tree_labels(self, course):
@@ -120,11 +120,8 @@ class CourseManager:
         found_course = self.course_dict[uuid]
         if found_course is None:
             return False
-
         GlobalVariables.database.drop_course(found_course)
-
         self.__reload_courses()
-
         return True
 
     def get_course(self, course_uuid):
@@ -135,6 +132,9 @@ class CourseManager:
 
     def get_current_course_uuid(self):
         return self.currentCourse.course_uuid
+
+    def add_student_to_course(self, course, student):
+        course.add_student(student)
 
     def drop_student_from_course(self, course_uuid, student_uuid):
         found_course = self.course_dict[course_uuid]

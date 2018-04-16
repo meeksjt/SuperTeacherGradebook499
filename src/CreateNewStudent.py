@@ -5,6 +5,7 @@ import sys
 import sqlite3
 from sqlite3 import Error
 import uuid
+from Student import *
 
 
 """
@@ -17,7 +18,7 @@ class CreateNewStudent(object):
     """
     Constructor for the CreateNewStudent class
     """
-    def __init__(self):
+    def __init__(self, student_temp):
 
         # Create the dialog box
         self.CNStudent = QtWidgets.QDialog()
@@ -25,7 +26,6 @@ class CreateNewStudent(object):
 
         # Link the button functionality
         self.CNStudent.createNewStudentButton.clicked.connect(self.create_student)
-
         self.CNStudent.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.CNStudent.exec()
 
@@ -80,6 +80,7 @@ class CreateNewStudent(object):
             c.execute('INSERT INTO students VALUES ("{f}", "{s}", "{t}", "{r}")'.format(f=id, s=student_id, t=student_name, r=student_email))
             conn.commit()
 
+            self.student_temp = Student("", student_id, student_name, student_email, id)
             choice = QtWidgets.QMessageBox.question(self.CNStudent, 'Congrats!', 'You successfully created the student "{0}"'
                                                                                  ' with the student ID "{1}"'.format(student_name, id),
                                                 QtWidgets.QMessageBox.Ok)

@@ -28,7 +28,7 @@ def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, cat
 				newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName, assignment.totalPoints, newCourse.student_list)
 
 def test_dezz_nuts():
-	x = Course("Red Silo Cup", "101", "01", "Fall", uuid.uuid4())
+	x = Course("Red Silo Cup", "101", "01", "Fall", uuid.uuid4(), "2")
 	create_course_from_past_course(x, "Senior Project", True, True, True)
 
 	#def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, categories_bool, assignments_bool):

@@ -44,7 +44,3 @@ class Course(object):
 
     def set_grade_scale(self, a, b, c, d):
         self.grade_scale.set_grade_scale(a, b, c, d)
-
-    def delete_course(self):
-        # Will be implemented later
-        pass

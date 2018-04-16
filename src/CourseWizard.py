@@ -65,7 +65,7 @@ class CourseCreatorWidget(object):
             output.append([cat_name, cat_drop_count])
 
         # Make sure that our data is valid
-        valid = self.error_checking(output)
+        valid = self.category_error_checking(output)
 
         # Add the assignmentcategorylist creation here if valid is valid
         if valid:
