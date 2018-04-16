@@ -163,7 +163,8 @@ class AssignmentCategory:
     def set_assignment_name(self, uuid, name):
                                         #UPDATE ? SET email = '?' WHERE uuid = '?
                                         # query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        GlobalVariables.database.connection.execute(("UPDATE `" + str(self.tableName) + " SET assignment_name = `"+str(name) +"`" +"` WHERE assignment_uuid = `"+str(uuid)+"')"))
+        x = "UPDATE `" + str(self.tableName) + "` SET assignment_name = `"+str(name) + "` WHERE assignment_uuid=`" + str(uuid) + "`"
+        GlobalVariables.database.connection.execute("UPDATE `" + str(self.tableName) + "` SET assignment_name = `"+str(name) +"` WHERE assignment_uuid=`" + str(uuid) + "`")
         GlobalVariables.database.connection.commit()
 
     def set_assignment_total_points(self, uuid, name):

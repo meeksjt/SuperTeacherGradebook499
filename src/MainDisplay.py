@@ -8,6 +8,7 @@ from Student import *
 from AssignmentStats import *
 from CreateAssignment import *
 from EditAssignment import EditAssignment
+from EditStudent import EditStudent
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -207,11 +208,16 @@ class MainDisplay(object):
         edit_assignment_sub.setStatusTip("Edit Selected Assignment Name, Category, or Point Values")
         edit_assignment_sub.triggered.connect(self.edit_assignment_fn)
 
+        edit_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Edit Selected Student", self.add_course)
+        edit_student_sub.setStatusTip("Modify Student Information")
+        edit_student_sub.triggered.connect(self.edit_student_fn)
+
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_student_sub)
         menu.addAction(create_assignment_sub)
         menu.addAction(edit_assignment_sub)
+        menu.addAction(edit_student_sub)
 
 
         self.add_course.setMenu(menu)
@@ -313,6 +319,27 @@ class MainDisplay(object):
         self.add_assignment = CreateAssignment(self.course_manager.currentCourse.assignment_category_dict, self.course_manager.currentCourse.student_list)
         self.load_grade_sheet()
 
+    def edit_student_fn(self):
+
+        checked_indices = []
+        for i in range(1, self.grade_sheet.rowCount()):
+            if self.grade_sheet.item(i, 0).checkState() == QtCore.Qt.Checked:
+                checked_indices.append(i)
+
+        if len(checked_indices) != 1:
+            print("You fucked up")
+        else:
+            # we need the student id, student name, student email, student uuid
+            student_uuid = self.grade_sheet.verticalHeaderItem(checked_indices[0]).get_student_uuid()
+            student_name = self.grade_sheet.verticalHeaderItem(checked_indices[0]).get_student_name()
+            student_email = self.course_manager.currentCourse.student_list.get_email(student_uuid)
+            student_id = self.course_manager.currentCourse.student_list.get_id(student_uuid)
+
+            edit_student = EditStudent(student_uuid, student_name, student_email, student_id, self.course_manager.currentCourse.student_list)
+
+            self.load_grade_sheet()
+
+
     def edit_assignment_fn(self):
 
         checked_indices = []
@@ -324,13 +351,14 @@ class MainDisplay(object):
             print("You fucked up")
         else:
             assignment_name = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_name()
-            assignment_id = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
+            assignment_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
             assignment_points = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_points()
             category_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_category_uuid()
-            edit_assignment = EditAssignment(assignment_name, assignment_points, assignment_id,
+            edit_assignment = EditAssignment(assignment_name, assignment_points, assignment_uuid,
                                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid],
                                self.course_manager.currentCourse.student_list)
             self.load_grade_sheet()
+
     def add_course(self):
         pass
 
