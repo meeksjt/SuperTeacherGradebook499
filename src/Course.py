@@ -25,6 +25,9 @@ class Course(object):
         self.assignment_category_dict = None
         self.attendance_dictionary = None
 
+    def set_attendance_points(self, points):
+        self.attendance_points = points
+
     def link_with_database(self):
         self.student_list = StudentList(self.course_uuid)
         self.grade_scale = GradeScale(self.course_uuid)

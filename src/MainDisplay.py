@@ -5,6 +5,7 @@ from CourseWizard import *
 from CreateNewStudent import *
 from CourseManager import *
 from Student import *
+from AssignmentStats import *
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -216,6 +217,7 @@ class MainDisplay(object):
 
         #connections
         # self.add_course.released.connect(self.add_item)
+        self.get_stats.released.connect(self.calculate_statistics)
         self.del_course.released.connect(self.del_selected_item)
         self.get_stats.released.connect(self.menu_event)
         self.save_grades.released.connect(self.save_grade_sheet)
@@ -452,7 +454,7 @@ class MainDisplay(object):
         # insert database logic here
 
     def calculate_statistics(self):
-        pass
+        self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list, self.grade_sheet, self.course_manager.currentCourse.name, self.course_manager.currentCourse.semester)
 
 
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):

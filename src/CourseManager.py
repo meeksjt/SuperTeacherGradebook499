@@ -102,7 +102,6 @@ class CourseManager:
         # Go through each row
         for row in results:
             # Here, we pass the Name, Number, Section, Semester, and UUID to the Course object, and it creates it.
-            print(row[3])
             new_course = Course(row[0], row[1], row[2], row[3], row[4], row[5])
             new_course.link_with_database()
             self.add_to_course_tree_labels(new_course)
