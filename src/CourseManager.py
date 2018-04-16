@@ -5,7 +5,7 @@ from Course import Course
 
 
 # the CourseList class just holds a list representing the labels
-# the MainDisplay uses this to build the tree on startup
+# the MainDisplay uses this to fill the tree on startup
 class StudentItem(object):
     def __init__(self, student_name, student_uuid):
         self.student_name = student_name
@@ -13,8 +13,9 @@ class StudentItem(object):
 
 
 class CourseListItem(object):
-    def __init__(self, course_name, course_uuid, student_list):
+    def __init__(self, course_name, course_section, course_uuid, student_list):
         self.course_name = course_name
+        self.course_section = course_section
         self.course_uuid = course_uuid
         self.student_list = student_list
 
@@ -24,8 +25,8 @@ class CourseList(object):
         self.course_list = []
         self.current_course_item = None
 
-    def add_course(self, course_name, course_uuid, student_list):
-        self.course_list.append(CourseListItem(course_name, course_uuid, student_list))
+    def add_course(self, course_name, course_section, course_uuid, student_list):
+        self.course_list.append(CourseListItem(course_name, course_section, course_uuid, student_list))
 
 
 # This class will read the CourseList table, and create a Course for each object in it.
@@ -51,25 +52,18 @@ class CourseManager(object):
             return
         for student in course.student_list.students:
             student_list_items.append(StudentItem(student.name, student.uuid))
-        self.course_tree_labels.add_course(course.name, course.course_uuid, student_list_items)
+        self.course_tree_labels.add_course(course.name, course.section, course.course_uuid, student_list_items)
 
     def __reload_courses(self):
-        # Clears course list variable
-        # self.course_dict.clear()
-
-        # Get everything in the table
         GlobalVariables.database.execute("SELECT * FROM `courseList`")
         results = GlobalVariables.database.cursor.fetchall()
 
-        # Go through each row
         self.course_tree_labels.course_list.clear()
         for row in results:
             new_course = Course(row[0], row[1], row[2], row[3], row[4], row[5])
             new_course.link_with_database()
             self.__add_to_course_tree_labels(new_course)
-            # self.course_dict[row[4]] = copy.deepcopy(new_course)
 
-    # Adds a new course to the database and course list
     def add_course(self, course):
         GlobalVariables.database.add_course(course)
         self.__reload_courses()
@@ -85,9 +79,6 @@ class CourseManager(object):
 
     def set_current_course(self, course_uuid):
         self.currentCourse = self.get_course(course_uuid)
-
-    def get_current_course_uuid(self):
-        return self.currentCourse.course_uuid
 
     def add_student_to_course(self, course, student):
         course.add_student(student)
