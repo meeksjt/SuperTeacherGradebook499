@@ -331,6 +331,7 @@ class MainDisplay(object):
                                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid],
                                self.course_manager.currentCourse.student_list)
             self.load_grade_sheet()
+
     def add_course(self):
         pass
 
