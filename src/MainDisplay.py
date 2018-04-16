@@ -13,6 +13,8 @@ from EditAssignment import EditAssignment
 from EditStudent import EditStudent
 
 
+# this class has a lot of buttons that call a lot of functions
+# so it's a bit of a God class
 class MainDisplay(object):
     def __init__(self):
         self.cc_form = None                     # course creation form
@@ -162,15 +164,13 @@ class MainDisplay(object):
         return self.course_manager.currentCourse
 
     def add_student_fn(self):
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
+            return
+
         self.new_student_form = CreateNewStudent(self.course_manager.currentCourse.student_list)
         if not self.new_student_form.is_complete:
             print("form not completed, so no new student")
-            return
-
-        self.get_selected_course().add_student(self.new_student_form.new_student)
-
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
             return
 
         current_item = self.model.itemFromIndex(index)
@@ -181,6 +181,7 @@ class MainDisplay(object):
         student.setAccessibleDescription(self.new_student_form.new_student.uuid)
         current_item.appendRow(student)
 
+        self.get_selected_course().add_student(self.new_student_form.new_student)
         self.course_manager.currentCourse.reload_grades()
         self.load_grade_sheet()
 
