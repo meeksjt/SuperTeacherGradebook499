@@ -19,7 +19,7 @@ class MainDisplay(object):
         self.course_tree_view.setModel(self.model)
         self.course_manager = CourseManager()
         self.update_tree_view()
-        self.course_manager.set_current_course('4e7282e3-6ea2-4ad5-9aa8-9a137583b4bb')
+        #self.course_manager.set_current_course('4e7282e3-6ea2-4ad5-9aa8-9a137583b4bb')
 
         self.form = QtWidgets.QWidget()
         self.form.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
@@ -211,6 +211,7 @@ class MainDisplay(object):
         menu.addAction(add_student_sub)
         menu.addAction(create_student_sub)
         menu.addAction(create_assignment_sub)
+        menu.addAction(edit_assignment_sub)
 
 
         self.add_course.setMenu(menu)
@@ -322,9 +323,14 @@ class MainDisplay(object):
         if len(checked_indices) != 1:
             print("You fucked up")
         else:
-
-
-
+            assignment_name = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_name()
+            assignment_id = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
+            assignment_points = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_points()
+            category_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_category_uuid()
+            edit_assignment = EditAssignment(assignment_name, assignment_points, assignment_id,
+                               self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid],
+                               self.course_manager.currentCourse.student_list)
+            self.load_grade_sheet()
     def add_course(self):
         pass
 
