@@ -11,7 +11,7 @@ This is the class that deals with creating a new Assignment
 
 class CreateAssignment(object):
 
-    def __init__(self, assignment_category_list, studentList):
+    def __init__(self, assignment_category_dict, studentList):
         self.CAssignment = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/CreateAssignment.ui', self.CAssignment)
         self.CAssignment.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
@@ -19,9 +19,9 @@ class CreateAssignment(object):
 
         self.studentList = studentList
 
-        self.assignmentCategoryList = assignment_category_list
+        self.assignmentCategoryDict = assignment_category_dict
 
-        for category in self.assignmentCategoryList.assignment_categories:
+        for category in self.assignmentCategoryDict.assignment_categories.values():
             self.CAssignment.assignmentCategoryDropdown.addItem(category.categoryName)
 
         self.CAssignment.createAssignmentButton.clicked.connect(self.add_assignment)
@@ -40,7 +40,7 @@ class CreateAssignment(object):
 
         if self.is_float(points):
             point_value = float(points)
-            new_assignment_category = self.assignmentCategoryList.get_category(category)
+            new_assignment_category = self.assignmentCategoryDict.get_category(category)
             new_assignment_category.add_assignment(str(uuid.uuid4()), name, point_value, self.studentList)
 
     """

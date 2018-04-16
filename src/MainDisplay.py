@@ -6,6 +6,8 @@ from CreateNewStudent import *
 from CourseManager import *
 from Student import *
 from AssignmentStats import *
+from CreateAssignment import *
+from EditAssignment import EditAssignment
 
 
 # a good portion of this class was auto-generated with pyuic5 to
@@ -160,9 +162,9 @@ class MainDisplay(object):
                 "border: 2px transparent red;"
                 "border-radius: 0px;"
             "}"
-            "QTableWidget::indicator {"
-            "   background-color: black;"
-            "}"
+            #"QTableWidget::indicator {"
+            #"   background-color: black;"
+            #"}"
         )
         self.grade_sheet.viewportSizeHint()
 
@@ -193,8 +195,23 @@ class MainDisplay(object):
         add_student_sub.setStatusTip("Add new student to a course")
         add_student_sub.triggered.connect(self.add_student_fn)
 
+        create_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Create New Student", self.add_course)
+        create_student_sub.setStatusTip("Create a New Student")
+        create_student_sub.triggered.connect(self.add_student_fn)
+
+        create_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Create New Assignment", self.add_course)
+        create_assignment_sub.setStatusTip("Create a New Assignment")
+        create_assignment_sub.triggered.connect(self.add_assignment_fn)
+
+        edit_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Edit Selected Assignment", self.add_course)
+        edit_assignment_sub.setStatusTip("Edit Selected Assignment Name, Category, or Point Values")
+        edit_assignment_sub.triggered.connect(self.edit_assignment_fn)
+
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
+        menu.addAction(create_student_sub)
+        menu.addAction(create_assignment_sub)
+
 
         self.add_course.setMenu(menu)
 
@@ -239,25 +256,26 @@ class MainDisplay(object):
         self.cc_form = None
         self.new_student_form = None
 
-        # senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
-        # senior_project.link_with_database()
-        # senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
-        # senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
-        # senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
-        # senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
-        # a = senior_project.assignment_category_dict.add_category("Red Fighter 1", "jgfgjfg", "0", senior_project.student_list)
-        # b = senior_project.assignment_category_dict.add_category("Red Fighter 2", "jgfgjfg", "0", senior_project.student_list)
-        # c = senior_project.assignment_category_dict.add_category("Red Fighter 3", "jgfgjfg", "0", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID4", "Age of Notron", "24", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "24", senior_project.student_list)
-        # senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "I tell you hwat", "24", senior_project.student_list)
-        #self.course_manager.add_course(senior_project)
+        """
+        senior_project = Course("Senior Project", "CS 499", "01", "Spring 18")
+        senior_project.link_with_database()
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "42", "Tyler Bomb", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "43", "Tyler Bomba", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "44", "Tyler Bombas", "Hotmail@gmail.com"))
+        senior_project.student_list.add_student(Student(senior_project.course_uuid, "45", "Tyler Bombast", "Hotmail@gmail.com"))
+        a = senior_project.assignment_category_dict.add_category("1", "Homework", "1", senior_project.student_list)
+        b = senior_project.assignment_category_dict.add_category("2", "Quizzes", "2", senior_project.student_list)
+        c = senior_project.assignment_category_dict.add_category("3", "Tests", "0", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[a].add_assignment("AUUID", "Oceans Eleven", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[b].add_assignment("AUUID2", "Hunger Games", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID3", "Age of Ultron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID4", "Age of Notron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID5", "Darkness of Notron", "24", senior_project.student_list)
+        senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID6", "I tell you hwat", "24", senior_project.student_list)
+        self.course_manager.add_course(senior_project)
 
         self.update_tree_view()
-
+        """
 
     def menu_event(self):
         pass
@@ -289,6 +307,23 @@ class MainDisplay(object):
             current_item.parent().appendRow(QtGui.QStandardItem(self.new_student_form.new_name))
         #Now we have to refresh grades...
         self.course_manager.currentCourse.reload_grades()
+
+    def add_assignment_fn(self):
+        self.add_assignment = CreateAssignment(self.course_manager.currentCourse.assignment_category_dict, self.course_manager.currentCourse.student_list)
+        self.load_grade_sheet()
+
+    def edit_assignment_fn(self):
+
+        checked_indices = []
+        for i in range(1, self.grade_sheet.columnCount()):
+            if self.grade_sheet.item(0, i).checkState() == QtCore.Qt.Checked:
+                checked_indices.append(i)
+
+        if len(checked_indices) != 1:
+            print("You fucked up")
+        else:
+
+
 
     def add_course(self):
         pass
@@ -384,10 +419,10 @@ class MainDisplay(object):
 
         row_count = self.grade_sheet.rowCount()
         col_count = self.grade_sheet.columnCount()
-        for col in range(col_count):
+        for col in range(1, col_count):
             assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
             category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-            for row in range(row_count):
+            for row in range(1, row_count):
                 student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
                 grade = str(self.grade_sheet.item(row, col).text())
                 if grade == "":
@@ -411,25 +446,41 @@ class MainDisplay(object):
             header_labels = self.load_header_cells()
             vertical_labels = self.load_vertical_header_cells()
 
-            row_count = len(vertical_labels)
-            col_count = len(header_labels)
+            row_count = len(vertical_labels) + 1
+            col_count = len(header_labels) + 1
 
             self.grade_sheet.setRowCount(row_count)
             self.grade_sheet.setColumnCount(col_count)
 
-            for i in range(len(header_labels)):
-                self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i])
+            for i in range(1, col_count):
+                self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i - 1])
                 self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name())
 
-            for i in range(len(vertical_labels)):
-                self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i])
+            for i in range(1, row_count):
+                self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
                 self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
 
+            # Add the checkboxes
+            #for i in range(0, len(vertical_labels)):
+            for i in range(1, row_count):
+                chkBoxItem = QtWidgets.QTableWidgetItem()
+                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+                self.grade_sheet.setItem(i, 0, chkBoxItem)
 
-            for col in range(0, len(header_labels)):
+            # Add more checkboxes
+            for i in range(1, col_count):
+                chkBoxItem = QtWidgets.QTableWidgetItem()
+                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+
+                self.grade_sheet.setItem(0, i, chkBoxItem)
+
+
+            for col in range(1, col_count):
                 assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
                 category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-                for row in range(0, len(vertical_labels)):
+                for row in range(1, row_count):
                     student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
                     student_grade = self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
 
@@ -441,7 +492,7 @@ class MainDisplay(object):
                         student_id,
                         self.grade_sheet.verticalHeaderItem(row).get_student_name(),
                         student_grade,
-                        # self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
+                        self.grade_sheet.horizontalHeaderItem(row).get_assignment_points()
                     ))
                     self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
 
