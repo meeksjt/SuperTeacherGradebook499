@@ -23,7 +23,6 @@ class CreateNewStudent(object):
         # Create the dialog box
         self.student_list = student_list
         self.CNStudent = QtWidgets.QDialog()
-        self.new_name = ""
         self.ui = uic.loadUi('../assets/ui/CreateNewStudent.ui', self.CNStudent)
 
         # Link the button functionality
@@ -58,7 +57,6 @@ class CreateNewStudent(object):
         #valid = self.check_for_existing_student(conn, student_name, student_email, student_id)
 
         #self.add_student(conn, student_name, student_id, student_email)
-
         self.student_list.add_student(Student(self.student_list.tableName, student_id, student_name, student_email, str(uuid.uuid4())))
         self.CNStudent.hide()
 

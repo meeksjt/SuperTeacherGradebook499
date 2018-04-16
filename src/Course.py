@@ -44,3 +44,5 @@ class Course(object):
 
     def set_grade_scale(self, a, b, c, d):
         self.grade_scale.set_grade_scale(a, b, c, d)
+    def reload_grades(self):
+        self.assignment_category_dict = AssignmentCategoryDict(self.course_uuid, self.student_list)

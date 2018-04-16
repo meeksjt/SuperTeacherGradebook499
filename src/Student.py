@@ -60,7 +60,7 @@ class StudentList:
     def add_student(self, student):
         GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(student.uuid) + "','" + str(student.id) + "', '" + str(student.name) + "', '" + str(student.email) + "')"))
         GlobalVariables.database.connection.commit()
-        self.__add_student(student)
+
 
     def add_student_and_create_object(self,uuid,id,name,email):
         newStudent = Student(self.tableName,id,name,email, uuid)

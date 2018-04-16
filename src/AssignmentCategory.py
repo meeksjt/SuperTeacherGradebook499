@@ -49,6 +49,9 @@ class AssignmentCategory:
     def get_drop_count(self):
         return self.drop_count
 
+    def reload_grades(self):
+        for key, assignment in self.assignment_dict.items():
+            assignment.reload_grades()
     """
         Function to set the dropCount of the AssignmentCategory
         Parameters:

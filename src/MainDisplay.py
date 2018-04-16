@@ -17,6 +17,7 @@ class MainDisplay(object):
         self.course_tree_view.setModel(self.model)
         self.course_manager = CourseManager()
         self.update_tree_view()
+        self.course_manager.set_current_course('4e7282e3-6ea2-4ad5-9aa8-9a137583b4bb')
 
         self.form = QtWidgets.QWidget()
         self.form.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
@@ -279,13 +280,15 @@ class MainDisplay(object):
         if not index.isValid():
            return
 
-        student = Student("temp", "temp", "temp", "temp")
-        self.new_student_form = CreateNewStudent(student)
+
+        self.new_student_form = CreateNewStudent(self.course_manager.currentCourse.student_list)
 
         if current_item.parent() is None:
-            current_item.appendRow(QtGui.QStandardItem(student.name))
+            current_item.appendRow(QtGui.QStandardItem(self.new_student_form.new_name))
         else:
-            current_item.parent().appendRow(QtGui.QStandardItem(student.name))
+            current_item.parent().appendRow(QtGui.QStandardItem(self.new_student_form.new_name))
+        #Now we have to refresh grades...
+        self.course_manager.currentCourse.reload_grades()
 
     def add_course(self):
         pass

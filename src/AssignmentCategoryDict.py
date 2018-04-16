@@ -15,7 +15,7 @@ class AssignmentCategoryDict(object):
         self.tableName = str(course_uuid) + "_categories"
         GlobalVariables.database.connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`uuid`	TEXT,`name` TEXT,`drop_count` TEXT);")
         GlobalVariables.database.connection.commit()
-        self.__reload_categories()
+        self.reload_categories()
 
         # Jacob: Need to add loading in from database and saving to database if table already exists
         # Will also need to do the loading for all the assignment categories and everything below that
@@ -30,7 +30,7 @@ class AssignmentCategoryDict(object):
         category = AssignmentCategory(str(uuid), name, drop_count, self.student_list)
         GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(uuid) + "', '" + str(name) + "', '" + str(drop_count) + "')")
         GlobalVariables.database.connection.commit()
-        self.__reload_categories()
+        self.reload_categories()
         return uuid
 
     def get_category(self, category_name):
@@ -38,7 +38,7 @@ class AssignmentCategoryDict(object):
             if category.categoryName == category_name:
                 return category
 
-    def __reload_categories(self):
+    def reload_categories(self):
         GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
@@ -52,7 +52,7 @@ class AssignmentCategoryDict(object):
                 query = "UPDATE `" + self.tableName + "` SET name = '" + str(name) + "' WHERE uuid = '" + str(x.uuid) + "';"
                 GlobalVariables.database.cursor.execute(query)
                 GlobalVariables.database.connection.commit()
-                self.__reload_categories()
+                self.reload_categories()
 
     def set_drop_count(self,uuid, dropCount):
         for x in self.assignment_categories:
@@ -60,4 +60,4 @@ class AssignmentCategoryDict(object):
                 query = "UPDATE `" + self.tableName + "` SET name = '" + str(dropCount) + "' WHERE uuid = '" + str(x.uuid) + "';"
                 GlobalVariables.database.cursor.execute(query)
                 GlobalVariables.database.connection.commit()
-                self.__reload_categories()
+                self.reload_categories()

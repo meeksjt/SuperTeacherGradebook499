@@ -27,7 +27,9 @@ class Assignment:
         self.__load_grades()
         self.add_grade_to_database()
 
-
+    def reload_grades(self):
+        self.__load_grades()
+        self.add_grade_to_database()
     """
         Function to get assignmentName for an Assignment
         Parameters:
