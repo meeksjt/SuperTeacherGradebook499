@@ -1,4 +1,4 @@
-import Assignment
+from Assignment import Assignment
 import GlobalVariables
 import copy
 # for your grade calculations, make sure you handle "-"
@@ -25,10 +25,10 @@ class AssignmentCategory:
         GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEXT);")
         GlobalVariables.database.connection.commit()
 
-        self.__reload_assignments()
+        self.reload_assignments()
 
     # reload assignments, pretty sure this is right
-    def __reload_assignments(self):
+    def reload_assignments(self):
         self.assignment_dict.clear()
         GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = GlobalVariables.database.cursor.fetchall()
@@ -77,7 +77,7 @@ class AssignmentCategory:
         GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(assignment_uuid) + "', '" + str(assignment_name) + "', '" + str(total_points) + "')")
         GlobalVariables.database.connection.commit()
 
-        self.__reload_assignments()
+        self.reload_assignments()
 
     """
         Function to delete an Assignment from our assignmentList
@@ -93,7 +93,7 @@ class AssignmentCategory:
                 #del self.assignment_dict[assignment_uuid]
                 GlobalVariables.database.cursor.execute("DELETE FROM " + str(self.tableName) + " where assignment_uuid = '" + assignment_uuid + "';")
                 GlobalVariables.database.connection.commit()
-                self.__reload_assignments()
+                self.reload_assignments()
                 break
 
     """
@@ -163,7 +163,8 @@ class AssignmentCategory:
     def set_assignment_name(self, uuid, name):
                                         #UPDATE ? SET email = '?' WHERE uuid = '?
                                         # query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        GlobalVariables.database.connection.execute(("UPDATE `" + str(self.tableName) + " SET assignment_name = `"+str(name) +"`" +"` WHERE assignment_uuid = `"+str(uuid)+"')"))
+        x = "UPDATE `" + str(self.tableName) + "` SET assignment_name = `"+str(name) + "` WHERE assignment_uuid=`" + str(uuid) + "`"
+        GlobalVariables.database.connection.execute("UPDATE `" + str(self.tableName) + "` SET assignment_name = `"+str(name) +"` WHERE assignment_uuid=`" + str(uuid) + "`")
         GlobalVariables.database.connection.commit()
 
     def set_assignment_total_points(self, uuid, name):
