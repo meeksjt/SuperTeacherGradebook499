@@ -71,6 +71,19 @@ class GradeScale(object):
     def get_D_bottom_score(self):
         return self.grade_dict['D']
 
+    def get_letter_grade(self, score):
+        if score >= float(self.grade_dict['A']):
+            return 'A'
+        elif score >= float(self.grade_dict['B']):
+            return 'B'
+        elif score >= float(self.grade_dict['C']):
+            return 'C'
+        elif score >= float(self.grade_dict['D']):
+            return 'D'
+        else:
+            return 'F'
+
+
 if __name__ == "__main__":
     print("This is a test.")
     testGradeScale = GradeScale("StacysMom")
