@@ -110,8 +110,11 @@ class Assignment:
             student_id : (string) id of the student we are setting the Grade for
             grade : (float) grade of the student on this Assignment
         Returns:
-            None
+            None(`assignment_uuid`	TEXT,`assignment_name`	TEXT,`total_points`	TEX
     """
+
+
+
     def set_student_grade(self, student_uuid, grade):
         self.studentGrades.set_grade(student_uuid, grade)
 
