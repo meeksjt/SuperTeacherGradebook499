@@ -164,7 +164,7 @@ class MainDisplay(object):
         # self.add_course.released.connect(self.add_item)
         self.get_stats.released.connect(self.calculate_statistics)
         self.del_course.released.connect(self.del_selected_item)
-        self.get_stats.released.connect(self.menu_event)
+        #self.get_stats.released.connect(self.menu_event)
         self.save_grades.released.connect(self.save_grade_sheet)
 
         # connection for when a course is selected

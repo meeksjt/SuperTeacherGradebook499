@@ -43,12 +43,12 @@ class AssignmentStats(object):
                                                "Your file has been saved in the 'student_assignment_statistics' directory.",
                                                QtWidgets.QMessageBox.Ok)
             with open(("../student_assignment_statistics/" + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.txt"), 'w') as f:
-                header_line = "Assignment Name - Assignment Points - Mean - Median - Mode - Standard Deviation\n"
+                header_line = "Assignment Name\t - \tAssignment Points - Mean - Median - Mode - Standard Deviation\n"
                 f.write(header_line)
                 row_count = self.AStats.statsTable.rowCount()
                 for row in range(row_count):
                     f.write(self.AStats.statsTable.item(row, 0).text().ljust(23))
-                    f.write(self.AStats.statsTable.item(row, 1).text().ljust(15))
+                    f.write(self.AStats.statsTable.item(row, 1).text().rjust(15))
                     f.write(self.AStats.statsTable.item(row, 2).text().ljust(8))
                     f.write(self.AStats.statsTable.item(row, 3).text().ljust(8))
                     f.write(self.AStats.statsTable.item(row, 4).text().ljust(8))
@@ -73,11 +73,11 @@ class AssignmentStats(object):
 
     def setup_display(self):
         row_count = self.gradesheetTable.rowCount()
-        col_count = self.gradesheetTable.columnCount()
+        col_count = self.gradesheetTable.columnCount() - 2
 
         student_grades = []
         #Loop through our grade table
-        for col in range(col_count):
+        for col in range(1, col_count):
             row_insert = self.AStats.statsTable.rowCount()
             self.AStats.statsTable.insertRow(row_insert)
             assignment_grades = []
@@ -90,7 +90,7 @@ class AssignmentStats(object):
             assignment_grades.append(assignment_name)
             assignment_grades.append(assignment_points)
             assignment_grades.append({})
-            for row in range(row_count):
+            for row in range(1, row_count):
                 student_id = self.gradesheetTable.verticalHeaderItem(row).get_student_uuid()
                 grade = self.gradesheetTable.item(row, col).text()
                 if grade == "" or grade == "-":
