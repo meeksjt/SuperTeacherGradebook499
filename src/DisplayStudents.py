@@ -1,8 +1,8 @@
-from PyQt5 import QtCore, QtWidgets, uic
 import sys
-from Student import Student, StudentList
 import os
 
+from PyQt5 import QtCore, QtWidgets, uic
+from Student import Student, StudentList
 
 
 """

@@ -1,13 +1,14 @@
-# Delete Course
+import Student
+import uuid
+
 from AssignmentCategoryDict import AssignmentCategoryDict
-from Student import *
 from GradeScale import GradeScale
 from Attendance import AttendanceDictionary
-
+from PyQt5 import QtWidgets
 
 class Course(object):
 
-    def __init__(self, name="", number="", section="", semester="", course_uuid="invalid", attendance_points=0):
+    def __init__(self, name="", number="", section="", semester="", course_uuid="invalid", attendance_points="0"):
         self.name = name
         self.number = number
         self.section = section
@@ -29,7 +30,7 @@ class Course(object):
         self.attendance_points = points
 
     def link_with_database(self):
-        self.student_list = StudentList(self.course_uuid)
+        self.student_list = Student.StudentList(self.course_uuid)
         self.grade_scale = GradeScale(self.course_uuid)
         self.assignment_category_dict = AssignmentCategoryDict(self.course_uuid, self.student_list)
         self.attendance_dictionary = AttendanceDictionary(self.course_uuid, self.student_list)
@@ -46,3 +47,6 @@ class Course(object):
         self.grade_scale.set_grade_scale(a, b, c, d)
     def reload_grades(self):
         self.assignment_category_dict = AssignmentCategoryDict(self.course_uuid, self.student_list)
+
+    def get_property_list(self):
+        return (self.name, self.number, self.section, self.semester, self.course_uuid, self.attendance_points)

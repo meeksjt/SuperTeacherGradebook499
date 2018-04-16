@@ -1,7 +1,4 @@
 from PyQt5 import QtCore, QtWidgets, uic
-import sys
-from AssignmentCategoryDict import AssignmentCategoryDict
-from Student import StudentList
 
 """
 This is the class that deals with editing a previously created Assignment

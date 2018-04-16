@@ -1,8 +1,9 @@
-from CourseManager import *
+from CourseManager import CourseManager
+from Course import Course
 from CreateAssignment import *
 
-class CourseCreatorWidget(object):
 
+class CourseCreatorWidget(object):
     def __init__(self, course_manager, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
 
         self.categories_to_create = []
@@ -21,6 +22,11 @@ class CourseCreatorWidget(object):
         self.ui.save_course_button.clicked.connect(self.save_course_data)
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
         self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
+
+        self.ui.course_name_line_edit.setText("Name")
+        self.ui.course_number_line_edit.setText("Number")
+        self.ui.section_number_line_edit.setText("Section")
+        self.ui.course_semester_line_edit.setText("Semester")
 
         self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()

@@ -1,7 +1,10 @@
 import Authentication
-from MainDisplay import *
-from CreateUser import Ui_IGPCreateUser
 import GlobalVariables
+import sys
+
+from PyQt5 import QtCore, QtWidgets, uic
+from MainDisplay import MainDisplay
+from CreateUser import Ui_IGPCreateUser
 from Database import Database
 
 class Ui_IGPLogin(object):

@@ -1,7 +1,8 @@
 # Finished
-from PyQt5 import QtCore, QtWidgets, uic
 import sys
 import Authentication
+
+from PyQt5 import QtCore, QtWidgets, uic
 
 
 """

@@ -1,11 +1,10 @@
-#Finished
-from PyQt5 import QtCore, QtWidgets, uic
-import GlobalVariables
 import sys
 import sqlite3
+import GlobalVariables
+
+from PyQt5 import QtCore, QtWidgets, uic
 from sqlite3 import Error
-import uuid
-from Student import *
+from Student import Student
 
 
 """
@@ -23,8 +22,10 @@ class CreateNewStudent(object):
         # Create the dialog box
         self.student_list = student_list
         self.CNStudent = QtWidgets.QDialog()
-        self.new_name = ""
         self.ui = uic.loadUi('../assets/ui/CreateNewStudent.ui', self.CNStudent)
+
+        self.new_student = None  # student being created
+        self.is_complete = False # indicate if the form is complete, if yes then add student to GUI
 
         # Link the button functionality
         self.CNStudent.createNewStudentButton.clicked.connect(self.create_student)
@@ -47,19 +48,15 @@ class CreateNewStudent(object):
 
         # Make sure that the input fields contain some content
         if student_name == "" or student_email == "" or student_id == "":
+            # TODO: throw an error dialog box asking for valid data
             return
 
-        #conn = sqlite3.connect(GlobalVariables.all_students)
+        # TODO: check for existing student
 
-        # Create the students table if this is our first time
-        #self.create_students_table(conn)
-
-        # Make sure that we don't already have a student with that name and email
-        #valid = self.check_for_existing_student(conn, student_name, student_email, student_id)
-
-        #self.add_student(conn, student_name, student_id, student_email)
-
-        self.student_list.add_student(Student(self.student_list.tableName, student_id, student_name, student_email, str(uuid.uuid4())))
+        student = Student(self.student_list.tableName, student_id, student_name, student_email)
+        if self.add_student(student):
+            self.new_student = student
+            self.is_complete = True
         self.CNStudent.hide()
 
         #self.bad_input('Error', 'There already exists a student with that name and email')
@@ -73,26 +70,14 @@ class CreateNewStudent(object):
     Returns:
         None
     """
-    def add_student(self, conn, student_name, student_id, student_email):
-
-        # Generate a random id for the student
-        id = str(uuid.uuid4())
-        c = conn.cursor()
-
-        try:
-            # Create the user and tell them what we have done
-            c.execute('INSERT INTO students VALUES ("{f}", "{s}", "{t}", "{r}")'.format(f=id, s=student_id, t=student_name, r=student_email))
-            conn.commit()
-
-            self.student_temp = Student("", student_id, student_name, student_email, id)
-            choice = QtWidgets.QMessageBox.question(self.CNStudent, 'Congrats!', 'You successfully created the student "{0}"'
-                                                                                 ' with the student ID "{1}"'.format(student_name, id),
-                                                QtWidgets.QMessageBox.Ok)
-            if choice:
-                pass
-
-        except sqlite3.IntegrityError:
-            pass
+    def add_student(self, student):
+            if QtWidgets.QMessageBox.question(self.CNStudent,
+                                            'Congrats!',
+                                            'You successfully created the student "{0}"'
+                                            ' with the student ID "{1}"'.format(student.name, student.id),
+                                            QtWidgets.QMessageBox.Ok):
+                return True
+            return False
 
     """
     Function to check if the student already exists in our database
@@ -107,7 +92,7 @@ class CreateNewStudent(object):
         c = conn.cursor()
         try:
             count = 0
-            for line in c.execute('SELECT * FROM students WHERE name="{f}" AND email="{s}" AND id="{t}"'
+            for _ in c.execute('SELECT * FROM students WHERE name="{f}" AND email="{s}" AND id="{t}"'
                                           .format(f=student_name, s=student_email, t=student_id)):
                 count += 1
             if count == 0:
