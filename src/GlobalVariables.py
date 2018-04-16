@@ -1,7 +1,9 @@
-import sqlite3
-from Database import *
+#import sqlite3
+#from Database import *
+
 database = None
 all_students = '../databases/all_student.db'
+
 #Here for testing purposes.
 #database = Database(all_students)
 

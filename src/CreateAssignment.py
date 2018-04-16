@@ -1,8 +1,9 @@
-from PyQt5 import QtCore, QtWidgets, uic
 import sys
+import uuid
+
+from PyQt5 import QtCore, QtWidgets, uic
 from AssignmentCategoryDict import AssignmentCategoryDict
 from Student import StudentList
-import uuid
 
 """
 This is the class that deals with creating a new Assignment

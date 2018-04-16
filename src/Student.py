@@ -1,20 +1,15 @@
-import copy
 import GlobalVariables
+import copy
 import uuid
 
-
+"""Really just a wrapper for a list of Students"""
 class StudentList:
-    """Really just a wrapper for a list of Students"""
     def __init__(self, courseUUID):
-
         self.students = []
-        #This holds the name of the course
         self.course = courseUUID
         self.tableName = str(courseUUID) + "_student_list"
-        GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`uuid`	TEXT,`ID`	TEXT,`name`	TEXT,`email`	TEXT);")
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS '" + self.tableName + "' (uuid TEXT, ID TEXT, name TEXT, email TEXT);")
         self.load_students()
-
 
     def set_email(self,uuid,email):
         for student in self.students:
@@ -58,18 +53,14 @@ class StudentList:
                 return student.uuid
 
     def add_student(self, student):
-        GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(student.uuid) + "','" + str(student.id) + "', '" + str(student.name) + "', '" + str(student.email) + "')"))
-        GlobalVariables.database.connection.commit()
-
+        GlobalVariables.database.add_student(student)
 
     def add_student_and_create_object(self,uuid,id,name,email):
         newStudent = Student(self.tableName,id,name,email, uuid)
-        #connection.execute(("INSERT INTO `cs499_student_list`(`uid`,`ID`,`name`,`email`) VALUES (`"+str(newStudent.uuid)+"`,"+str(newStudent.id)+",`"+str(newStudent.name+"`,`"+str(newStudent.email)+"`);")))
-        GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')"))
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.execute("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')")
         self.__add_student(newStudent)
 
-    def __add_student(self,dstudent):
+    def __add_student(self, dstudent):
         self.students.append(copy.deepcopy(dstudent))
 
     def save_students(self):
