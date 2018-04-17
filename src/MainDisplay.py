@@ -11,7 +11,7 @@ from CreateAssignment import *
 from StyleSheetData import  *
 from EditAssignment import EditAssignment
 from EditStudent import EditStudent
-
+from FinalGradeStats import FinalGradeStats
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -128,17 +128,21 @@ class MainDisplay(object):
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
 
-        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Grades", self.add_course)
+        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grades", self.add_course)
         calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
         calculate_grades_sub.triggered.connect(self.calculate_grade)
+
+        calculate_final_grades_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grade Statistics", self.add_course)
+        calculate_final_grades_stats_sub.setStatusTip("Calculate Student Statistics for the Course")
+        calculate_final_grades_stats_sub.triggered.connect(self.student_final_stats)
 
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
         menu.addAction(edit_assignment_sub)
         menu.addAction(edit_student_sub)
-
         menu.addAction(calculate_grades_sub)
+        menu.addAction(calculate_final_grades_stats_sub)
 
         self.add_course.setMenu(menu)
 
@@ -201,7 +205,6 @@ class MainDisplay(object):
         senior_project.assignment_category_dict.assignment_categories[c].add_assignment("AUUID6", "I tell you hwat", "40", senior_project.student_list)
         self.course_manager.add_course(senior_project)
         """
-    
         self.update_tree_view()
 
     # updates the data model for the QTreeView with the CourseList from CourseManager
@@ -256,6 +259,25 @@ class MainDisplay(object):
         self.add_assignment = CreateAssignment(self.course_manager.currentCourse.assignment_category_dict,
                                                self.course_manager.currentCourse.student_list)
         self.load_grade_sheet()
+
+    def student_final_stats(self):
+        self.calculate_grade()
+        col = self.grade_sheet.columnCount() - 2
+
+        final_grades = []
+
+        for row in range(1, self.grade_sheet.rowCount()):
+            final_grades.append(float(self.grade_sheet.item(row, col).text()))
+
+        final_grade_stats = FinalGradeStats(
+            self.course_manager.currentCourse.name,
+            self.course_manager.currentCourse.number,
+            self.course_manager.currentCourse.section,
+            self.course_manager.currentCourse.semester,
+            final_grades
+        )
+
+        print('test')
 
     def edit_student_fn(self):
         checked_indices = []
