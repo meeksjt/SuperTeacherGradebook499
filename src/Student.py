@@ -56,7 +56,7 @@ class StudentList:
         GlobalVariables.database.add_student(student)
 
     def add_student_and_create_object(self,uuid,id,name,email):
-        newStudent = Student(self.tableName,id,name,email, uuid)
+        newStudent = Student(self.tableName, id, name, email, uuid)
         GlobalVariables.database.execute("INSERT INTO '" + str(self.tableName) + "' VALUES('" + str(newStudent.uuid) + "','" + str(newStudent.id) + "', '" + str(newStudent.name) + "', '" + str(newStudent.email) + "')")
         self.__add_student(newStudent)
 
@@ -93,8 +93,9 @@ class StudentList:
 
 class Student(object):
 #Need to reload students after setting name.
-    def __init__(self, tableName="", id="", name="", email="", xuuid="invalid"):
+    def __init__(self, tableName="", id="", name="", email="", xuuid="invalid", dropped=False):
         self.tableName = tableName
+        self.dropped = dropped
         self.name = name
         self.email = email
         self.id = id
@@ -103,6 +104,10 @@ class Student(object):
             self.uuid = str(uuid.uuid4())
 
     #connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
+
+    def set_dropped(self, bool):
+        self.dropped = bool
+
 
     def get_email(self):
         return self.email

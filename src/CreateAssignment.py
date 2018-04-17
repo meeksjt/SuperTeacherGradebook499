@@ -23,6 +23,7 @@ class CreateAssignment(object):
         self.assignmentCategoryDict = assignment_category_dict
 
         for category in self.assignmentCategoryDict.assignment_categories.values():
+            print("Category: " + category.categoryName + "\n")
             self.CAssignment.assignmentCategoryDropdown.addItem(category.categoryName)
 
         self.CAssignment.createAssignmentButton.clicked.connect(self.add_assignment)
