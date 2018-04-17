@@ -7,7 +7,7 @@ This is the class used for editing the name, number, section, semester, and atte
 
 class CourseEditing(object):
 
-    def __init__(self, course):
+    def __init__(self, course, set_name):
 
         self.CEditing = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/CourseEditing.ui', self.CEditing)
@@ -19,9 +19,11 @@ class CourseEditing(object):
         self.CEditing.courseSemesterField.setText(self.course.semester)
         self.CEditing.attendancePointsField.setText(self.course.attendance_points)
 
-        self.CEditing.show()
-
         self.CEditing.saveButton.clicked.connect(self.edit_course)
+        self.set_name = set_name
+
+        self.CEditing.exec()
+
 
     def edit_course(self):
         name = self.CEditing.courseNameField.text()
@@ -32,6 +34,7 @@ class CourseEditing(object):
 
         if self.validate_input(name, number, section, semester, ap):
             self.course.update_course(self.course.course_uuid, name, number, section, semester, ap)
+            self.set_name(name + '-' + section)
             self.CEditing.hide()
 
     def validate_input(self, name, number, section, semester, attendance_points):

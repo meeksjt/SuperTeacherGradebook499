@@ -55,7 +55,6 @@ class CourseManager(object):
     def reload_courses(self):
         GlobalVariables.database.execute("SELECT * FROM `courseList` ORDER BY Name;")
         results = GlobalVariables.database.cursor.fetchall()
-        print(results)
 
         self.course_tree_labels.course_list.clear()
         for row in results:
