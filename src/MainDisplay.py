@@ -184,13 +184,12 @@ class MainDisplay(object):
         self.course_manager.set_current_course(current_item.accessibleDescription())
         return self.course_manager.currentCourse
 
-    # if the current row that is selected has children (is a course)
-    # then add a new course... else add a student
     def add_course_fn(self):
         self.course_manager.currentCourse = Course()
         self.cc_form = CourseWizard.InitialCourseScreen(self.course_manager, self.add_course_fn_aux)
 
-    # make the course item for QTreeView
+    # auxiliary function that gets passed into the course wizard
+    # to be called when a course is created
     def add_course_fn_aux(self, new_course):
         course = QtGui.QStandardItem(new_course.name + '-' + new_course.section)
         course.setAccessibleDescription(new_course.course_uuid)
@@ -219,6 +218,7 @@ class MainDisplay(object):
         self.new_student_form = CreateNewStudent(self.course_manager.currentCourse.student_list,
                                                  self.add_student_aux_fn)
 
+    # auxiliary function that gets passed into the student creator
     def add_student_aux_fn(self, student):
         index = self.course_tree_view.currentIndex()
         if not index.isValid():
