@@ -426,75 +426,78 @@ class MainDisplay(object):
 
         current_course = self.get_selected_course()
 
+        header_labels = self.load_header_cells()
+        vertical_labels = self.load_vertical_header_cells()
+
+        row_count = len(vertical_labels) + 1
+        col_count = len(header_labels) + 1
+
+        self.grade_sheet.setRowCount(row_count)
+        self.grade_sheet.setColumnCount(col_count)
+
+        for i in range(1, col_count):
+            self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i - 1])
+            self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points()+")")
+
+        for i in range(1, row_count):
+            self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
+            self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
+
+        # Add the checkboxes
+        #for i in range(0, len(vertical_labels)):
+        for i in range(1, row_count):
+            chkBoxItem = QtWidgets.QTableWidgetItem()
+            chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+            self.grade_sheet.setItem(i, 0, chkBoxItem)
+
+        # Add more checkboxes
+        for i in range(1, col_count):
+            chkBoxItem = QtWidgets.QTableWidgetItem()
+            chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
+
+            self.grade_sheet.setItem(0, i, chkBoxItem)
+
+
+        for col in range(1, col_count):
+            assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
+            category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
+            for row in range(1, row_count):
+                student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
+                student_grade = current_course.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
+
+                self.grade_sheet.setItem(row, col, GradeCell(
+                    self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
+                    assignment_id,
+                    category_id,
+                    current_course.assignment_category_dict.assignment_categories[category_id].get_drop_count(),
+                    student_id,
+                    self.grade_sheet.verticalHeaderItem(row).get_student_name(),
+                    student_grade,
+                    self.grade_sheet.horizontalHeaderItem(col).get_assignment_points()
+                ))
+                self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
+
+        # Create the final grade and letter grade columns
+        self.grade_sheet.insertColumn(col_count)
+        self.grade_sheet.insertColumn(col_count)
+        self.grade_sheet.setHorizontalHeaderItem(col_count, QtWidgets.QTableWidgetItem("Final Points"))
+        self.grade_sheet.setHorizontalHeaderItem(col_count + 1, QtWidgets.QTableWidgetItem("Final Letter Grade"))
+        self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
+
+
         index = self.course_tree_view.currentIndex()
         if not index.isValid():
             return
 
         item = self.model.itemFromIndex(index)
-        if item.parent() is None: # no parent? then this is a course, so load the grade sheet
-            header_labels = self.load_header_cells()
-            vertical_labels = self.load_vertical_header_cells()
-
-            row_count = len(vertical_labels) + 1
-            col_count = len(header_labels) + 1
-
-            self.grade_sheet.setRowCount(row_count)
-            self.grade_sheet.setColumnCount(col_count)
-
-            for i in range(1, col_count):
-                self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i - 1])
-                self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points()+")")
-
-            for i in range(1, row_count):
-                self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
-                self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
-
-            # Add the checkboxes
-            #for i in range(0, len(vertical_labels)):
-            for i in range(1, row_count):
-                chkBoxItem = QtWidgets.QTableWidgetItem()
-                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
-                self.grade_sheet.setItem(i, 0, chkBoxItem)
-
-            # Add more checkboxes
-            for i in range(1, col_count):
-                chkBoxItem = QtWidgets.QTableWidgetItem()
-                chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
-
-                self.grade_sheet.setItem(0, i, chkBoxItem)
-
-
-            for col in range(1, col_count):
-                assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
-                category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
-                for row in range(1, row_count):
-                    student_id = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                    student_grade = current_course.assignment_category_dict.assignment_categories[category_id].assignment_dict[assignment_id].get_student_grade(student_id)
-
-                    self.grade_sheet.setItem(row, col, GradeCell(
-                        self.grade_sheet.horizontalHeaderItem(col).get_assignment_name(),
-                        assignment_id,
-                        category_id,
-                        current_course.assignment_category_dict.assignment_categories[category_id].get_drop_count(),
-                        student_id,
-                        self.grade_sheet.verticalHeaderItem(row).get_student_name(),
-                        student_grade,
-                        self.grade_sheet.horizontalHeaderItem(col).get_assignment_points()
-                    ))
-                    self.grade_sheet.item(row, col).setTextGradeCell(str(self.grade_sheet.item(row, col).current_grade))
-
-            # Create the final grade and letter grade columns
-            self.grade_sheet.insertColumn(col_count)
-            self.grade_sheet.insertColumn(col_count)
-            self.grade_sheet.setHorizontalHeaderItem(col_count, QtWidgets.QTableWidgetItem("Final Points"))
-            self.grade_sheet.setHorizontalHeaderItem(col_count + 1, QtWidgets.QTableWidgetItem("Final Letter Grade"))
-            self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
-        else:
-            self.grade_sheet.setRowCount(0)
-            self.grade_sheet.setColumnCount(0)
-
+        for i in range(1, self.grade_sheet.rowCount()):
+            student_uuid = self.grade_sheet.verticalHeaderItem(i).get_student_uuid()
+            if item.parent() is not None and student_uuid != item.accessibleDescription():
+                self.grade_sheet.hideRow(i)
+            else:
+                self.grade_sheet.showRow(i)
 
     def calculate_statistics(self):
         self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list,
