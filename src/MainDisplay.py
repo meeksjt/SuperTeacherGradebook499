@@ -11,7 +11,7 @@ from CreateAssignment import *
 from StyleSheetData import  *
 from EditAssignment import EditAssignment
 from EditStudent import EditStudent
-
+from FinalGradeStats import FinalGradeStats
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -134,17 +134,21 @@ class MainDisplay(object):
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
 
-        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Grades", self.add_course)
+        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grades", self.add_course)
         calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
         calculate_grades_sub.triggered.connect(self.calculate_grade)
+
+        calculate_final_grades_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grade Statistics", self.add_course)
+        calculate_final_grades_stats_sub.setStatusTip("Calculate Student Statistics for the Course")
+        # calculate_final_grades_stats_sub.triggered.connect(self.student_final_stats)
 
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
         # menu.addAction(edit_assignment_sub)
         # menu.addAction(edit_student_sub)
-
         menu.addAction(calculate_grades_sub)
+        menu.addAction(calculate_final_grades_stats_sub)
 
         self.add_course.setMenu(menu)
 
