@@ -28,7 +28,7 @@ class CourseCreatorWidget(object):
         self.ui.course_number_line_edit.setText("Course Number")
         self.ui.section_number_line_edit.setText("Course Section")
         self.ui.course_semester_line_edit.setText("Course Semester")
-        self.ui.attendance_points_line_edit.setText("Points for Attendance")
+        self.ui.attendance_points_line_edit.setText("0")
 
         self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()

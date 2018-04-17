@@ -5,6 +5,7 @@ from AssignmentCategoryDict import AssignmentCategoryDict
 from GradeScale import GradeScale
 from Attendance import AttendanceDictionary
 from PyQt5 import QtWidgets
+import GlobalVariables
 
 class Course(object):
 
@@ -25,6 +26,11 @@ class Course(object):
         self.grade_scale = None
         self.assignment_category_dict = None
         self.attendance_dictionary = None
+
+    def update_course(self, uuid, name, number, section, semester, points):
+        query = "UPDATE `courseList` SET Name = ?, Number = ?, Section = ?, Semester = ?, Attendance_Points = ? WHERE Course_UUID = ?;"
+        GlobalVariables.database.connection.execute(query, (name, number, section, semester, points, uuid))
+        GlobalVariables.database.connection.commit()
 
     def set_attendance_points(self, points):
         self.attendance_points = points

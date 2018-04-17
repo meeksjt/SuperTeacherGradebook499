@@ -34,6 +34,9 @@ class EditStudent(object):
         id = self.EStudent.studentIDField.text()
 
         if name and email and id:
-            pass
+            self.studentList.set_email(self.student_uuid, email)
+            self.studentList.set_name(self.student_uuid, name)
+            self.studentList.set_id(self.student_uuid, id)
+            self.EStudent.hide()
             # database setting functions for both our own student list and the global student list
             # reload the student list
