@@ -146,43 +146,6 @@ class MainDisplay(object):
 
         self.add_course.setMenu(menu)
 
-        '''
-        menu = QtWidgets.QMenu()
-
-        del_course_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Delete Course", self.del_course)
-        del_course_sub.setStatusTip("Add new course to the grade book")
-        del_course_sub.triggered.connect(self.del_selected_item)
-
-        del_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Delete Student", self.del_course)
-        del_student_sub.setStatusTip("Add new student to a course")
-        del_student_sub.triggered.connect(self.del_selected_item)
-
-        menu.addAction(del_course_sub)
-        menu.addAction(del_student_sub)
-        '''
-
-        # self.del_course.setMenu(menu)
-        # create underlying model
-
-        #connections
-        # self.add_course.released.connect(self.add_item)
-        self.get_stats.released.connect(self.calculate_statistics)
-        self.del_course.released.connect(self.del_selected_item)
-        #self.get_stats.released.connect(self.menu_event)
-        self.save_grades.released.connect(self.save_grade_sheet)
-
-        # connection for when a course is selected
-        self.selection_model = self.course_tree_view.selectionModel()
-        self.selection_model.selectionChanged.connect(self.load_grade_sheet)
-
-        # connection for when a tree item is renamed
-        # self.model.itemChanged.connect(self.course_or_name_change)
-
-        self.course_tree_view.setHeaderHidden(True)
-        self.course_tree_view.setUniformRowHeights(True)
-
-        self.splitter.setSizes([1, 800])
-
         # course creation wizard
         self.cc_form = None
         self.new_student_form = None
@@ -252,6 +215,7 @@ class MainDisplay(object):
         current_item.appendRow(student)
 
         self.get_selected_course().add_student(self.new_student_form.new_student)
+        self.get_selected_course().assignment_category_dict.reload_categories()
         self.course_manager.currentCourse.reload_grades()
         self.load_grade_sheet()
 
@@ -331,7 +295,6 @@ class MainDisplay(object):
             
     def calculate_category_grade(self, drop_count, student_grades):
         deficits = []
-
         for i in range(len(student_grades)):
             deficits.append(student_grades[i][1] - student_grades[i][0])
 
@@ -356,7 +319,6 @@ class MainDisplay(object):
             min: (int) index of the lowest score in the student assignment list
     """
     def get_max_deficit(self, assignment_score_deficits):
-
         max_index = 0
         max_val = assignment_score_deficits[0]
         for i in range(len(assignment_score_deficits)):
@@ -492,6 +454,7 @@ class MainDisplay(object):
     def load_grade_sheet(self):
 
         self.grade_sheet.clear()
+
         current_course = self.get_selected_course()
 
         index = self.course_tree_view.currentIndex()
@@ -723,6 +686,7 @@ def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, cat
             for assignment_uuid, assignment in category.assignment_dict.items():
                 newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName,
                                                                              assignment.totalPoints, newCourse.student_list)
+
 
 if __name__ == "__main__":
    import sys
