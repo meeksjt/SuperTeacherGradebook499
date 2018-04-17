@@ -102,7 +102,10 @@ class Assignment:
             grade : (string) grade of the student on this Assignment
     """
     def get_student_grade(self, student_uuid):
-        return self.studentGrades.get_grade(student_uuid)
+        try:
+            return self.studentGrades.get_grade(student_uuid)
+        except:
+            self.add_grade_to_database()
 
     """
         Function to set a specific Student's grade for an Assignment

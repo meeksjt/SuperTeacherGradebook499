@@ -34,7 +34,12 @@ class Grades:
             self.assignmentGrades[student_id] - (string) student grade
     """
     def get_grade(self, student_id):
-        return self.assignmentGrades[student_id]
+        #return self.assignmentGrades[student_id]
+        try:
+            return self.assignmentGrades[student_id]
+        except:
+            self.assignmentGrades[student_id] = "-"
+            return "-"
 
     """
         Function to clear the grades for an Assignment
