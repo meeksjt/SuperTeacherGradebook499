@@ -26,6 +26,7 @@ class FinalGradeStats(object):
         #self.FGStats.saveStatsButton.clicked.connect()
 
     def setup_display(self):
+        self.FGStats.statsTable.insertRow(0)
         self.FGStats.statsTable.setItem(0, 0, QtWidgets.QTableWidgetItem(self.name))
         self.FGStats.statsTable.setItem(0, 1, QtWidgets.QTableWidgetItem(self.number))
         self.FGStats.statsTable.setItem(0, 2, QtWidgets.QTableWidgetItem(self.section))
@@ -34,6 +35,7 @@ class FinalGradeStats(object):
         self.FGStats.statsTable.setItem(0, 5, QtWidgets.QTableWidgetItem(str(Statistics.calculate_median(self.studentGrades))))
         self.FGStats.statsTable.setItem(0, 6, QtWidgets.QTableWidgetItem(str(Statistics.calculate_mode(self.studentGrades))))
         self.FGStats.statsTable.setItem(0, 7, QtWidgets.QTableWidgetItem(str(Statistics.calculate_std_dev(self.studentGrades))))
+        self.FGStats.statsTable.resizeColumnsToContents()
 
     def save_student_statistics(self):
         pass
