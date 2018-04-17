@@ -269,7 +269,7 @@ class MainDisplay(object):
         for row in range(1, self.grade_sheet.rowCount()):
             final_grades.append(float(self.grade_sheet.item(row, col).text()))
 
-        final_grade_stats = FinalGradeStats(
+        self.final_grade_stats = FinalGradeStats(
             self.course_manager.currentCourse.name,
             self.course_manager.currentCourse.number,
             self.course_manager.currentCourse.section,
