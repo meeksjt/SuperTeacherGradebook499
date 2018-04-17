@@ -351,7 +351,7 @@ class MainDisplay(object):
                 checked_indices.append(i)
 
         if len(checked_indices) != 1:
-            print("You fucked up")
+            print("You messed up")
         else:
             assignment_name = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_name()
             assignment_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
