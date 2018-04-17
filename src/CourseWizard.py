@@ -4,11 +4,12 @@ from CreateAssignment import *
 
 
 class CourseCreatorWidget(object):
-    def __init__(self, course_manager, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
+    def __init__(self, course_manager, add_course_fn, gradeDict={'A': 90.0, 'B': 80.0, 'C': 70.0, 'D': 60.0}):
 
         self.categories_to_create = []
         self.new_course = Course()
         self.course_manager = course_manager
+        self.add_course_fn = add_course_fn
 
         self.gradeDict = gradeDict.copy()
 
@@ -23,10 +24,11 @@ class CourseCreatorWidget(object):
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
         self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
 
-        self.ui.course_name_line_edit.setText("Name")
-        self.ui.course_number_line_edit.setText("Number")
-        self.ui.section_number_line_edit.setText("Section")
-        self.ui.course_semester_line_edit.setText("Semester")
+        self.ui.course_name_line_edit.setText("Course Name")
+        self.ui.course_number_line_edit.setText("Course Number")
+        self.ui.section_number_line_edit.setText("Course Section")
+        self.ui.course_semester_line_edit.setText("Course Semester")
+        self.ui.attendance_points_line_edit.setText("Points for Attendance")
 
         self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()
@@ -42,16 +44,16 @@ class CourseCreatorWidget(object):
             return
         if not self.validate_assignment_categories():
             print("failed to validate assignment categories")
-
             return
 
+        self.save_table_data()
+        self.add_course_fn(self.new_course)
         self.course_manager.add_course(self.new_course)
         self.course_manager.set_current_course(self.new_course.course_uuid)
-        self.course_manager.currentCourse.is_complete = True
-        self.course_manager.currentCourse.link_with_database()
-        self.save_table_data()
+        QtWidgets.QMessageBox.question(self.frame, '', 'Created new course', QtWidgets.QMessageBox.Ok)
+        self.new_course = Course()
 
-        self.frame.hide()
+        # self.frame.hide()
 
     def add_category(self):
         row_insert = self.ui.tableWidget.rowCount()
@@ -213,8 +215,9 @@ class CourseCreatorWidget(object):
 
 class InitialCourseScreen(object):
 
-    def __init__(self, course_manager):
+    def __init__(self, course_manager, add_course_fn):
         self.course_manager = course_manager
+        self.add_course_fn = add_course_fn
         self.next_screen = None
         self.ICScreen = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/CourseWizardFirst.ui', self.ICScreen)
@@ -225,7 +228,7 @@ class InitialCourseScreen(object):
 
     def create_new_course(self):
         self.ICScreen.hide()
-        self.next_screen = CourseCreatorWidget(self.course_manager)
+        self.next_screen = CourseCreatorWidget(self.course_manager, self.add_course_fn)
 
     def create_new_template_course(self):
         pass

@@ -7,19 +7,11 @@ import os
 import Statistics
 
 
-"""
-Class for displaying students in a course
-"""
 class AssignmentStats(object):
 
-    """
-    Constructor for displaying students and student information
-    Parameters:
-        studentList: (StudentList) the list of students and associated variables we are displaying
-    """
     def __init__(self, studentList, gradesheetTable, course_name, course_semester):
         self.AStats = QtWidgets.QDialog()
-        self.ui = uic.loadUi('AssignmentStats.ui', self.AStats)
+        self.ui = uic.loadUi('../assets/ui/AssignmentStats.ui', self.AStats)
         self.AStats.statsTable.setHorizontalHeaderLabels(
             ['Assignment Name', 'Assignment Point Value', 'Mean', 'Median', 'Mode', 'Standard Deviation']
         )
@@ -43,12 +35,12 @@ class AssignmentStats(object):
                                                "Your file has been saved in the 'student_assignment_statistics' directory.",
                                                QtWidgets.QMessageBox.Ok)
             with open(("../student_assignment_statistics/" + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.txt"), 'w') as f:
-                header_line = "Assignment Name\t - \tAssignment Points - Mean - Median - Mode - Standard Deviation\n"
+                header_line = "Assignment Name - Assignment Points - Mean - Median - Mode - Standard Deviation\n"
                 f.write(header_line)
                 row_count = self.AStats.statsTable.rowCount()
                 for row in range(row_count):
                     f.write(self.AStats.statsTable.item(row, 0).text().ljust(23))
-                    f.write(self.AStats.statsTable.item(row, 1).text().rjust(15))
+                    f.write(self.AStats.statsTable.item(row, 1).text().ljust(15))
                     f.write(self.AStats.statsTable.item(row, 2).text().ljust(8))
                     f.write(self.AStats.statsTable.item(row, 3).text().ljust(8))
                     f.write(self.AStats.statsTable.item(row, 4).text().ljust(8))
