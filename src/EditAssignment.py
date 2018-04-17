@@ -27,8 +27,6 @@ class EditAssignment(object):
         points = self.EAssignment.assignmentPointsField.text()
 
         if name and points:
-
-            
             self.assignmentCategory.save_assignment(name, points)
             #self.assignmentCategory.update_assignment_database()
             self.assignmentCategory.reload_assignments()
