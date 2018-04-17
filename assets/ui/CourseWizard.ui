@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>381</width>
-    <height>307</height>
+    <width>388</width>
+    <height>298</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,7 +54,7 @@ QPushButton {
 }</string>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="course_info_tab">
     <property name="autoFillBackground">
@@ -113,7 +113,7 @@ QPushButton {
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
+              <width>30</width>
               <height>20</height>
              </size>
             </property>
@@ -263,6 +263,49 @@ QPushButton {
           </item>
          </layout>
         </item>
+        <item>
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <spacer name="horizontalSpacer_18">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Attendance Points</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="attendance_points_line_edit"/>
+          </item>
+         </layout>
+        </item>
        </layout>
       </item>
       <item row="1" column="2">
@@ -272,7 +315,7 @@ QPushButton {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>50</width>
           <height>20</height>
          </size>
         </property>
@@ -288,7 +331,7 @@ QPushButton {
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>42</width>
+          <width>1</width>
           <height>20</height>
          </size>
         </property>

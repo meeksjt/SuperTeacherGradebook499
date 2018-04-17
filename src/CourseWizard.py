@@ -24,10 +24,11 @@ class CourseCreatorWidget(object):
         self.ui.add_assignment_category_button.clicked.connect(self.add_category)
         self.ui.drop_assignment_category_button.clicked.connect(self.drop_category)
 
-        self.ui.course_name_line_edit.setText("Name")
-        self.ui.course_number_line_edit.setText("Number")
-        self.ui.section_number_line_edit.setText("Section")
-        self.ui.course_semester_line_edit.setText("Semester")
+        self.ui.course_name_line_edit.setText("Course Name")
+        self.ui.course_number_line_edit.setText("Course Number")
+        self.ui.section_number_line_edit.setText("Course Section")
+        self.ui.course_semester_line_edit.setText("Course Semester")
+        self.ui.attendance_points_line_edit.setText("Points for Attendance")
 
         self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()

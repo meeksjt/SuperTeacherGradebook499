@@ -55,6 +55,7 @@ class MainDisplay(object):
 
         # grade sheet setup
         self.grade_sheet = QtWidgets.QTableWidget(self.splitter)
+        self.grade_sheet.setCornerButtonEnabled(False)
         self.grade_sheet.setObjectName("grade_sheet")
         self.grade_sheet.setStyleSheet(grade_sheet_style)
         self.grade_sheet.viewportSizeHint()
@@ -309,8 +310,12 @@ class MainDisplay(object):
             final_grade = student_points / total_points * 100
             letter_grade = self.course_manager.currentCourse.grade_scale.get_letter_grade(final_grade)
 
-            self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 2, QtWidgets.QTableWidgetItem(str(student_points)))
-            self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 1, QtWidgets.QTableWidgetItem(letter_grade))
+            final_points = QtWidgets.QTableWidgetItem(str(student_points))
+            final_points.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsSelectable)
+            final_grade = QtWidgets.QTableWidgetItem(letter_grade)
+            final_grade.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsSelectable)
+            self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 2, final_points)
+            self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 1, final_grade)
             
     def calculate_category_grade(self, drop_count, student_grades):
         deficits = []
@@ -437,7 +442,7 @@ class MainDisplay(object):
 
         for i in range(1, col_count):
             self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i - 1])
-            self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points()+")")
+            self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points() + " points total)")
 
         for i in range(1, row_count):
             self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
@@ -459,7 +464,9 @@ class MainDisplay(object):
 
             self.grade_sheet.setItem(0, i, chkBoxItem)
 
-
+        cornerItem = QtWidgets.QTableWidgetItem()
+        cornerItem.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEditable)
+        self.grade_sheet.setItem(0, 0, cornerItem) # set corner
         for col in range(1, col_count):
             assignment_id = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
             category_id = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
@@ -482,10 +489,18 @@ class MainDisplay(object):
         # Create the final grade and letter grade columns
         self.grade_sheet.insertColumn(col_count)
         self.grade_sheet.insertColumn(col_count)
+
+        for row in range(0, row_count):
+             finalItem = QtWidgets.QTableWidgetItem()
+             finalItem.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsSelectable)
+             finalItem2 = QtWidgets.QTableWidgetItem()
+             finalItem2.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsSelectable)
+             self.grade_sheet.setItem(row, col_count, finalItem)
+             self.grade_sheet.setItem(row, col_count + 1, finalItem2)
+
         self.grade_sheet.setHorizontalHeaderItem(col_count, QtWidgets.QTableWidgetItem("Final Points"))
         self.grade_sheet.setHorizontalHeaderItem(col_count + 1, QtWidgets.QTableWidgetItem("Final Letter Grade"))
         self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
-
 
         index = self.course_tree_view.currentIndex()
         if not index.isValid():
