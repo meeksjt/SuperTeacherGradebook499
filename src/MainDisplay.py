@@ -13,6 +13,7 @@ from EditAssignment import EditAssignment
 from EditStudent import EditStudent
 from CourseEditing import CourseEditing
 from FinalGradeStats import FinalGradeStats
+from EditingGradeDict import EditingGradeDict
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -129,7 +130,7 @@ class MainDisplay(object):
 
         edit_grade_scale_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Grade Scale", self.edit_button)
         edit_grade_scale_sub.setStatusTip("Edit Grade Scale for the Course")
-        #edit_grade_scale_sub.triggered.connect(self.edit_student_fn)
+        edit_grade_scale_sub.triggered.connect(self.edit_course_grade_scale_fn)
 
         edit_categories_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Categories", self.edit_button)
         edit_categories_sub.setStatusTip("Edit Assignment Categories for the Course")
@@ -218,6 +219,9 @@ class MainDisplay(object):
     def edit_course_fn(self):
         self.edit_course = CourseEditing(self.course_manager.currentCourse)
         self.load_grade_sheet()
+
+    def edit_course_grade_scale_fn(self):
+        self.edit_grade_scale = EditingGradeDict(self.course_manager.currentCourse)
 
     # auxiliary function that gets passed into the course wizard
     # to be called when a course is created
