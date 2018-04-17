@@ -442,7 +442,7 @@ class MainDisplay(object):
 
         for i in range(1, col_count):
             self.grade_sheet.setHorizontalHeaderItem(i, header_labels[i - 1])
-            self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points() + " points total)")
+            self.grade_sheet.horizontalHeaderItem(i).setText(self.grade_sheet.horizontalHeaderItem(i).get_assignment_name() + " (" + self.grade_sheet.horizontalHeaderItem(i).get_assignment_points() + " points)")
 
         for i in range(1, row_count):
             self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
@@ -461,7 +461,6 @@ class MainDisplay(object):
             chkBoxItem = QtWidgets.QTableWidgetItem()
             chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
             chkBoxItem.setCheckState(QtCore.Qt.Unchecked)
-
             self.grade_sheet.setItem(0, i, chkBoxItem)
 
         cornerItem = QtWidgets.QTableWidgetItem()
@@ -500,7 +499,6 @@ class MainDisplay(object):
 
         self.grade_sheet.setHorizontalHeaderItem(col_count, QtWidgets.QTableWidgetItem("Final Points"))
         self.grade_sheet.setHorizontalHeaderItem(col_count + 1, QtWidgets.QTableWidgetItem("Final Letter Grade"))
-        self.horizontal_header_view.resizeSections(QtWidgets.QHeaderView.Stretch)
 
         index = self.course_tree_view.currentIndex()
         if not index.isValid():
@@ -513,6 +511,9 @@ class MainDisplay(object):
                 self.grade_sheet.hideRow(i)
             else:
                 self.grade_sheet.showRow(i)
+
+        # self.horizontal_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        # self.vertical_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
     def calculate_statistics(self):
         self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list,
@@ -551,6 +552,7 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
         self.assignment_name = a_name
         self.assignment_points = a_points
         self.category_uuid = c_uuid
+        self.setTextAlignment(QtCore.Qt.AlignCenter)
 
     def setText(self, new_name):
         self.assignment_name = new_name
@@ -590,6 +592,7 @@ class GradeCell(QtWidgets.QTableWidgetItem):
         self.student_name = s_name
         self.current_grade = c_grade
         self.current_points = c_points
+        self.setTextAlignment(QtCore.Qt.AlignCenter)
 
     def setTextGradeCell(self, grade):
         self.current_grade = grade
