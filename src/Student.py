@@ -79,7 +79,7 @@ class StudentList:
 
     def load_students(self):
         self.students.clear() #Erase what's in the list
-        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "` ORDER BY name;")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             # print("Here is the row:", row)

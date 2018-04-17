@@ -1,4 +1,3 @@
-import copy
 import GlobalVariables
 
 from Course import Course
@@ -28,7 +27,6 @@ class CourseList(object):
     def add_course(self, course_name, course_section, course_uuid, student_list):
         self.course_list.append(CourseListItem(course_name, course_section, course_uuid, student_list))
 
-
 # This class will read the CourseList table, and create a Course for each object in it.
 # It will also create a Course.
 class CourseManager(object):
@@ -55,8 +53,9 @@ class CourseManager(object):
         self.course_tree_labels.add_course(course.name, course.section, course.course_uuid, student_list_items)
 
     def reload_courses(self):
-        GlobalVariables.database.execute("SELECT * FROM `courseList`")
+        GlobalVariables.database.execute("SELECT * FROM `courseList` ORDER BY Name;")
         results = GlobalVariables.database.cursor.fetchall()
+        print(results)
 
         self.course_tree_labels.course_list.clear()
         for row in results:

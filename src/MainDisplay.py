@@ -30,6 +30,7 @@ class MainDisplay(object):
         self.course_tree_view.setStyleSheet(tree_view_style)
         self.course_tree_view.setHeaderHidden(True)
         self.course_tree_view.setUniformRowHeights(True)
+        self.course_tree_view.setSortingEnabled(True)
 
         self.selection_model = self.course_tree_view.selectionModel()
         self.selection_model.selectionChanged.connect(self.load_grade_sheet)
@@ -198,19 +199,30 @@ class MainDisplay(object):
         self.grade_sheet.setRowCount(0)
         self.grade_sheet.setColumnCount(0)
 
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
-            self.model.appendRow(course)
-        else:
-            current_item = self.model.itemFromIndex(index)
-            if current_item.parent() is not None: # if parent exists, set index = parent index
-                current_item = current_item.parent()
+        self.course_tree_view.setCurrentIndex(self.model.index(0, 0))
+        while self.course_tree_view.currentIndex().isValid():
+            item = self.model.itemFromIndex(self.course_tree_view.currentIndex())
+            print(item.text())
+            if min(course.text(), item.text()) == course.text():
+                self.model.insertRow(item.row(), course)
+                self.load_grade_sheet()
+                return
+            self.course_tree_view.setCurrentIndex(self.course_tree_view.indexBelow(self.course_tree_view.currentIndex()))
+        self.model.appendRow(course)
 
-            if current_item.row() >= self.model.rowCount(): # out of bounds, just append to the end
-                self.model.appendRow(course)
-            else:
-                self.model.insertRow(current_item.row() + 1, course)
-        self.load_grade_sheet()
+
+        # if not index.isValid():
+        #     self.model.appendRow(course)
+        # else:
+        #     current_item = self.model.itemFromIndex(index)
+        #     if current_item.parent() is not None: # if parent exists, set index = parent index
+        #         current_item = current_item.parent()
+        #     if current_item.row() >= self.model.rowCount(): # out of bounds, just append to the end
+        #         self.model.appendRow(course)
+        #     else:
+        #        self.model.insertRow(current_item.row() + 1, course)
+
+        #self.load_grade_sheet()
 
     def add_student_fn(self):
         index = self.course_tree_view.currentIndex()
@@ -231,10 +243,16 @@ class MainDisplay(object):
         s = QtGui.QStandardItem(student.name)
         s.setAccessibleDescription(student.uuid)
         current_item.appendRow(s)
+        current_item.sortChildren(0, QtCore.Qt.AscendingOrder)
+        # self.course_tree_view.sortByColumn(0, QtCore.Qt.AscendingOrder)
 
         self.get_selected_course().add_student(student)
         self.get_selected_course().assignment_category_dict.reload_categories()
         self.course_manager.currentCourse.reload_grades()
+
+        # self.course_manager.reload_courses()
+        # self.update_tree_view()
+
         self.load_grade_sheet()
 
     def edit_student_fn(self):
