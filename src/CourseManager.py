@@ -44,7 +44,7 @@ class CourseManager(object):
                                          "Course_UUID TEXT, "
                                          "Attendance_Points TEXT"
                                          ");")
-        self.__reload_courses()
+        self.reload_courses()
 
     def __add_to_course_tree_labels(self, course):
         student_list_items = []
@@ -54,7 +54,7 @@ class CourseManager(object):
             student_list_items.append(StudentItem(student.name, student.uuid))
         self.course_tree_labels.add_course(course.name, course.section, course.course_uuid, student_list_items)
 
-    def __reload_courses(self):
+    def reload_courses(self):
         GlobalVariables.database.execute("SELECT * FROM `courseList`")
         results = GlobalVariables.database.cursor.fetchall()
 
@@ -66,12 +66,12 @@ class CourseManager(object):
 
     def add_course(self, course):
         GlobalVariables.database.add_course(course)
-        self.__reload_courses()
+        self.reload_courses()
         return course.course_uuid
 
     def delete_course(self, course_uuid):
         GlobalVariables.database.drop_course(course_uuid)
-        self.__reload_courses()
+        self.reload_courses()
         return True
 
     def get_course(self, course_uuid):
@@ -90,7 +90,7 @@ class CourseManager(object):
 
         self.set_current_course(course_uuid)
         if self.currentCourse.remove_student(student_uuid):
-            self.__reload_courses()
+            self.reload_courses()
             return True
 
         return False

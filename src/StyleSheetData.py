@@ -70,6 +70,60 @@ add_button_style = "QPushButton { "\
                    "    border-image: url(../assets/images/add_course_button_pressed.png); "\
                    "}"
 
+save_button_style = "QPushButton { " \
+                   "    background-color: transparent;" \
+                   "    border-image: url(../assets/images/save_button.png);" \
+                   "    background: none;" \
+                   "    border: none;" \
+                   "    background-repeat: none;" \
+                   "    min-width: 32px;" \
+                   "    max-width: 32px;" \
+                   "    min-height: 32px;" \
+                   "    max-height: 32px;" \
+                   "}" \
+                   "QPushButton:hover { " \
+                   "    border-image: url(../assets/images/save_button_highlight.png); " \
+                   "}" \
+                   "QPushButton:pressed { " \
+                   "    border-image: url(../assets/images/save_button_pressed.png); " \
+                   "}"
+
+stats_button_style = "QPushButton { " \
+                    "    background-color: transparent;" \
+                    "    border-image: url(../assets/images/get_statistics_button.png);" \
+                    "    background: none;" \
+                    "    border: none;" \
+                    "    background-repeat: none;" \
+                    "    min-width: 32px;" \
+                    "    max-width: 32px;" \
+                    "    min-height: 32px;" \
+                    "    max-height: 32px;" \
+                    "}" \
+                    "QPushButton:hover { " \
+                    "    border-image: url(../assets/images/get_statistics_button_highlight.png); " \
+                    "}" \
+                    "QPushButton:pressed { " \
+                    "    border-image: url(../assets/images/get_statistics_button_pressed.png); " \
+                    "}"
+
+edit_button_style = "QPushButton { " \
+                     "    background-color: transparent;" \
+                     "    border-image: url(../assets/images/edit_button.png);" \
+                     "    background: none;" \
+                     "    border: none;" \
+                     "    background-repeat: none;" \
+                     "    min-width: 32px;" \
+                     "    max-width: 32px;" \
+                     "    min-height: 32px;" \
+                     "    max-height: 32px;" \
+                     "}" \
+                     "QPushButton:hover { " \
+                     "    border-image: url(../assets/images/edit_button_highlight.png); " \
+                     "}" \
+                     "QPushButton:pressed { " \
+                     "    border-image: url(../assets/images/edit_button_pressed.png); " \
+                     "}"
+
 grade_sheet_style = "QTableWidget {"\
                     "   border: none;"\
                     "   background-color: #eff1f5;"\
