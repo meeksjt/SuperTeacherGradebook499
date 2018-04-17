@@ -113,6 +113,13 @@ class MainDisplay(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         # add button is a menu with many options, so handle connections differently
+        edit_menu = QtWidgets.QMenu()
+        edit_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Selected Assignment",
+                                                self.edit_button)
+        edit_assignment_sub.setStatusTip("Edit Selected Assignment Name, Category, or Point Values")
+        edit_assignment_sub.triggered.connect(self.edit_assignment_fn)
+        edit_menu.addAction(edit_assignment_sub)
+
         menu = QtWidgets.QMenu()
 
         add_course_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Add Course", self.add_course)
@@ -127,10 +134,6 @@ class MainDisplay(object):
         create_assignment_sub.setStatusTip("Create a New Assignment")
         create_assignment_sub.triggered.connect(self.add_assignment_fn)
 
-        edit_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Edit Selected Assignment", self.add_course)
-        edit_assignment_sub.setStatusTip("Edit Selected Assignment Name, Category, or Point Values")
-        edit_assignment_sub.triggered.connect(self.edit_assignment_fn)
-
         edit_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Edit Selected Student", self.add_course)
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
@@ -143,15 +146,18 @@ class MainDisplay(object):
         calculate_final_grades_stats_sub.setStatusTip("Calculate Student Statistics for the Course")
         # calculate_final_grades_stats_sub.triggered.connect(self.student_final_stats)
 
+
+
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
-        # menu.addAction(edit_assignment_sub)
+        menu.addAction(edit_assignment_sub)
         # menu.addAction(edit_student_sub)
         menu.addAction(calculate_grades_sub)
         menu.addAction(calculate_final_grades_stats_sub)
 
         self.add_course.setMenu(menu)
+        self.edit_button.setMenu(edit_menu)
 
         # course creation wizard
         self.cc_form = None
@@ -555,8 +561,8 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
         self.setTextAlignment(QtCore.Qt.AlignCenter)
 
     def setText(self, new_name):
-        self.assignment_name = new_name
-        super(HeaderCell, self).setText(self.assignment_name)
+        #self.assignment_name = new_name
+        super(HeaderCell, self).setText(new_name)
 
     def set_assignment_uuid(self, new_uuid):
         self.assignment_uuid = new_uuid

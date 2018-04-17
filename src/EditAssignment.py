@@ -29,7 +29,8 @@ class EditAssignment(object):
         if name and points:
             self.assignmentCategory.set_assignment_name(self.assignment_uuid, name)
             self.assignmentCategory.set_assignment_total_points(self.assignment_uuid, points)
-            self.assignmentCategory.reload_assignments()
-
-        self.EAssignment.hide()
+            #self.assignmentCategory.reload_assignments()
+            #self.assignmentCategory.assignment_dict[self.assignment_uuid].set_assignment_name(name)
+            #self.assignmentCategory.assignment_dict[self.assignment_uuid].set_total_points(points)
+            self.EAssignment.hide()
 
