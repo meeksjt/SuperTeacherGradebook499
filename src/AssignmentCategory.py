@@ -79,12 +79,12 @@ class AssignmentCategory:
 
         self.reload_assignments()
 
-    def save_assignment(self, uuid):
+    def save_assignment(self, uuid, name, points):
         for key, assignment in self.assignment_dict.items:
             #Then we need to find the right assignment
             if assignment.assignmentID == uuid:
                 query = "UPDATE `" + self.tableName + "` SET assigment_name = ?, total_points = ?, WHERE uuid = ?;"
-                self.cursor.execute(query, (assignment.assignmentName, assignment.totalPoints, assignment.assignmentID))
+                self.cursor.execute(query, (name, points, uuid))
                 self.connection.commit()
 
 
