@@ -80,6 +80,7 @@ class CourseCreatorWidget(object):
 
         # Add the assignmentcategorylist creation here if valid is valid
         if valid:
+            self.course_manager.currentCourse.link_with_database()
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
                 self.categories_to_create.append(category[:].copy())

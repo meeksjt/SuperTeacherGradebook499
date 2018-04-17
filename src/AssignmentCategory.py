@@ -83,7 +83,7 @@ class AssignmentCategory:
         for key, assignment in self.assignment_dict.items():
             #Then we need to find the right assignment
             if assignment.assignmentID == uuid:
-                query = "UPDATE `" + self.tableName + "` SET assigment_name = ?, total_points = ?, WHERE uuid = ?;"
+                query = "UPDATE `" + self.tableName + "` SET assignment_name = ?, total_points = ? WHERE assignment_uuid = ?;"
                 GlobalVariables.database.connection.execute(query, (name, points, uuid))
                 GlobalVariables.database.connection.commit()
 

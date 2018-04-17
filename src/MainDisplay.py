@@ -250,7 +250,7 @@ class MainDisplay(object):
                 checked_indices.append(i)
 
         if len(checked_indices) != 1:
-            print("You fucked up")
+            pass
         else:
             # we need the student id, student name, student email, student uuid
             student_uuid = self.grade_sheet.verticalHeaderItem(checked_indices[0]).get_student_uuid()
