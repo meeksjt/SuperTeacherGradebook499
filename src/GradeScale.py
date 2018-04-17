@@ -33,30 +33,15 @@ class GradeScale(object):
             GlobalVariables.database.connection.execute(("INSERT INTO '" + str(self.grade_scale_uuid) + "' VALUES('90','80', '70', '60')"))
             GlobalVariables.database.connection.commit()
 
-
     def set_grade_scale(self,a,b,c,d):
         self.grade_dict['A'] = a
         self.grade_dict['B'] = b
         self.grade_dict['C'] = c
         self.grade_dict['D'] = d
 
-        query = "UPDATE `" + self.grade_scale_uuid + "` SET `A` = '" + str(self.grade_dict['A']) + "';"
-        #print(query)
-        GlobalVariables.database.cursor.execute(query)
-        query = "UPDATE `" + self.grade_scale_uuid + "` SET `B` = '" + str(self.grade_dict['B']) + "';"
-        #print(query)
-        GlobalVariables.database.cursor.execute(query)
-        query = "UPDATE `" + self.grade_scale_uuid + "` SET `C` = '" + str(self.grade_dict['C']) + "';"
-        #print(query)
-        GlobalVariables.database.cursor.execute(query)
-        query = "UPDATE `" + self.grade_scale_uuid + "` SET `D` = '" + str(self.grade_dict['D']) + "';"
-        #print(query)
-        GlobalVariables.database.cursor.execute(query)
+        query = "UPDATE `" + self.grade_scale_uuid + "` SET A = ?, B = ?, C = ?, D = ?;"
+        GlobalVariables.database.connection.execute(query, (a, b, c, d))
         GlobalVariables.database.connection.commit()
-
-        ##******** DATABASE STUFF
-        #Save this stuff to the database table for grade scales.
-        #Remember to use the Course UUID to find your entry on the table.
 
     # The following functions just return a letter grade.
     def get_A_bottom_score(self):

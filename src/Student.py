@@ -159,8 +159,8 @@ class Student(object):
     def remove_student(self):
         query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.uuid) + "';"
         print(query)
-        GlobalVariables.GlobalVariables.database.cursor.execute(query)
-        GlobalVariables.GlobalVariables.database.connection.commit()
+        GlobalVariables.database.cursor.execute(query)
+        GlobalVariables.database.connection.commit()
 
 
 def create_test_database():

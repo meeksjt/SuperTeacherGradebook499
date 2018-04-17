@@ -13,6 +13,8 @@ from EditAssignment import EditAssignment
 from EditStudent import EditStudent
 from CourseEditing import CourseEditing
 from FinalGradeStats import FinalGradeStats
+from EditingGradeDict import EditingGradeDict
+from EditCategories import EditCategories
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -114,6 +116,10 @@ class MainDisplay(object):
         self.verticalLayout.addWidget(self.course_tree_view)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+
+        """
+        This is the docstring for the edit menu in the bottom left corner
+        """
         # add button is a menu with many options, so handle connections differently
         # edit_menu = QtWidgets.QMenu()
         # edit_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Selected Assignment", self.edit_button)
@@ -130,11 +136,11 @@ class MainDisplay(object):
 
         # edit_grade_scale_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Grade Scale", self.edit_button)
         # edit_grade_scale_sub.setStatusTip("Edit Grade Scale for the Course")
-        #edit_grade_scale_sub.triggered.connect(self.edit_student_fn)
+        # edit_grade_scale_sub.triggered.connect(self.edit_course_grade_scale_fn)
 
-        edit_categories_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Categories", self.edit_button)
-        edit_categories_sub.setStatusTip("Edit Assignment Categories for the Course")
-        #edit_categories_sub.triggered.connect(self.edit_student_fn)
+        # edit_categories_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Categories", self.edit_button)
+        # edit_categories_sub.setStatusTip("Edit Assignment Categories for the Course")
+        # edit_categories_sub.triggered.connect(self.edit_categories_fn)
 
         # edit_menu.addAction(edit_assignment_sub)
         # edit_menu.addAction(edit_student_sub)
@@ -221,6 +227,14 @@ class MainDisplay(object):
         self.model.itemFromIndex(self.course_tree_view.currentIndex()).setText(name)
     def edit_course_fn(self):
         self.edit_course = CourseEditing(self.course_manager.currentCourse, self.set_course_name_in_treeview)
+
+    def edit_categories_fn(self):
+        print("Testing")
+        self.edit_categories = EditCategories(self.course_manager.currentCourse)
+        self.course_manager.currentCourse.assignment_category_dict.reload_categories()
+
+    def edit_course_grade_scale_fn(self):
+        self.edit_grade_scale = EditingGradeDict(self.course_manager.currentCourse)
 
     # auxiliary function that gets passed into the course wizard
     # to be called when a course is created

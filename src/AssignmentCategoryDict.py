@@ -39,6 +39,7 @@ class AssignmentCategoryDict(object):
                 return category
 
     def reload_categories(self):
+        self.assignment_categories.clear()
         GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
@@ -58,6 +59,19 @@ class AssignmentCategoryDict(object):
         for x in self.assignment_categories:
             if x.uuid == uuid:
                 query = "UPDATE `" + self.tableName + "` SET name = '" + str(dropCount) + "' WHERE uuid = '" + str(x.uuid) + "';"
-                GlobalVariables.database.cursor.execute(query)
+                GlobalVariables.database.connection.execute(query)
                 GlobalVariables.database.connection.commit()
                 self.reload_categories()
+
+    def save_category_info(self, name, drop_count, uuid):
+        query = "UPDATE `" + self.tableName + "` SET name = ?, drop_count = ? WHERE uuid = ?;"
+        GlobalVariables.database.connection.execute(query, (name, drop_count, uuid))
+        GlobalVariables.database.connection.commit()
+
+    def delete_category(self, course, uuid):
+        query = "DELETE FROM `" + self.tableName + "` WHERE uuid = '" + uuid + "';"
+        print(query)
+        GlobalVariables.database.connection.execute(query)
+        GlobalVariables.database.connection.commit()
+        course.assignment_category_dict.reload_categories()
+
