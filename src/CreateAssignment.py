@@ -12,7 +12,8 @@ This is the class that deals with creating a new Assignment
 
 class CreateAssignment(object):
 
-    def __init__(self, assignment_category_dict, studentList):
+    def __init__(self, assignment_category_dict, studentList, load_grade_sheet):
+        self.load_grade_sheet = load_grade_sheet
         self.CAssignment = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/CreateAssignment.ui', self.CAssignment)
         self.CAssignment.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
@@ -32,7 +33,6 @@ class CreateAssignment(object):
         self.CAssignment.exec()
 
     def add_assignment(self):
-
         category = str(self.CAssignment.assignmentCategoryDropdown.currentText())
         name = self.CAssignment.assignmentNameField.text()
         points = self.CAssignment.assignmentPointsField.text()
@@ -44,6 +44,8 @@ class CreateAssignment(object):
             point_value = float(points)
             new_assignment_category = self.assignmentCategoryDict.get_category(category)
             new_assignment_category.add_assignment(str(uuid.uuid4()), name, point_value, self.studentList)
+            QtWidgets.QMessageBox.question(self.CAssignment, "", "Assignment added", QtWidgets.QMessageBox.Ok)
+            self.load_grade_sheet()
 
     """
     Function to make sure that the string input can be turned into a float

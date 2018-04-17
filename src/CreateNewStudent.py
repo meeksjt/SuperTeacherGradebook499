@@ -14,18 +14,13 @@ This is the class that deals with creating a new student to add to our database 
 
 class CreateNewStudent(object):
 
-    """
-    Constructor for the CreateNewStudent class
-    """
-    def __init__(self, student_list):
+    def __init__(self, student_list, add_student_fn):
 
         # Create the dialog box
         self.student_list = student_list
         self.CNStudent = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/CreateNewStudent.ui', self.CNStudent)
-
-        self.new_student = None  # student being created
-        self.is_complete = False # indicate if the form is complete, if yes then add student to GUI
+        self.add_student_fn = add_student_fn
 
         # Link the button functionality
         self.CNStudent.createNewStudentButton.clicked.connect(self.create_student)
@@ -52,32 +47,11 @@ class CreateNewStudent(object):
             return
 
         # TODO: check for existing student
-
         student = Student(self.student_list.tableName, student_id, student_name, student_email)
-        if self.add_student(student):
-            self.new_student = student
-            self.is_complete = True
-        self.CNStudent.hide()
-
-        #self.bad_input('Error', 'There already exists a student with that name and email')
-
-    """
-    Function to add the student
-    Parameters:
-        conn: (sqlite3 connection) the connection to our all_students database
-        student_name: (string) name of the student we want to add
-        student_email: (string) email of the student we want to add
-    Returns:
-        None
-    """
-    def add_student(self, student):
-            if QtWidgets.QMessageBox.question(self.CNStudent,
-                                            'Congrats!',
-                                            'You successfully created the student "{0}"'
-                                            ' with the student ID "{1}"'.format(student.name, student.id),
-                                            QtWidgets.QMessageBox.Ok):
-                return True
-            return False
+        QtWidgets.QMessageBox.question(self.CNStudent, '', 'You successfully created the student "{0}"'
+                                          ' with the student ID "{1}"'.format(student.name, student.id),
+                                          QtWidgets.QMessageBox.Ok)
+        self.add_student_fn(student)
 
     """
     Function to check if the student already exists in our database

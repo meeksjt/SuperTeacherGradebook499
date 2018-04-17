@@ -69,33 +69,39 @@ class MainDisplay(object):
 
         # buttons
         self.get_stats = QtWidgets.QPushButton(self.layoutWidget)
-        self.get_stats.setText("Get Statistics")
-        self.get_stats.setStyleSheet(push_button_style)
-        self.get_stats.released.connect(self.calculate_statistics)
+        self.get_stats.setStyleSheet(stats_button_style)
+        self.get_stats.setToolTip("View selected item's statistics.")
+        #self.get_stats.released.connect(self.calculate_statistics)
+
+        self.edit_button = QtWidgets.QPushButton(self.layoutWidget)
+        self.edit_button.setObjectName("edit_button")
+        self.edit_button.setToolTip("Edit selected item.")
+        self.edit_button.setStyleSheet(edit_button_style)
+        # self.edit_button.released.connect(self.del_selected_item)
 
         self.del_course = QtWidgets.QPushButton(self.layoutWidget)
         self.del_course.setObjectName("del_course")
-        self.del_course.setToolTip("Deletes the selected entry.")
+        self.del_course.setToolTip("Delete the selected entry (either a student or course).")
         self.del_course.setStyleSheet(delete_button_style)
         self.del_course.released.connect(self.del_selected_item)
 
         self.add_course = QtWidgets.QPushButton(self.layoutWidget)
         self.add_course.setObjectName("add_course")
-        self.add_course.setToolTip("Creates a new course.")
         self.add_course.setStyleSheet(add_button_style)
 
         self.save_grades = QtWidgets.QPushButton(self.layoutWidget)
-        self.save_grades.setText("Save Gradesheet")
-        self.save_grades.setStyleSheet(push_button_style)
+        self.save_grades.setStyleSheet(save_button_style)
+        self.save_grades.setToolTip("Saves current course's grades.")
         self.save_grades.released.connect(self.save_grade_sheet)
 
         # holds bottom left row of buttons
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.horizontalLayout.addWidget(self.get_stats)
+        self.horizontalLayout.addWidget(self.edit_button)
+        self.horizontalLayout.addWidget(self.save_grades)
         self.horizontalLayout.addWidget(self.del_course)
         self.horizontalLayout.addWidget(self.add_course)
-        self.horizontalLayout.addWidget(self.save_grades)
 
         # holds the button row on the bottom and
         # holds the course view above it
@@ -135,8 +141,8 @@ class MainDisplay(object):
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
-        menu.addAction(edit_assignment_sub)
-        menu.addAction(edit_student_sub)
+        # menu.addAction(edit_assignment_sub)
+        # menu.addAction(edit_student_sub)
 
         menu.addAction(calculate_grades_sub)
 
@@ -174,32 +180,56 @@ class MainDisplay(object):
         self.course_manager.set_current_course(current_item.accessibleDescription())
         return self.course_manager.currentCourse
 
+    # if the current row that is selected has children (is a course)
+    # then add a new course... else add a student
+    def add_course_fn(self):
+        self.course_manager.currentCourse = Course()
+        self.cc_form = CourseWizard.InitialCourseScreen(self.course_manager, self.add_course_fn_aux)
+
+    # make the course item for QTreeView
+    def add_course_fn_aux(self, new_course):
+        course = QtGui.QStandardItem(new_course.name + '-' + new_course.section)
+        course.setAccessibleDescription(new_course.course_uuid)
+
+        self.grade_sheet.setRowCount(0)
+        self.grade_sheet.setColumnCount(0)
+
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
+            self.model.appendRow(course)
+        else:
+            current_item = self.model.itemFromIndex(index)
+            if current_item.parent() is not None: # if parent exists, set index = parent index
+                current_item = current_item.parent()
+
+            if current_item.row() >= self.model.rowCount(): # out of bounds, just append to the end
+                self.model.appendRow(course)
+            else:
+                self.model.insertRow(current_item.row() + 1, course)
+        self.load_grade_sheet()
+
     def add_student_fn(self):
         index = self.course_tree_view.currentIndex()
         if not index.isValid():
             return
+        self.new_student_form = CreateNewStudent(self.course_manager.currentCourse.student_list,
+                                                 self.add_student_aux_fn)
 
-        self.new_student_form = CreateNewStudent(self.course_manager.currentCourse.student_list)
-        if not self.new_student_form.is_complete:
-            print("form not completed, so no new student")
+    def add_student_aux_fn(self, student):
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
             return
-
         current_item = self.model.itemFromIndex(index)
         if current_item.parent() is not None:
             current_item = current_item.parent()
 
-        student = QtGui.QStandardItem(self.new_student_form.new_student.name)
-        student.setAccessibleDescription(self.new_student_form.new_student.uuid)
-        current_item.appendRow(student)
+        s = QtGui.QStandardItem(student.name)
+        s.setAccessibleDescription(student.uuid)
+        current_item.appendRow(s)
 
-        self.get_selected_course().add_student(self.new_student_form.new_student)
+        self.get_selected_course().add_student(student)
         self.get_selected_course().assignment_category_dict.reload_categories()
         self.course_manager.currentCourse.reload_grades()
-        self.load_grade_sheet()
-
-    def add_assignment_fn(self):
-        self.add_assignment = CreateAssignment(self.course_manager.currentCourse.assignment_category_dict,
-                                               self.course_manager.currentCourse.student_list)
         self.load_grade_sheet()
 
     def edit_student_fn(self):
@@ -219,6 +249,32 @@ class MainDisplay(object):
 
             edit_student = EditStudent(student_uuid, student_name, student_email, student_id, self.course_manager.currentCourse.student_list)
 
+            self.load_grade_sheet()
+
+    def add_assignment_fn(self):
+        index = self.course_tree_view.currentIndex()
+        if not index.isValid():
+            return
+        self.add_assignment = CreateAssignment(self.course_manager.currentCourse.assignment_category_dict,
+                                               self.course_manager.currentCourse.student_list,
+                                               self.load_grade_sheet)
+
+    def edit_assignment_fn(self):
+        checked_indices = []
+        for i in range(1, self.grade_sheet.columnCount()):
+            if self.grade_sheet.item(0, i).checkState() == QtCore.Qt.Checked:
+                checked_indices.append(i)
+
+        if len(checked_indices) != 1:
+            print("You fucked up")
+        else:
+            assignment_name = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_name()
+            assignment_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
+            assignment_points = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_points()
+            category_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_category_uuid()
+            edit_assignment = EditAssignment(assignment_name, assignment_points, assignment_uuid,
+                                             self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid],
+                                             self.course_manager.currentCourse.student_list)
             self.load_grade_sheet()
 
     def calculate_grade(self):
@@ -286,56 +342,6 @@ class MainDisplay(object):
                 max_val = assignment_score_deficits[max_index]
 
         return max_index
-
-    def edit_assignment_fn(self):
-        checked_indices = []
-        for i in range(1, self.grade_sheet.columnCount()):
-            if self.grade_sheet.item(0, i).checkState() == QtCore.Qt.Checked:
-                checked_indices.append(i)
-
-        if len(checked_indices) != 1:
-            print("You fucked up")
-        else:
-            assignment_name = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_name()
-            assignment_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
-            assignment_points = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_points()
-            category_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_category_uuid()
-            edit_assignment = EditAssignment(assignment_name, assignment_points, assignment_uuid,
-                               self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid],
-                               self.course_manager.currentCourse.student_list)
-            self.load_grade_sheet()
-
-    # if the current row that is selected has children (is a course)
-    # then add a new course... else add a student
-    def add_course_fn(self):
-        self.course_manager.currentCourse = Course()
-        self.cc_form = CourseWizard.InitialCourseScreen(self.course_manager)
-        if self.course_manager.currentCourse.is_complete is False:
-            print("Backed out of course wizard, no new course created")
-            self.get_selected_course() # reset current course
-            return
-
-        # make the course item for QTreeView
-        course = QtGui.QStandardItem(self.course_manager.currentCourse.name + '-' + self.course_manager.currentCourse.section)
-        course.setAccessibleDescription(self.course_manager.currentCourse.course_uuid)
-
-        self.grade_sheet.setRowCount(0)
-        self.grade_sheet.setColumnCount(0)
-
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
-            self.model.appendRow(course)
-        else:
-            current_item = self.model.itemFromIndex(index)
-            if current_item.parent() is not None: # if parent exists, set index = parent index
-                current_item = current_item.parent()
-
-            if current_item.row() >= self.model.rowCount(): # out of bounds, just append to the end
-                self.model.appendRow(course)
-            else:
-                self.model.insertRow(current_item.row() + 1, course)
-
-        self.load_grade_sheet()
 
     # delete selected item (row or student) from tree view
     def del_selected_item(self):
@@ -645,7 +651,6 @@ def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, cat
             for assignment_uuid, assignment in category.assignment_dict.items():
                 newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName,
                                                                              assignment.totalPoints, newCourse.student_list)
-
 
 if __name__ == "__main__":
    import sys

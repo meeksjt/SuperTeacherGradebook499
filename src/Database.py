@@ -23,7 +23,7 @@ class Database(object):
             return None
 
 
-    #### INTERNAL functions that are called behind teh scenes to test queries ####
+    #### INTERNAL functions that are called behind the scenes to test queries ####
     def __execute(self, string):
         self.cursor.execute(string)
         self.connection.commit()
