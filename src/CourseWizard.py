@@ -42,11 +42,14 @@ class CourseCreatorWidget(object):
             return
         if not self.validate_assignment_categories():
             print("failed to validate assignment categories")
+
             return
 
         self.course_manager.add_course(self.new_course)
         self.course_manager.set_current_course(self.new_course.course_uuid)
         self.course_manager.currentCourse.is_complete = True
+        self.course_manager.currentCourse.link_with_database()
+        self.save_table_data()
 
         self.frame.hide()
 
@@ -78,7 +81,7 @@ class CourseCreatorWidget(object):
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
                 self.categories_to_create.append(category[:].copy())
-                self.new_course.assignment_category_dict.add_category(category)
+                self.new_course.assignment_category_dict.add_category(str(uuid.uuid4()), category[0], category[1], self.new_course.student_list)
 
     def validate_assignment_categories(self):
         row_count = self.ui.tableWidget.rowCount()
@@ -133,7 +136,7 @@ class CourseCreatorWidget(object):
                     self.bad_input('Error', 'negative drop count')
                     return False
             except ValueError:
-                self.bad_input('Error', 'You have a drop count that is not a nonnegative integer.  Please try again.')
+                self.bad_input('Error', 'You have a drop count that is not a non-negative integer.  Please try again.')
                 return False
 
         return True
