@@ -27,9 +27,8 @@ class EditAssignment(object):
         points = self.EAssignment.assignmentPointsField.text()
 
         if name and points:
-            self.assignmentCategory.set_assignment_name(self.assignment_uuid, name)
-            self.assignmentCategory.set_assignment_total_points(self.assignment_uuid, points)
+            self.assignmentCategory.save_assignment(self.assignment_uuid, name, points)
+            #self.assignmentCategory.update_assignment_database()
             self.assignmentCategory.reload_assignments()
-
-        self.EAssignment.hide()
+            self.EAssignment.hide()
 

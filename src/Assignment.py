@@ -38,6 +38,11 @@ class Assignment:
             assignmentName : (string) name of Assignment
     """
 
+    #def save_assignment(self):
+
+        #GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(student.uuid) + "','" + "-" + "')")
+        #GlobalVariables.database.connection.commit()
+
     def add_grade_to_database(self):
         for student in self.studentList.students:
             if student.uuid not in self.studentGrades.assignmentGrades.keys():

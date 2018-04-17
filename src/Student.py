@@ -125,26 +125,20 @@ class Student(object):
     def set_email(self,email):
         self.email = email
         #query = "UPDATE "+self.tableName+" SET email = '" + str(self.email) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        GlobalVariables.database.cursor.execute("UPDATE ? SET email = '?' WHERE uuid = '?';",
-                                                (self.tableName, self.email, self.uuid))
+        GlobalVariables.database.cursor.execute("UPDATE `" + self.tableName + "` SET email = ? WHERE uuid = ?;", (self.email, self.uuid))
         GlobalVariables.database.connection.commit()
 
     def set_name(self,name):
         """Tested"""
-        self.name=name
-        # I used a query to make it easier by creating our string, and just passing it to the cursor.
-        #query = "UPDATE "+self.tableName+" SET name = '" + str(self.name) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        GlobalVariables.database.cursor.execute("UPDATE ? SET name = '?' WHERE uuid = '?';",
-                                                (self.tableName, self.name, self.uuid))
+        self.name = name
+        GlobalVariables.database.cursor.execute("UPDATE `" + self.tableName + "` SET name = ? WHERE uuid = ?;", (self.name, self.uuid))
         GlobalVariables.database.connection.commit()
 
     def set_id(self,id):
         """Sets ID in object and in database"""
         self.id=id
 
-        query = "UPDATE "+self.tableName+" SET id = '" + str(self.id) + "' WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
-        GlobalVariables.database.cursor.execute(query)
+        GlobalVariables.database.cursor.execute("UPDATE `" + self.tableName + "` SET ID = ? WHERE uuid = ?;", (self.id, self.uuid))
         GlobalVariables.database.connection.commit()
 
     def save_student(self):

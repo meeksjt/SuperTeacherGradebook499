@@ -28,7 +28,7 @@ class CourseCreatorWidget(object):
         self.ui.course_number_line_edit.setText("Course Number")
         self.ui.section_number_line_edit.setText("Course Section")
         self.ui.course_semester_line_edit.setText("Course Semester")
-        self.ui.attendance_points_line_edit.setText("Points for Attendance")
+        self.ui.attendance_points_line_edit.setText("0")
 
         self.frame.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.frame.exec()
@@ -80,6 +80,7 @@ class CourseCreatorWidget(object):
 
         # Add the assignmentcategorylist creation here if valid is valid
         if valid:
+            self.course_manager.currentCourse.link_with_database()
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
                 self.categories_to_create.append(category[:].copy())

@@ -11,6 +11,7 @@ from CreateAssignment import *
 from StyleSheetData import  *
 from EditAssignment import EditAssignment
 from EditStudent import EditStudent
+from CourseEditing import CourseEditing
 from FinalGradeStats import FinalGradeStats
 
 # this class has a lot of buttons that call a lot of functions
@@ -114,6 +115,33 @@ class MainDisplay(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         # add button is a menu with many options, so handle connections differently
+        edit_menu = QtWidgets.QMenu()
+        edit_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Selected Assignment", self.edit_button)
+        edit_assignment_sub.setStatusTip("Edit Selected Assignment Name, Category, or Point Values")
+        edit_assignment_sub.triggered.connect(self.edit_assignment_fn)
+
+        edit_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Selected Student", self.edit_button)
+        edit_student_sub.setStatusTip("Edit Selected Student Name, ID, and Email")
+        edit_student_sub.triggered.connect(self.edit_student_fn)
+
+        edit_course_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course", self.edit_button)
+        edit_course_sub.setStatusTip("Edit Course Name, Number, Section, Semester, and Attendance Value")
+        edit_course_sub.triggered.connect(self.edit_course_fn)
+
+        edit_grade_scale_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Grade Scale", self.edit_button)
+        edit_grade_scale_sub.setStatusTip("Edit Grade Scale for the Course")
+        #edit_grade_scale_sub.triggered.connect(self.edit_student_fn)
+
+        edit_categories_sub = QtWidgets.QAction(QtGui.QIcon("../assets/edit_button.png"), "Edit Course Categories", self.edit_button)
+        edit_categories_sub.setStatusTip("Edit Assignment Categories for the Course")
+        #edit_categories_sub.triggered.connect(self.edit_student_fn)
+
+        edit_menu.addAction(edit_assignment_sub)
+        edit_menu.addAction(edit_student_sub)
+        edit_menu.addAction(edit_course_sub)
+        edit_menu.addAction(edit_grade_scale_sub)
+        edit_menu.addAction(edit_categories_sub)
+
         menu = QtWidgets.QMenu()
 
         add_course_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Add Course", self.add_course)
@@ -128,10 +156,6 @@ class MainDisplay(object):
         create_assignment_sub.setStatusTip("Create a New Assignment")
         create_assignment_sub.triggered.connect(self.add_assignment_fn)
 
-        edit_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Edit Selected Assignment", self.add_course)
-        edit_assignment_sub.setStatusTip("Edit Selected Assignment Name, Category, or Point Values")
-        edit_assignment_sub.triggered.connect(self.edit_assignment_fn)
-
         edit_student_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Edit Selected Student", self.add_course)
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
@@ -144,15 +168,17 @@ class MainDisplay(object):
         calculate_final_grades_stats_sub.setStatusTip("Calculate Student Statistics for the Course")
         # calculate_final_grades_stats_sub.triggered.connect(self.student_final_stats)
 
+
+
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
-        # menu.addAction(edit_assignment_sub)
         # menu.addAction(edit_student_sub)
         menu.addAction(calculate_grades_sub)
         menu.addAction(calculate_final_grades_stats_sub)
 
         self.add_course.setMenu(menu)
+        self.edit_button.setMenu(edit_menu)
 
         # course creation wizard
         self.cc_form = None
@@ -189,6 +215,10 @@ class MainDisplay(object):
     def add_course_fn(self):
         self.course_manager.currentCourse = Course()
         self.cc_form = CourseWizard.InitialCourseScreen(self.course_manager, self.add_course_fn_aux)
+
+    def edit_course_fn(self):
+        self.edit_course = CourseEditing(self.course_manager.currentCourse)
+        self.load_grade_sheet()
 
     # auxiliary function that gets passed into the course wizard
     # to be called when a course is created
@@ -262,7 +292,7 @@ class MainDisplay(object):
                 checked_indices.append(i)
 
         if len(checked_indices) != 1:
-            print("You fucked up")
+            pass
         else:
             # we need the student id, student name, student email, student uuid
             student_uuid = self.grade_sheet.verticalHeaderItem(checked_indices[0]).get_student_uuid()
@@ -573,8 +603,8 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
         self.setTextAlignment(QtCore.Qt.AlignCenter)
 
     def setText(self, new_name):
-        self.assignment_name = new_name
-        super(HeaderCell, self).setText(self.assignment_name)
+        #self.assignment_name = new_name
+        super(HeaderCell, self).setText(new_name)
 
     def set_assignment_uuid(self, new_uuid):
         self.assignment_uuid = new_uuid
