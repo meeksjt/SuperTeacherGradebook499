@@ -67,4 +67,4 @@ class TemplateCourseCreation(object):
                                                                              assignment.assignmentName,
                                                                              assignment.totalPoints,
                                                                              new_course.student_list)
-        
+        self.course_manager.add_course(new_course)
