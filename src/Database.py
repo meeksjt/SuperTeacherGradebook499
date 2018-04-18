@@ -20,7 +20,7 @@ class Database(object):
             print("SQL data error: {}".format(e.args[0]))
             return None
         except Exception as e:
-            print("Error: {}".format(e.args))
+            print("Non-SQL Error: {}".format(e.args[0]))
             return None
 
 
@@ -34,6 +34,13 @@ class Database(object):
         self.cursor.execute(query.format(course.name, course.number, course.section,
                                          course.semester, course.course_uuid, course.attendance_points))
         self.connection.commit()
+
+    def __add_template_course(self, course):
+        query = "INSERT INTO 'templateCourses' VALUES('{}', '{}', '{}', '{}', '{}', '{}');"
+        self.cursor.execute(query.format(course.name, course.number, course.section,
+                                         course.semester, course.course_uuid, course.attendance_points))
+        self.connection.commit()
+
     def __drop_course(self, course_uuid):
         query = "DELETE FROM 'courseList' WHERE Course_UUID = '{}';"
         self.cursor.execute(query.format(course_uuid))
@@ -46,6 +53,14 @@ class Database(object):
 
     def __get_course(self, course_uuid):
         query = "SELECT * FROM 'courseList' WHERE Course_UUID = '{}';"
+        self.cursor.execute(query.format(course_uuid))
+        row = self.cursor.fetchall()[0]
+        course = Course(row[0], row[1], row[2], row[3], row[4], row[5])
+        course.link_with_database()
+        return course
+
+    def __get_template_course(self, course_uuid):
+        query = "SELECT * FROM 'templateCourses' WHERE Course_UUID = '{}';"
         self.cursor.execute(query.format(course_uuid))
         row = self.cursor.fetchall()[0]
         course = Course(row[0], row[1], row[2], row[3], row[4], row[5])
@@ -82,6 +97,9 @@ class Database(object):
     def add_course(self, course):
         self.__execute_internal(self.__add_course, course)
 
+    def add_template_course(self, course):
+        self.__execute_internal(self.__add_template_course, course)
+
     def drop_course(self, course):
         self.__execute_internal(self.__drop_course, course)
 
@@ -90,6 +108,9 @@ class Database(object):
 
     def get_course(self, course_uuid):
         return self.__execute_internal(self.__get_course, course_uuid)
+
+    def get_template_course(self, course_uuid):
+        return self.__execute_internal(self.__get_template_course, course_uuid)
 
     def add_student(self, student):
         self.__execute_internal(self.__add_student, student)

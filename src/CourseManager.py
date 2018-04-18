@@ -42,6 +42,15 @@ class CourseManager(object):
                                          "Course_UUID TEXT, "
                                          "Attendance_Points TEXT"
                                          ");")
+
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS 'templateCourses' ("
+                                         "Name TEXT, "
+                                         "Number TEXT, "
+                                         "Section TEXT, "
+                                         "Semester TEXT, "
+                                         "Course_UUID TEXT, "
+                                         "Attendance_Points TEXT"
+                                         ");")
         self.reload_courses()
 
     def __add_to_course_tree_labels(self, course):
@@ -62,10 +71,17 @@ class CourseManager(object):
             new_course.link_with_database()
             self.__add_to_course_tree_labels(new_course)
 
+        GlobalVariables.database.execute("SELECT * FROM `templateCourses` ORDER BY Name;")
+
     def add_course(self, course):
         GlobalVariables.database.add_course(course)
         self.reload_courses()
         return course.course_uuid
+
+    def add_template_course(self, course):
+        GlobalVariables.database.add_template_course(course)
+        self.reload_courses()
+        return
 
     def delete_course(self, course_uuid):
         GlobalVariables.database.drop_course(course_uuid)
@@ -74,6 +90,9 @@ class CourseManager(object):
 
     def get_course(self, course_uuid):
         return GlobalVariables.database.get_course(course_uuid)
+
+    def get_template_course(self, course_uuid):
+        return GlobalVariables.database.get_template_course(course_uuid)
 
     def set_current_course(self, course_uuid):
         self.currentCourse = self.get_course(course_uuid)
