@@ -47,6 +47,16 @@ class AttendanceDictionary(object):
 
         return present_days / self.total_days
 
+    def get_student_day_count(self, student_uuid):
+        present_days = 0
+
+        for day in self.attendance_sheets:
+            present_students = self.attendance_sheets[day].split(';')
+            if student_uuid in present_students:
+                present_days += 1
+
+        return present_days
+
 """
 Class for an individual Attendance Sheet
 """
