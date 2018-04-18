@@ -1,6 +1,7 @@
 from CourseManager import CourseManager
 from Course import Course
 from CreateAssignment import *
+from TemplateCourseCreation import *
 
 
 class CourseCreatorWidget(object):
@@ -232,8 +233,8 @@ class InitialCourseScreen(object):
         self.next_screen = CourseCreatorWidget(self.course_manager, self.add_course_fn)
 
     def create_new_template_course(self):
-        pass
-
+        self.ICScreen.hide()
+        self.next_screen = TemplateCourseCreation(self.course_manager, self.add_course_fn)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

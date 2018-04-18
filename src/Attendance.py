@@ -45,7 +45,7 @@ class AttendanceDictionary(object):
                 present_days += 1
             self.total_days += 1
 
-        return present_days
+        return present_days / self.total_days
 
 """
 Class for an individual Attendance Sheet
@@ -62,6 +62,7 @@ class AttendanceSheet(object):
 
         # Get the current date and add our list of students
         current_date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
+        self.student_uuids = []
         self.add_students()
 
         # database stuff
@@ -70,8 +71,8 @@ class AttendanceSheet(object):
         GlobalVariables.database.connection.commit()
         self.__load_attendance()
         # If the user is trying to modify the date they are currently in
-        if current_date in self.attendanceDictionary:
-            self.load_presence(self.attendanceDictionary[current_date])
+        if current_date in self.attendanceDictionary.attendance_sheets:
+            self.load_presence(self.attendanceDictionary.attendance_sheets[current_date])
         self.ASheet.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         self.ASheet.show()
         self.ASheet.saveAttendanceButton.clicked.connect(self.save_attendance)
@@ -83,7 +84,7 @@ class AttendanceSheet(object):
         students = students_present.split(';')
 
         for row in range(0, row_count):
-            if self.ASheet.studentAttendanceTable.item(row, 0).text() in students:
+            if self.student_uuids[row] in students:
                 self.ASheet.studentAttendanceTable.item(row, 1).setCheckState(QtCore.Qt.Checked)
 
     """
@@ -94,6 +95,7 @@ class AttendanceSheet(object):
             row_insert = self.ASheet.studentAttendanceTable.rowCount()
             self.ASheet.studentAttendanceTable.insertRow(row_insert)
             self.ASheet.studentAttendanceTable.setItem(row_insert, 0, QtWidgets.QTableWidgetItem(student.name))
+            self.student_uuids.append(student.uuid)
 
             chkBoxItem = QtWidgets.QTableWidgetItem()
             chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
@@ -103,9 +105,9 @@ class AttendanceSheet(object):
 
     def load_new_date(self):
         date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
-        if date in self.attendanceDictionary:
+        if date in self.attendanceDictionary.attendance_sheets:
             self.uncheck_names()
-            self.load_presence(self.attendanceDictionary[date])
+            self.load_presence(self.attendanceDictionary.attendance_sheets[date])
         else:
             self.uncheck_names()
 
@@ -115,11 +117,11 @@ class AttendanceSheet(object):
             self.ASheet.studentAttendanceTable.item(row, 1).setCheckState(QtCore.Qt.Unchecked)
 
     def __load_attendance(self):
-        self.attendanceDictionary.clear()  # Erase what's in the list
+        self.attendanceDictionary.attendance_sheets.clear()  # Erase what's in the list
         GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
-            self.attendanceDictionary[row[0]] = row[1]
+            self.attendanceDictionary.attendance_sheets[row[0]] = row[1]
 
     def save_attendance(self):
         row_count = self.ASheet.studentAttendanceTable.rowCount()
@@ -127,16 +129,16 @@ class AttendanceSheet(object):
 
         for row in range(0, row_count):
             if self.ASheet.studentAttendanceTable.item(row, 1).checkState() == QtCore.Qt.Checked:
-                output.append(self.studentList.get_uuid_from_name(self.ASheet.studentAttendanceTable.item(row, 0).text()))
+                output.append(self.student_uuids[row])
 
         output_string = ';'.join(output)
         date = self.ASheet.attendanceCalendar.selectedDate().toString("dd-MM-yyyy")
         # This is where we find the date in the GlobalVariables.database.
-        self.attendanceDictionary[date] = output_string
+        self.attendanceDictionary.attendance_sheets[date] = output_string
 
-        for i in self.attendanceDictionary:
+        for i in self.attendanceDictionary.attendance_sheets:
             # i is the date, attendanceDicctionry[i] is the list of students
-            print(i, self.attendanceDictionary[i])
+            print(i, self.attendanceDictionary.attendance_sheets[i])
 
             # if the date exists, we update it's entry in the GlobalVariables.database.
             results = GlobalVariables.database.connection.execute("SELECT * FROM `" + self.tableName + "` WHERE date='" + i + "' ;")
@@ -150,5 +152,5 @@ class AttendanceSheet(object):
             # Else, we INSERT
             else:
                 # Add database entry
-                GlobalVariables.database.connection.execute("INSERT INTO " + str(self.tableName) + " VALUES('" + str(i) + "', '" + str(self.attendanceDictionary[i]) + "')")
+                GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(i) + "', '" + str(self.attendanceDictionary.attendance_sheets[i]) + "')")
                 GlobalVariables.database.connection.commit()
