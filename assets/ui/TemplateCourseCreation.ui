@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
-    <height>483</height>
+    <width>451</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>60</y>
+     <x>10</x>
+     <y>10</y>
      <width>431</width>
      <height>331</height>
     </rect>
@@ -25,82 +25,12 @@
    <property name="title">
     <string>Template Course Creation</string>
    </property>
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>110</y>
-      <width>341</width>
-      <height>165</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QLabel" name="courseNameLabel">
-         <property name="text">
-          <string>Course Name</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="courseNumberLabel">
-         <property name="text">
-          <string>Course Number</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="courseSectionLabel">
-         <property name="text">
-          <string>Course Section</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="courseSemesterLabel">
-         <property name="text">
-          <string>Course Semester</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="attendancePointsLabel">
-         <property name="text">
-          <string>Attendance Points</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="courseNameField"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="courseNumberField"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="courseSectionField"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="courseSemesterField"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="attendancePointsField"/>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
    <widget class="QComboBox" name="courseChoiceBox">
     <property name="geometry">
      <rect>
       <x>40</x>
       <y>60</y>
-      <width>360</width>
+      <width>351</width>
       <height>25</height>
      </rect>
     </property>
@@ -117,6 +47,153 @@
     <property name="text">
      <string>Create Course</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>100</y>
+      <width>331</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="courseNameLabel">
+         <property name="text">
+          <string>Course Name</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseNameField"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="courseNumberLabel">
+         <property name="text">
+          <string>Course Number</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseNumberField"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="courseSectionLabel">
+         <property name="text">
+          <string>Course Section</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseSectionField"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="courseSemesterLabel">
+         <property name="text">
+          <string>Course Semester</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="courseSemesterField"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QLabel" name="attendancePointsLabel">
+         <property name="text">
+          <string>Attendance Points</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="attendancePointsField"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>

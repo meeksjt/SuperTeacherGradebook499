@@ -13,8 +13,8 @@ class AssignmentCategoryDict(object):
         self.assignment_categories = {}
 
         self.tableName = str(course_uuid) + "_categories"
-        GlobalVariables.database.connection.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`uuid`	TEXT,`name` TEXT,`drop_count` TEXT);")
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS `" + self.tableName + "` (`uuid` TEXT,`name` TEXT,`drop_count` TEXT);")
+        # GlobalVariables.database.connection.commit()
         self.reload_categories()
 
         # Jacob: Need to add loading in from database and saving to database if table already exists
@@ -28,8 +28,8 @@ class AssignmentCategoryDict(object):
 
     def add_category(self, uuid, name, drop_count, student_list):
         category = AssignmentCategory(str(uuid), name, drop_count, self.student_list)
-        GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(uuid) + "', '" + str(name) + "', '" + str(drop_count) + "')")
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(uuid) + "', '" + str(name) + "', '" + str(drop_count) + "')")
+        # GlobalVariables.database.connection.commit()
         self.reload_categories()
         return uuid
 
@@ -40,7 +40,7 @@ class AssignmentCategoryDict(object):
 
     def reload_categories(self):
         self.assignment_categories.clear()
-        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
+        GlobalVariables.database.execute("SELECT * FROM `" + self.tableName + "`")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             # '4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
@@ -51,26 +51,26 @@ class AssignmentCategoryDict(object):
         for x in self.assignment_categories.values():
             if x.uuid == uuid:
                 query = "UPDATE `" + self.tableName + "` SET name = '" + str(name) + "' WHERE uuid = '" + str(x.uuid) + "';"
-                GlobalVariables.database.cursor.execute(query)
+                GlobalVariables.database.execute(query)
                 GlobalVariables.database.connection.commit()
                 self.reload_categories()
 
     def set_drop_count(self,uuid, dropCount):
         for x in self.assignment_categories:
             if x.uuid == uuid:
-                query = "UPDATE `" + self.tableName + "` SET name = '" + str(dropCount) + "' WHERE uuid = '" + str(x.uuid) + "';"
-                GlobalVariables.database.connection.execute(query)
+                query = "UPDATE `" + self.tableName + "` SET drop_count = '" + str(dropCount) + "' WHERE uuid = '" + str(x.uuid) + "';"
+                GlobalVariables.database.execute(query)
                 GlobalVariables.database.connection.commit()
                 self.reload_categories()
 
     def save_category_info(self, name, drop_count, uuid):
         query = "UPDATE `" + self.tableName + "` SET name = ?, drop_count = ? WHERE uuid = ?;"
-        GlobalVariables.database.connection.execute(query, (name, drop_count, uuid))
+        GlobalVariables.database.cursor.execute(query, (name, drop_count, uuid))
         GlobalVariables.database.connection.commit()
 
     def delete_category(self, course, uuid):
         query = "DELETE FROM `" + self.tableName + "` WHERE uuid = '" + uuid + "';"
-        GlobalVariables.database.connection.execute(query)
-        GlobalVariables.database.connection.commit()
+        GlobalVariables.database.execute(query)
+        # GlobalVariables.database.connection.commit()
         course.assignment_category_dict.reload_categories()
 
