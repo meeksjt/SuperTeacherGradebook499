@@ -709,6 +709,9 @@ class MainDisplay(object):
         for i in range(len(student_grades)):
             deficits.append(student_grades[i][1] - student_grades[i][0])
 
+        if drop_count > len(student_grades):
+            drop_count = 0
+
         for i in range(drop_count):
             index = int(self.get_max_deficit(deficits))
             del student_grades[index]
