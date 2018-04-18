@@ -18,7 +18,8 @@ from EditCategories import EditCategories
 from DisplayStudents import DisplayStudents
 from Attendance import *
 from math import ceil
-import sys
+import plotly as py
+import plotly.graph_objs as go
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -143,11 +144,16 @@ class MainDisplay(object):
         calculate_final_stats_sub.setStatusTip("Calculate Final Stats for the Course")
         calculate_final_stats_sub.triggered.connect(self.student_final_stats)
 
+        plot_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Plot Grades vs. Attendance and Letter Grade Frequency", self.get_stats_button)
+        plot_grades_sub.setStatusTip("Calculate Final Stats for the Course")
+        plot_grades_sub.triggered.connect(self.create_graphs)
+
         stats_menu.addAction(display_student_roster_sub)
         stats_menu.addAction(calculate_grades_sub)
         stats_menu.addAction(calculate_assignment_stats_sub)
         stats_menu.addAction(save_student_reports_sub)
         stats_menu.addAction(calculate_final_stats_sub)
+        stats_menu.addAction(plot_grades_sub)
 
         self.get_stats_button.setMenu(stats_menu)
 
@@ -519,7 +525,106 @@ class MainDisplay(object):
             final_grades
         )
 
-        print('test')
+    def create_graphs(self):
+        self.calculate_grades()
+        self.plot_grades_vs_attendance()
+        self.plot_letter_grade_frequency()
+
+    def plot_grades_vs_attendance(self):
+        my_filename = '../course_graphics/grades_vs_attendance.html'
+        print(my_filename)
+        final_grades = []
+        attendance = []
+
+        for row in range(1, self.grade_sheet.rowCount()):
+            final_grades.append(self.final_grades[row - 1])
+            attendance.append(
+                self.course_manager.currentCourse.attendance_dictionary.get_student_day_count(self.grade_sheet.verticalHeaderItem(row).get_student_uuid())
+            )
+
+        trace1 = go.Scatter(
+            x=final_grades,
+            y=attendance,
+            name='Test',
+            mode='markers',
+            marker={'size': '12'}
+        )
+
+        data = [trace1]
+
+        layout = go.Layout(
+            title='Final Grades vs. Attendance',
+            xaxis = dict(
+                title='x Axis',
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            ),
+            yaxis = dict(
+                title='y Axis',
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            )
+        )
+
+        fig = go.Figure(data=data, layout=layout)
+        py.offline.plot(fig, filename=my_filename)
+
+    def plot_letter_grade_frequency(self):
+        filename = "../course_graphics/letter_grade_frequency.html"
+
+        letters = []
+
+        for row in range(1, self.grade_sheet.rowCount()):
+            letters.append(self.grade_sheet.item(row, self.grade_sheet.columnCount() - 1).text())
+
+        letter_frequencies = {}
+        letter_frequencies['A'] = letters.count('A')
+        letter_frequencies['B'] = letters.count('B')
+        letter_frequencies['C'] = letters.count('C')
+        letter_frequencies['D'] = letters.count('D')
+        letter_frequencies['F'] = letters.count('F')
+
+        trace0 = go.Bar(
+            x=list(letter_frequencies.keys()),
+            y=list(letter_frequencies.values()),
+            marker=dict(
+                color=['rgba(0,255,0,1)',
+                       'rgba(0,0,255,1)',
+                       'rgba(255,255,0,1)',
+                       'rgba(255,165,0,1)',
+                       'rgba(255,0,0,1)']
+            )
+        )
+
+        data = [trace0]
+        layout = go.Layout(
+            title='Letter Grade Frequency',
+            xaxis=dict(
+                title='Letter Grade',
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            ),
+            yaxis=dict(
+                title='Frequency (Number of Students)',
+                titlefont=dict(
+                    family='Courier New, monospace',
+                    size=18,
+                    color='#7f7f7f'
+                )
+            )
+        )
+
+        fig = go.Figure(data=data, layout=layout)
+        py.offline.plot(fig, filename=filename)
 
     def display_student_roster(self):
         self.display_roster = DisplayStudents(self.course_manager.currentCourse.student_list,
@@ -529,6 +634,7 @@ class MainDisplay(object):
     def calculate_grades(self):
         # Loop through each row in the grade sheet
         drop_counts = {}
+        self.final_grades = []
         for row in range(1, self.grade_sheet.rowCount()):
 
             studentID = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
@@ -562,6 +668,7 @@ class MainDisplay(object):
                 total_points = total_points + atp
 
             final_grade = student_points / total_points * 100
+            self.final_grades.append(final_grade)
             letter_grade = self.course_manager.currentCourse.grade_scale.get_letter_grade(final_grade)
 
             final_points = QtWidgets.QTableWidgetItem(str(student_points))
