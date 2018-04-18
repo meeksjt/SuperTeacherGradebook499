@@ -555,7 +555,7 @@ class MainDisplay(object):
         layout = go.Layout(
             title='Final Grades vs. Attendance',
             xaxis = dict(
-                title='x Axis',
+                title='Final Grades (%)',
                 titlefont=dict(
                     family='Courier New, monospace',
                     size=18,
@@ -563,7 +563,7 @@ class MainDisplay(object):
                 )
             ),
             yaxis = dict(
-                title='y Axis',
+                title='Attendance (days)',
                 titlefont=dict(
                     family='Courier New, monospace',
                     size=18,
