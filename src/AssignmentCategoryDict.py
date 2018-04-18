@@ -43,7 +43,6 @@ class AssignmentCategoryDict(object):
         GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
-            # '4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
             newAssignmentCategory = AssignmentCategory(row[0], row[1], row[2], self.student_list)
             self.assignment_categories[row[0]] = copy.deepcopy(newAssignmentCategory)
 

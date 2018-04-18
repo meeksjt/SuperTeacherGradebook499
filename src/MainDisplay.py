@@ -303,6 +303,7 @@ class MainDisplay(object):
         self.get_selected_course()
         self.edit_categories = EditCategories(self.course_manager.currentCourse)
         self.course_manager.currentCourse.assignment_category_dict.reload_categories()
+        self.load_grade_sheet()
 
     def edit_course_grade_scale_fn(self):
         self.edit_grade_scale = EditingGradeDict(self.course_manager.currentCourse)
