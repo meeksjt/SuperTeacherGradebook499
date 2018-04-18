@@ -78,6 +78,7 @@ class EditCategories(object):
                 else:
                     self.course.assignment_category_dict.add_category(str(uuid.uuid4()), output[i][0], output[i][1], self.course.student_list)
                     # Add the database create function
+            self.reload_gradesheet()
 
 
     def error_checking(self, user_input):
