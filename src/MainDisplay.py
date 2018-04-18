@@ -470,22 +470,31 @@ class MainDisplay(object):
                 self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid].delete_assignment(assignment_uuid)
 
         #student_table = self.course_manager.currentCourse.student_list.table_name
+        kept_child_list = []
+        index = self.course_tree_view.currentIndex()
+        if index.parent() is None:
+            index = index.parent()
+        item = self.model.itemFromIndex(index)
         for row in range(1, row_count):
             if self.grade_sheet.item(row, 0) is None:
                 continue
             if self.grade_sheet.item(row, 0).checkState() == QtCore.Qt.Checked:
                 deleting_course = False
                 student_uuid = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
-                # self.course_manager.currentCourse.student_list.remove_student(student_uuid)
-                course_uuid = self.course_manager.currentCourse.course_uuid
-                if self.course_manager.drop_student_from_course(course_uuid, student_uuid):
-                    index = self.course_tree_view.currentIndex()
-                    item = self.model.itemFromIndex(index)
-                    if item.parent() is None:
-                        item.removeRow(row - 1)
-                    else:
-                        item = item.parent()
-                        item.removeRow(row - 1)
+                # course_uuid = self.course_manager.currentCourse.course_uuid
+                if self.course_manager.currentCourse.student_list.remove_student(student_uuid):
+                    pass
+            else:
+                if item.parent():
+                    item = item.parent()
+                print(item.child(row-1).text())
+                kept_child_list.append(item.child(row - 1).clone())
+
+        item.removeRows(0, item.rowCount())
+        if len(kept_child_list) > 0:
+            for child in kept_child_list:
+                item.appendRow(child)
+
 
         if deleting_course:
             choice = QtWidgets.QMessageBox.question(QtWidgets.QDialog(), "Warning",
@@ -508,7 +517,12 @@ class MainDisplay(object):
                     self.grade_sheet.setColumnCount(0)
                     return
 
+        self.course_manager.reload_courses()
         self.course_manager.currentCourse.reload_grades()
+        if len(kept_child_list) < 1:
+            self.update_tree_view()
+            self.grade_sheet.setRowCount(0)
+            self.grade_sheet.setColumnCount(0)
         self.load_grade_sheet()
 
 
