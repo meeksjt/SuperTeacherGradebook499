@@ -303,7 +303,8 @@ class MainDisplay(object):
         if self.get_selected_course() is None:
             return
         self.edit_categories = EditCategories(self.course_manager.currentCourse)
-        self.course_manager.currentCourse.assignment_category_dict.reload_categories()
+        # self.course_manager.currentCourse.assignment_category_dict.reload_categories()
+        self.course_manager.reload_courses()
         self.load_grade_sheet()
 
     def edit_course_grade_scale_fn(self):
@@ -355,7 +356,9 @@ class MainDisplay(object):
         if self.get_selected_course() is None:
             return
         self.edit_categories = EditCategories(self.course_manager.currentCourse)
-        self.course_manager.currentCourse.assignment_category_dict.reload_categories()
+        self.get_selected_course().assignment_category_dict.reload_categories()
+        self.course_manager.currentCourse.reload_grades()
+        self.load_grade_sheet()
 
     def edit_course_grade_scale_fn(self):
         if self.get_selected_course() is None:
@@ -696,10 +699,15 @@ class MainDisplay(object):
 
             student_points = 0
             total_points = 0
+
+            if len(student_grades) == 0:
+                return
+
             for i in student_grades:
                 temp = self.calculate_category_grade(int(drop_counts[i]), student_grades[i])
                 student_points = student_points + temp[0]
                 total_points = total_points + temp[1]
+
 
             if self.course_manager.currentCourse.attendance_points != "0":
                 atp = float(self.course_manager.currentCourse.attendance_points)

@@ -68,6 +68,7 @@ class EditCategories(object):
         valid = self.error_checking(output)
 
         if valid:
+            self.course.assignment_category_dict.reload_categories()
             for i in range(len(output)):
                 if i < self.original_row_count:
                     self.course.assignment_category_dict.save_category_info(output[i][0], output[i][1], self.category_uuids[i])
