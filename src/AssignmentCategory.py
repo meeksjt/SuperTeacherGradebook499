@@ -97,13 +97,10 @@ class AssignmentCategory:
     """
 
     def delete_assignment(self, assignment_uuid):
-        for assignment in self.assignment_dict.values():
-            if assignment.assignmentID == assignment_uuid:
-                #del self.assignment_dict[assignment_uuid]
-                GlobalVariables.database.cursor.execute("DELETE FROM " + str(self.tableName) + " where assignment_uuid = '" + assignment_uuid + "';")
-                GlobalVariables.database.connection.commit()
-                self.reload_assignments()
-                break
+        #del self.assignment_dict[assignment_uuid]
+        GlobalVariables.database.cursor.execute("DELETE FROM `" + str(self.tableName) + "` WHERE assignment_uuid = '" + assignment_uuid + "';")
+        GlobalVariables.database.connection.commit()
+        self.reload_assignments()
 
     """
         Function to get the student grade for this particular AssignmentCategory

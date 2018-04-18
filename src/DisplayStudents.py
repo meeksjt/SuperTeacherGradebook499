@@ -1,5 +1,6 @@
 import sys
 import os
+import csv
 
 from PyQt5 import QtCore, QtWidgets, uic
 from Student import Student, StudentList
@@ -44,18 +45,20 @@ class DisplayStudents(object):
     def save_table(self):
         # CourseName+CourseSemester+Student_Rster+txt
         if os.path.isfile(("../student_rosters/" + str(self.course_name)+" " +str(self.course_semester)+" Student Roster.txt")):
-            overwrite = self.display_message("Overwrite?", "Do you want to overwrite the previous student roster for this course?")
+            overwrite = QtWidgets.QMessageBox.question(self.DStudents, "Overwrite?", "Do you want to overwrite the previous student roster for this course?", QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
         else:
-            overwrite = True
-        if overwrite:
+            overwrite = QtWidgets.QMessageBox.Yes
+        if overwrite == QtWidgets.QMessageBox.Yes:
             x = QtWidgets.QMessageBox.question(self.DStudents, "Finished!",
-                                               "Your file has been saved in the 'student_rosters' directory.",
+                                               "Your file has been saved in the 'student_rosters' directory under the name '"+ str(self.course_name)+" " +str(self.course_semester)+" Student Roster.csv'",
                                                QtWidgets.QMessageBox.Ok)
-            with open(("../student_rosters/" + str(self.course_name)+" " +str(self.course_semester)+" Student Roster.txt"), 'w') as f:
-                f.write((str(self.course_name)+" - " +str(self.course_semester)+" - Student Roster\n\n"))
+            with open(("../student_rosters/" + str(self.course_name)+" " +str(self.course_semester)+" Student Roster.csv"), 'w+') as f:
+
+                writer = csv.writer(f)
+                writer.writerow(['Student Name', 'Student ID', 'Student Email'])
+
                 for student in self.studentList.students:
-                    f.write(student.id+"\t"+student.get_name()+"\t"+student.get_email()+"\n")
-            pass
+                    writer.writerow([student.get_name(),student.get_id(),student.get_email()])
         # Write table contents to a file
 
     def close(self):
