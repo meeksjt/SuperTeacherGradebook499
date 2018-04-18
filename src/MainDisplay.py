@@ -15,6 +15,7 @@ from CourseEditing import CourseEditing
 from FinalGradeStats import FinalGradeStats
 from EditingGradeDict import EditingGradeDict
 from EditCategories import EditCategories
+from DisplayStudents import DisplayStudents
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -72,10 +73,10 @@ class MainDisplay(object):
         self.vertical_header_view.setStyleSheet(vert_header_style)
 
         # buttons
-        self.get_stats = QtWidgets.QPushButton(self.layoutWidget)
-        self.get_stats.setStyleSheet(stats_button_style)
-        self.get_stats.setToolTip("View selected item's statistics.")
-        #self.get_stats.released.connect(self.calculate_statistics)
+        self.get_stats_button = QtWidgets.QPushButton(self.layoutWidget)
+        self.get_stats_button.setStyleSheet(stats_button_style)
+        self.get_stats_button.setToolTip("View selected item's statistics.")
+        #self.get_stats_button.released.connect(self.calculate_assignment_statistics)
 
         self.edit_button = QtWidgets.QPushButton(self.layoutWidget)
         self.edit_button.setObjectName("edit_button")
@@ -93,17 +94,17 @@ class MainDisplay(object):
         self.add_course.setObjectName("add_course")
         self.add_course.setStyleSheet(add_button_style)
 
-        self.save_grades = QtWidgets.QPushButton(self.layoutWidget)
-        self.save_grades.setStyleSheet(save_button_style)
-        self.save_grades.setToolTip("Saves current course's grades.")
-        self.save_grades.released.connect(self.save_grade_sheet)
+        self.save_grades_button = QtWidgets.QPushButton(self.layoutWidget)
+        self.save_grades_button.setStyleSheet(save_button_style)
+        self.save_grades_button.setToolTip("Saves current course's grades.")
+        self.save_grades_button.released.connect(self.save_grade_sheet)
 
         # holds bottom left row of buttons
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.horizontalLayout.addWidget(self.get_stats)
+        self.horizontalLayout.addWidget(self.get_stats_button)
         self.horizontalLayout.addWidget(self.edit_button)
-        self.horizontalLayout.addWidget(self.save_grades)
+        self.horizontalLayout.addWidget(self.save_grades_button)
         self.horizontalLayout.addWidget(self.del_course)
         self.horizontalLayout.addWidget(self.add_course)
 
@@ -115,6 +116,51 @@ class MainDisplay(object):
         self.verticalLayout.addWidget(self.course_tree_view)
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        """
+        This is the docstring for statistics calculations
+        """
+        stats_menu = QtWidgets.QMenu()
+
+        display_student_roster_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Display Student Roster", self.get_stats_button)
+        display_student_roster_sub.setStatusTip("Display the Student Roster for your Course")
+        display_student_roster_sub.triggered.connect(self.display_student_roster)
+
+        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Calculate Final Grades", self.get_stats_button)
+        calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
+        calculate_grades_sub.triggered.connect(self.calculate_grade)
+
+        calculate_assignment_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Calculate Assignment Statistics", self.get_stats_button)
+        calculate_assignment_stats_sub.setStatusTip("Calculate Assignment Statistics for the Course")
+        calculate_assignment_stats_sub.triggered.connect(self.calculate_assignment_statistics)
+
+        calculate_final_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Calculate Final Grade Statistics", self.get_stats_button)
+        calculate_final_stats_sub.setStatusTip("Calculate Final Stats for the Course")
+        calculate_final_stats_sub.triggered.connect(self.student_final_stats)
+
+        stats_menu.addAction(display_student_roster_sub)
+        stats_menu.addAction(calculate_grades_sub)
+        stats_menu.addAction(calculate_assignment_stats_sub)
+        stats_menu.addAction(calculate_final_stats_sub)
+
+        self.get_stats_button.setMenu(stats_menu)
+
+        """
+        This is the docstring for the saving and loading button
+        """
+        save_menu = QtWidgets.QMenu()
+
+        save_gradesheet_sub = QtWidgets.QAction(QtGui.QIcon("../assets/save_button.png"), "Save Gradesheet", self.save_grades_button)
+        save_gradesheet_sub.setStatusTip("Save Gradesheet to Database")
+        save_gradesheet_sub.triggered.connect(self.save_grade_sheet)
+
+        load_gradesheet_sub = QtWidgets.QAction(QtGui.QIcon("../assets/save_button.png"), "Load Gradesheet", self.save_grades_button)
+        load_gradesheet_sub.setStatusTip("Load Gradesheet from Last Save")
+        load_gradesheet_sub.triggered.connect(self.load_grade_sheet)
+
+        save_menu.addAction(save_gradesheet_sub)
+        save_menu.addAction(load_gradesheet_sub)
+
+        self.save_grades_button.setMenu(save_menu)
 
         """
         This is the docstring for the edit menu in the bottom left corner
@@ -147,6 +193,9 @@ class MainDisplay(object):
         edit_menu.addAction(edit_grade_scale_sub)
         edit_menu.addAction(edit_categories_sub)
 
+        """
+        Docstring for adding new items
+        """
         menu = QtWidgets.QMenu()
 
         add_course_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Add Course", self.add_course)
@@ -165,22 +214,9 @@ class MainDisplay(object):
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
 
-        calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grades", self.add_course)
-        calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
-        calculate_grades_sub.triggered.connect(self.calculate_grade)
-
-        calculate_final_grades_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grade Statistics", self.add_course)
-        calculate_final_grades_stats_sub.setStatusTip("Calculate Student Statistics for the Course")
-        # calculate_final_grades_stats_sub.triggered.connect(self.student_final_stats)
-
-
-
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
-        # menu.addAction(edit_student_sub)
-        menu.addAction(calculate_grades_sub)
-        menu.addAction(calculate_final_grades_stats_sub)
 
         self.add_course.setMenu(menu)
         self.edit_button.setMenu(edit_menu)
@@ -315,7 +351,7 @@ class MainDisplay(object):
                 checked_indices.append(i)
 
         if len(checked_indices) != 1:
-            print("You fucked up")
+            pass
         else:
             assignment_name = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_name()
             assignment_uuid = self.grade_sheet.horizontalHeaderItem(checked_indices[0]).get_assignment_uuid()
@@ -325,6 +361,28 @@ class MainDisplay(object):
                                              self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid],
                                              self.course_manager.currentCourse.student_list)
             self.load_grade_sheet()
+
+    def student_final_stats(self):
+        self.calculate_grade()
+        col = self.grade_sheet.columnCount() - 2
+
+        final_grades = []
+
+        for row in range(1, self.grade_sheet.rowCount()):
+            final_grades.append(float(self.grade_sheet.item(row, col).text()))
+
+        self.final_grade_stats = FinalGradeStats(
+            self.course_manager.currentCourse.name,
+            self.course_manager.currentCourse.number,
+            self.course_manager.currentCourse.section,
+            self.course_manager.currentCourse.semester,
+            final_grades
+        )
+
+        print('test')
+
+    def display_student_roster(self):
+        self.display_roster = DisplayStudents(self.course_manager.currentCourse.student_list, self.course_manager.currentCourse.name, self.course_manager.currentCourse.semester)
 
     def calculate_grade(self):
         # Loop through each row in the grade sheet
@@ -559,7 +617,7 @@ class MainDisplay(object):
         # self.horizontal_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         # self.vertical_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
-    def calculate_statistics(self):
+    def calculate_assignment_statistics(self):
         self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list,
                                        self.grade_sheet,
                                        self.course_manager.currentCourse.name,
@@ -690,36 +748,6 @@ class GradeCell(QtWidgets.QTableWidgetItem):
     def get_drop_count(self):
         return self.category_drop_count
 
-#Already existing CourseObject that has been linked with the database, and three booloans
-def create_course_from_past_course(newCourse, course_uuid, grade_scale_bool, categories_bool, assignments_bool):
-    #OK, so I need to check this stuff.
-    newCourse.link_with_database()
-
-    #Gets the Course we want to copy from.
-    old_course = main_display.course_manager.get_course(course_uuid)
-    # We want to copy the gradeScale.
-    if grade_scale_bool:
-        #Copes the gradescale
-        newCourse.grade_scale.set_grade_scale(old_course.get_A_bottom_score(), old_course.get_B_bottom_score(),
-                                              old_course.get_C_bottom_score(), old_course.get_D_bottom_score)
-
-    #We only want to copy the categories.
-    if categories_bool and assignments_bool:
-        #Loops through category_dict and creates a new category for each one it finds.
-        for category_uuid, category in old_course.assignment_category_dict.items:
-            newCourse.assignment_category_dict.add_category(uuid.uuid4(), category.categoryName,
-                                                            category.drop_count, newCourse.student_list)
-
-    #We want to copy the categories and assignments.
-    if categories_bool and assignments_bool:
-        #Loops through category_dict and creates a new category for each one it finds.
-        for category_uuid, category in old_course.assignment_category_dict.items:
-            temp_uuid = uuid.uuid4()
-            newCourse.assignment_category_dict.add_category(temp_uuid, category.categoryName,
-                                                            category.drop_count, newCourse.student_list)
-            for assignment_uuid, assignment in category.assignment_dict.items():
-                newCourse.assignment_category_dict[temp_uuid].add_assignment(uuid.uuid4(), assignment.assignmentName,
-                                                                             assignment.totalPoints, newCourse.student_list)
 
 if __name__ == "__main__":
    import sys
