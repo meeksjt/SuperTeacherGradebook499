@@ -591,7 +591,11 @@ class MainDisplay(object):
         data = [trace1]
 
         layout = go.Layout(
-            title='Final Grades vs. Attendance',
+            title='Final Grades vs. Attendance ({}-{}-{})'.format(
+                self.course_manager.currentCourse.number,
+                self.course_manager.currentCourse.section,
+                self.course_manager.currentCourse.semester
+            ) ,
             xaxis = dict(
                 title='Final Grades (%)',
                 titlefont=dict(
@@ -642,7 +646,11 @@ class MainDisplay(object):
 
         data = [trace0]
         layout = go.Layout(
-            title='Letter Grade Frequency',
+            title='Letter Grade Frequency ({}-{}-{})'.format(
+                self.course_manager.currentCourse.number,
+                self.course_manager.currentCourse.section,
+                self.course_manager.currentCourse.semester
+            ),
             xaxis=dict(
                 title='Letter Grade',
                 titlefont=dict(
