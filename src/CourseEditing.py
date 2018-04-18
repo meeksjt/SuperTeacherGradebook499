@@ -24,7 +24,6 @@ class CourseEditing(object):
 
         self.CEditing.exec()
 
-
     def edit_course(self):
         name = self.CEditing.courseNameField.text()
         number = self.CEditing.courseNumberField.text()
@@ -35,6 +34,11 @@ class CourseEditing(object):
         if self.validate_input(name, number, section, semester, ap):
             self.course.update_course(self.course.course_uuid, name, number, section, semester, ap)
             self.set_name(name + '-' + section)
+            self.course.name = name
+            self.course.number = number
+            self.course.section = section
+            self.course.semester = semester
+            self.course.attendance_points = ap
             self.CEditing.hide()
 
     def validate_input(self, name, number, section, semester, attendance_points):
