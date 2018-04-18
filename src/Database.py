@@ -1,5 +1,6 @@
 import sqlite3
 from Course import Course
+from Student import Student
 
 class Database(object):
     def __init__(self, databaseName):
@@ -70,7 +71,8 @@ class Database(object):
         query = "SELECT * FROM '" + str(course_uuid) + "_student_list' WHERE uuid = ?;"
         self.cursor.execute(query, (student_uuid,))
         student_info = self.cursor.fetchall()[0]
-        return student_info
+        student = Student(str(course_uuid) + "_student_list", student_info[1], student_info[2], student_info[3], student_uuid)
+        return student
 
 
     # these are called outside the class
