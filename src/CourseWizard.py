@@ -50,6 +50,7 @@ class CourseCreatorWidget(object):
         self.save_table_data()
         self.add_course_fn(self.new_course)
         self.course_manager.add_course(self.new_course)
+        self.course_manager.add_template_course(self.new_course)
         self.course_manager.set_current_course(self.new_course.course_uuid)
         QtWidgets.QMessageBox.question(self.frame, '', 'Created new course', QtWidgets.QMessageBox.Ok)
         self.new_course = Course()
@@ -85,7 +86,8 @@ class CourseCreatorWidget(object):
             for category in output:
                 # This is the class variable that the Course will user to create its new categories
                 self.categories_to_create.append(category[:].copy())
-                self.new_course.assignment_category_dict.add_category(str(uuid.uuid4()), category[0], category[1], self.new_course.student_list)
+                self.new_course.assignment_category_dict.add_category(str(uuid.uuid4()), category[0], category[1],
+                                                                      self.new_course.student_list)
 
     def validate_assignment_categories(self):
         row_count = self.ui.tableWidget.rowCount()

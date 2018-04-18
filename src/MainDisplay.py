@@ -462,6 +462,7 @@ class MainDisplay(object):
             if self.course_manager.drop_student_from_course(course_uuid, student_uuid):
                 self.model.removeRow(index.row(), index.parent())
             self.course_manager.currentCourse.reload_grades()
+            self.load_grade_sheet()
 
         index = self.course_tree_view.currentIndex()
         if not index.isValid():
@@ -469,7 +470,6 @@ class MainDisplay(object):
             self.grade_sheet.setColumnCount(0)
             return
 
-        self.load_grade_sheet()
 
     def student_final_stats(self):
         self.calculate_grade()
@@ -621,6 +621,8 @@ class MainDisplay(object):
         self.grade_sheet.clear()
 
         current_course = self.get_selected_course()
+        if current_course is None:
+           return
 
         header_labels = self.load_header_cells()
         vertical_labels = self.load_vertical_header_cells()

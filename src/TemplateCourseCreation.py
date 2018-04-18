@@ -13,15 +13,19 @@ class TemplateCourseCreation(object):
         self.TCCreation = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/TemplateCourseCreation.ui', self.TCCreation)
 
-        GlobalVariables.database.cursor.execute("SELECT * FROM courseList")
+        GlobalVariables.database.execute("SELECT * FROM templateCourses")
         results = GlobalVariables.database.cursor.fetchall()
+
         self.course_dict = {}
         for c in results:
-            self.course_dict[c[4]] = GlobalVariables.database.get_course(c[4])
+            course = GlobalVariables.database.get_template_course(c[4])
+            if course is not None:
+                self.course_dict[c[4]] = GlobalVariables.database.get_template_course(c[4])
 
         for course in self.course_dict.values():
             display_msg = course.name + " ; " + course.number + " ; " + course.section + " ; " + course.semester
             self.TCCreation.courseChoiceBox.addItem(str(display_msg))
+
         self.TCCreation.show()
         self.TCCreation.createCourseButton.clicked.connect(self.create_course_from_past_course)
 
@@ -46,12 +50,9 @@ class TemplateCourseCreation(object):
                 course_uuid = course.course_uuid
 
         # Gets the Course we want to copy from.
-        old_course = self.course_manager.get_course(course_uuid)
-
+        old_course = self.course_manager.get_template_course(course_uuid)
         new_uuid = str(uuid.uuid4())
-
         new_course = Course(name, number, section, semester, new_uuid, attendance_points)
-
         new_course.link_with_database()
 
         # We want to copy the gradeScale.
