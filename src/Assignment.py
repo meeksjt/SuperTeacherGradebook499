@@ -27,6 +27,13 @@ class Assignment:
         self.__load_grades()
         self.add_grade_to_database()
 
+    """
+        Function for loading grades and adding to the database
+        Parameters:
+            None
+        Returns:
+            None
+    """
     def reload_grades(self):
         self.__load_grades()
         self.add_grade_to_database()
@@ -43,12 +50,26 @@ class Assignment:
         #GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(student.uuid) + "','" + "-" + "')")
         #GlobalVariables.database.connection.commit()
 
+    """
+        Function that adds a grade to a database
+        Paremeters:
+            None
+        Returns:
+            None
+    """
     def add_grade_to_database(self):
         for student in self.studentList.students:
             if student.uuid not in self.studentGrades.assignmentGrades.keys():
                 GlobalVariables.database.connection.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(student.uuid) + "','" + "-" + "')")
                 GlobalVariables.database.connection.commit()
 
+    """
+        Function to get an assignment name for an assignment
+        Paremeters:
+            None
+        Returns:
+            assignmentName
+    """
     def get_assignment_name(self):
         return self.assignmentName
 
