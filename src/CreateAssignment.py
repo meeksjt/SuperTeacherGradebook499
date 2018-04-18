@@ -34,6 +34,9 @@ class CreateAssignment(object):
 
     def add_assignment(self):
         category = str(self.CAssignment.assignmentCategoryDropdown.currentText())
+        if category == "":
+            print("No category selected")
+            return
         name = self.CAssignment.assignmentNameField.text()
         points = self.CAssignment.assignmentPointsField.text()
 
