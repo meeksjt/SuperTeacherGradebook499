@@ -725,7 +725,6 @@ class MainDisplay(object):
             final_grade.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsSelectable)
             self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 2, final_points)
             self.grade_sheet.setItem(row, self.grade_sheet.columnCount() - 1, final_grade)
-            # sync with database
             
     def calculate_category_grade(self, drop_count, student_grades):
         if self.get_selected_course() is None:
@@ -737,6 +736,8 @@ class MainDisplay(object):
 
         if drop_count > len(student_grades):
             drop_count = 0
+
+        print(drop_count)
 
         for i in range(drop_count):
             index = int(self.get_max_deficit(deficits))
