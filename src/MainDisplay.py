@@ -302,10 +302,9 @@ class MainDisplay(object):
     def edit_categories_fn(self):
         if self.get_selected_course() is None:
             return
-        self.edit_categories = EditCategories(self.course_manager.currentCourse)
+        self.edit_categories = EditCategories(self.course_manager.currentCourse, self.load_grade_sheet)
         # self.course_manager.currentCourse.assignment_category_dict.reload_categories()
-        self.course_manager.reload_courses()
-        self.load_grade_sheet()
+        # self.course_manager.reload_courses()
 
     def edit_course_grade_scale_fn(self):
         if self.get_selected_course() is None:
@@ -355,7 +354,7 @@ class MainDisplay(object):
     def edit_categories_fn(self):
         if self.get_selected_course() is None:
             return
-        self.edit_categories = EditCategories(self.course_manager.currentCourse)
+        self.edit_categories = EditCategories(self.course_manager.currentCourse, self.load_grade_sheet)
         self.get_selected_course().assignment_category_dict.reload_categories()
         self.course_manager.currentCourse.reload_grades()
         self.load_grade_sheet()

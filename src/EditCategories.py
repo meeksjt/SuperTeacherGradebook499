@@ -6,7 +6,7 @@ import uuid
 
 class EditCategories(object):
 
-    def __init__(self, course):
+    def __init__(self, course, reload_gradesheet):
 
         col_headers = ['Category Name', 'Drop Count']
 
@@ -18,6 +18,7 @@ class EditCategories(object):
         self.ECategories.show()
         self.category_uuids = []
         self.setup_display()
+        self.reload_gradesheet = reload_gradesheet
 
         self.original_row_count = self.ECategories.categoryTable.rowCount()
 
@@ -56,6 +57,7 @@ class EditCategories(object):
                 self.original_row_count = self.original_row_count - 1
                 del self.category_uuids[row]
                 self.ECategories.categoryTable.removeRow(row)
+                self.reload_gradesheet()
 
     def save_table_data(self):
         row_count = self.ECategories.categoryTable.rowCount()
@@ -76,6 +78,7 @@ class EditCategories(object):
                 else:
                     self.course.assignment_category_dict.add_category(str(uuid.uuid4()), output[i][0], output[i][1], self.course.student_list)
                     # Add the database create function
+
 
     def error_checking(self, user_input):
 
