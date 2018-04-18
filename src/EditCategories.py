@@ -41,6 +41,8 @@ class EditCategories(object):
         self.ECategories.categoryTable.setItem(row_insert, 1, QtWidgets.QTableWidgetItem(""))
 
     def remove_category(self):
+        if self.ECategories.categoryTable.rowCount() <= 0:
+            return
         row = self.ECategories.categoryTable.currentRow()
         if row > self.original_row_count:
             self.ECategories.categoryTable.removeRow(row)

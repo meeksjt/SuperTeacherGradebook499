@@ -219,7 +219,7 @@ class MainDisplay(object):
         add_student_sub.setStatusTip("Add new student to a course")
         add_student_sub.triggered.connect(self.add_student_fn)
 
-        create_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Create New Assignment", self.add_course)
+        create_assignment_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Add New Assignment", self.add_course)
         create_assignment_sub.setStatusTip("Create a New Assignment")
         create_assignment_sub.triggered.connect(self.add_assignment_fn)
 
@@ -245,8 +245,8 @@ class MainDisplay(object):
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
         # menu.addAction(edit_student_sub)
-        menu.addAction(calculate_grades_sub)
-        menu.addAction(calculate_final_grades_stats_sub)
+        # menu.addAction(calculate_grades_sub)
+        # menu.addAction(calculate_final_grades_stats_sub)
         menu.addAction(create_attendance_record_sub)
 
         self.add_course.setMenu(menu)
@@ -300,11 +300,14 @@ class MainDisplay(object):
     #    self.load_grade_sheet()
 
     def edit_categories_fn(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         self.edit_categories = EditCategories(self.course_manager.currentCourse)
         self.course_manager.currentCourse.assignment_category_dict.reload_categories()
 
     def edit_course_grade_scale_fn(self):
+        if self.get_selected_course() is None:
+            return
         self.edit_grade_scale = EditingGradeDict(self.course_manager.currentCourse)
 
     # auxiliary function that gets passed into the course wizard
@@ -342,24 +345,25 @@ class MainDisplay(object):
         self.model.itemFromIndex(self.course_tree_view.currentIndex()).setText(name)
 
     def edit_course_fn(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         self.edit_course = CourseEditing(self.course_manager.currentCourse,
                                          self.set_course_name_in_treeview)
 
     def edit_categories_fn(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         self.edit_categories = EditCategories(self.course_manager.currentCourse)
         self.course_manager.currentCourse.assignment_category_dict.reload_categories()
 
     def edit_course_grade_scale_fn(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         self.edit_grade_scale = EditingGradeDict(self.course_manager.currentCourse)
 
 
     def add_student_fn(self):
-        self.get_selected_course()
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
+        if self.get_selected_course() is None:
             return
         self.new_student_form = CreateNewStudent(self.course_manager.currentCourse.student_list,
                                                  self.add_student_aux_fn)
@@ -411,11 +415,13 @@ class MainDisplay(object):
             child.setAccessibleDescription(student.uuid)
             item.setChild(child_index - 1, child)
             item.sortChildren(0, QtCore.Qt.AscendingOrder)
-            self.course_manager.reload_courses()
+
+            # self.course_manager.reload_courses()
             self.load_grade_sheet()
 
     def edit_selection(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         index = self.course_tree_view.currentIndex()
         current_item = self.model.itemFromIndex(index)
         if current_item.parent():
@@ -429,16 +435,15 @@ class MainDisplay(object):
         self.load_grade_sheet()
 
     def add_assignment_fn(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         self.add_assignment = CreateAssignment(self.course_manager.currentCourse.assignment_category_dict,
                                                self.course_manager.currentCourse.student_list,
                                                self.load_grade_sheet)
 
     def edit_assignment_fn(self):
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
+        if self.get_selected_course() is None:
             return
-        self.get_selected_course()
 
         checked_indices = []
         for i in range(1, self.grade_sheet.columnCount()):
@@ -460,6 +465,9 @@ class MainDisplay(object):
 
     # delete selected item (row or student) from tree view
     def del_selected_item(self):
+
+        if not self.course_tree_view.currentIndex().isValid():
+            return
 
         row_count = self.grade_sheet.rowCount()
         col_count = self.grade_sheet.columnCount()
@@ -550,6 +558,8 @@ class MainDisplay(object):
         )
 
     def create_graphs(self):
+        if self.get_selected_course() is None:
+            return
         self.calculate_grades()
         self.plot_grades_vs_attendance()
         self.plot_letter_grade_frequency()
@@ -651,11 +661,16 @@ class MainDisplay(object):
         py.offline.plot(fig, filename=filename)
 
     def display_student_roster(self):
+        if self.get_selected_course() is None:
+            return
         self.display_roster = DisplayStudents(self.course_manager.currentCourse.student_list,
                                               self.course_manager.currentCourse.name,
                                               self.course_manager.currentCourse.semester)
 
     def calculate_grades(self):
+        if self.get_selected_course() is None:
+            return
+
         # Loop through each row in the grade sheet
         drop_counts = {}
         self.final_grades = []
@@ -704,6 +719,9 @@ class MainDisplay(object):
             # sync with database
             
     def calculate_category_grade(self, drop_count, student_grades):
+        if self.get_selected_course() is None:
+            return
+
         deficits = []
         for i in range(len(student_grades)):
             deficits.append(student_grades[i][1] - student_grades[i][0])
@@ -871,12 +889,17 @@ class MainDisplay(object):
         # self.vertical_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 
     def calculate_assignment_statistics(self):
+        if self.get_selected_course() is None:
+            return
         self.a_stats = AssignmentStats(self.course_manager.currentCourse.student_list,
                                        self.grade_sheet,
                                        self.course_manager.currentCourse.name,
                                        self.course_manager.currentCourse.semester)
 
     def save_student_reports(self):
+        if self.get_selected_course() is None:
+            return
+
         self.calculate_grades()
 
         row_count = self.grade_sheet.rowCount()

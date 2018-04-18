@@ -70,7 +70,6 @@ class AssignmentCategoryDict(object):
 
     def delete_category(self, course, uuid):
         query = "DELETE FROM `" + self.tableName + "` WHERE uuid = '" + uuid + "';"
-        print(query)
         GlobalVariables.database.connection.execute(query)
         GlobalVariables.database.connection.commit()
         course.assignment_category_dict.reload_categories()
