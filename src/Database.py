@@ -70,7 +70,6 @@ class Database(object):
         query = "SELECT * FROM '" + str(course_uuid) + "_student_list' WHERE uuid = ?;"
         self.cursor.execute(query, (student_uuid,))
         student_info = self.cursor.fetchall()[0]
-        print(student_info)
         return student_info
 
 
