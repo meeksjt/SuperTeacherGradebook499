@@ -18,6 +18,7 @@ from EditCategories import EditCategories
 from DisplayStudents import DisplayStudents
 from Attendance import *
 from math import ceil
+import sys
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -84,11 +85,10 @@ class MainDisplay(object):
         self.edit_button.setObjectName("edit_button")
         self.edit_button.setToolTip("Edit selected item.")
         self.edit_button.setStyleSheet(edit_button_style)
-        #self.edit_button.released.connect(self.edit_selection)
 
         self.del_course = QtWidgets.QPushButton(self.layoutWidget)
         self.del_course.setObjectName("del_course")
-        self.del_course.setToolTip("Delete the selected entry (either a student or course).")
+        self.del_course.setToolTip("Delete the selected entries (either a student, assignment, or course).")
         self.del_course.setStyleSheet(delete_button_style)
         self.del_course.released.connect(self.del_selected_item)
 
@@ -129,11 +129,15 @@ class MainDisplay(object):
 
         calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Calculate Final Grades", self.get_stats_button)
         calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
-        calculate_grades_sub.triggered.connect(self.calculate_grade)
+        calculate_grades_sub.triggered.connect(self.calculate_grades)
 
         calculate_assignment_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Calculate Assignment Statistics", self.get_stats_button)
         calculate_assignment_stats_sub.setStatusTip("Calculate Assignment Statistics for the Course")
         calculate_assignment_stats_sub.triggered.connect(self.calculate_assignment_statistics)
+
+        save_student_reports_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Save Student Reports", self.get_stats_button)
+        save_student_reports_sub.setStatusTip("Save the Gradesheet of Checkmarked Students as a .csv file")
+        save_student_reports_sub.triggered.connect(self.save_student_reports)
 
         calculate_final_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/get_statistics_button.png"), "Calculate Final Grade Statistics", self.get_stats_button)
         calculate_final_stats_sub.setStatusTip("Calculate Final Stats for the Course")
@@ -142,6 +146,7 @@ class MainDisplay(object):
         stats_menu.addAction(display_student_roster_sub)
         stats_menu.addAction(calculate_grades_sub)
         stats_menu.addAction(calculate_assignment_stats_sub)
+        stats_menu.addAction(save_student_reports_sub)
         stats_menu.addAction(calculate_final_stats_sub)
 
         self.get_stats_button.setMenu(stats_menu)
@@ -218,7 +223,7 @@ class MainDisplay(object):
 
         calculate_grades_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grades", self.add_course)
         calculate_grades_sub.setStatusTip("Calculate the Final Grade for your Students")
-        calculate_grades_sub.triggered.connect(self.calculate_grade)
+        calculate_grades_sub.triggered.connect(self.calculate_grades)
 
         calculate_final_grades_stats_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Calculate Final Grade Statistics", self.add_course)
         calculate_final_grades_stats_sub.setStatusTip("Calculate Student Statistics for the Course")
@@ -283,10 +288,10 @@ class MainDisplay(object):
                                               self.course_manager.currentCourse.student_list,
                                               self.course_manager.currentCourse.course_uuid)
 
-    def edit_course_fn(self):
-        self.get_selected_course()
-        self.edit_course = CourseEditing(self.course_manager.currentCourse)
-        self.load_grade_sheet()
+    #def edit_course_fn(self):
+    #    self.get_selected_course()
+    #    self.edit_course = CourseEditing(self.course_manager.currentCourse)
+    #    self.load_grade_sheet()
 
     def edit_categories_fn(self):
         self.get_selected_course()
@@ -329,6 +334,7 @@ class MainDisplay(object):
 
     def set_course_name_in_treeview(self, name):
         self.model.itemFromIndex(self.course_tree_view.currentIndex()).setText(name)
+
     def edit_course_fn(self):
         self.get_selected_course()
         self.edit_course = CourseEditing(self.course_manager.currentCourse,
@@ -448,31 +454,66 @@ class MainDisplay(object):
 
     # delete selected item (row or student) from tree view
     def del_selected_item(self):
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
-            return
 
-        item = self.model.itemFromIndex(index)
-        if item.parent() is None: # no parent? must be a course
-            if self.course_manager.delete_course(item.accessibleDescription()):
-                self.model.removeRow(index.row())
-        else:
-            course_uuid = item.parent().accessibleDescription()
-            student_uuid = item.accessibleDescription()
-            if self.course_manager.drop_student_from_course(course_uuid, student_uuid):
-                self.model.removeRow(index.row(), index.parent())
-            self.course_manager.currentCourse.reload_grades()
-            self.load_grade_sheet()
+        row_count = self.grade_sheet.rowCount()
+        col_count = self.grade_sheet.columnCount()
 
-        index = self.course_tree_view.currentIndex()
-        if not index.isValid():
-            self.grade_sheet.setRowCount(0)
-            self.grade_sheet.setColumnCount(0)
-            return
+        deleting_course = True
+        for col in range(1, col_count - 2):
+            if self.grade_sheet.item(0, col) is None:
+                continue
+            if self.grade_sheet.item(0, col).checkState() == QtCore.Qt.Checked:
+                deleting_course = False
+                # get uuid and category uuid of assignment we are deleting
+                assignment_uuid = self.grade_sheet.horizontalHeaderItem(col).get_assignment_uuid()
+                category_uuid = self.grade_sheet.horizontalHeaderItem(col).get_category_uuid()
+                self.course_manager.currentCourse.assignment_category_dict.assignment_categories[category_uuid].delete_assignment(assignment_uuid)
+
+        #student_table = self.course_manager.currentCourse.student_list.table_name
+        for row in range(1, row_count):
+            if self.grade_sheet.item(row, 0) is None:
+                continue
+            if self.grade_sheet.item(row, 0).checkState() == QtCore.Qt.Checked:
+                deleting_course = False
+                student_uuid = self.grade_sheet.verticalHeaderItem(row).get_student_uuid()
+                # self.course_manager.currentCourse.student_list.remove_student(student_uuid)
+                course_uuid = self.course_manager.currentCourse.course_uuid
+                if self.course_manager.drop_student_from_course(course_uuid, student_uuid):
+                    index = self.course_tree_view.currentIndex()
+                    item = self.model.itemFromIndex(index)
+                    if item.parent() is None:
+                        item.removeRow(row - 1)
+                    else:
+                        item = item.parent()
+                        item.removeRow(row - 1)
+
+        if deleting_course:
+            choice = QtWidgets.QMessageBox.question(QtWidgets.QDialog(), "Warning",
+                                                    "You are about to delete a course.  Continue?",
+                                                    QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+
+            if choice == QtWidgets.QMessageBox.Yes:
+                index = self.course_tree_view.currentIndex()
+                if not index.isValid():
+                    return
+
+                item = self.model.itemFromIndex(index)
+                if item.parent() is None:  # no parent? must be a course
+                    if self.course_manager.delete_course(item.accessibleDescription()):
+                        self.model.removeRow(index.row())
+
+                index = self.course_tree_view.currentIndex()
+                if not index.isValid():
+                    self.grade_sheet.setRowCount(0)
+                    self.grade_sheet.setColumnCount(0)
+                    return
+
+        self.course_manager.currentCourse.reload_grades()
+        self.load_grade_sheet()
 
 
     def student_final_stats(self):
-        self.calculate_grade()
+        self.calculate_grades()
         col = self.grade_sheet.columnCount() - 2
 
         final_grades = []
@@ -495,7 +536,7 @@ class MainDisplay(object):
                                               self.course_manager.currentCourse.name,
                                               self.course_manager.currentCourse.semester)
 
-    def calculate_grade(self):
+    def calculate_grades(self):
         # Loop through each row in the grade sheet
         drop_counts = {}
         for row in range(1, self.grade_sheet.rowCount()):
@@ -714,6 +755,54 @@ class MainDisplay(object):
                                        self.course_manager.currentCourse.name,
                                        self.course_manager.currentCourse.semester)
 
+    def save_student_reports(self):
+        self.calculate_grades()
+
+        row_count = self.grade_sheet.rowCount()
+        col_count = self.grade_sheet.columnCount()
+
+        if row_count == 2:
+            filename = "{}_{}_{}_{}.csv".format(
+                self.grade_sheet.verticalHeaderItem(0).get_student_name(),
+                self.course_manager.currentCourse.number,
+                self.course_manager.currentCourse.section,
+                self.course_manager.currentCourse.semester
+            )
+        else:
+            filename = "StudentReports_{}_{}_{}.csv".format(
+                self.course_manager.currentCourse.number,
+                self.course_manager.currentCourse.section,
+                self.course_manager.currentCourse.semester
+            )
+
+        if os.path.isfile(("../student_reports/" + filename)):
+            overwrite = QtWidgets.QMessageBox.question(QtWidgets.QDialog(), "Overwrite?", "Do you want to overwrite the previous student reports file?", QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+        else:
+            overwrite = QtWidgets.QMessageBox.Yes
+
+        if overwrite == QtWidgets.QMessageBox.Yes:
+
+            x = QtWidgets.QMessageBox.question(QtWidgets.QDialog(), "Finished!",
+                                               "Your file has been saved in the 'student_reports' directory with the filename '" + filename,
+                                               QtWidgets.QMessageBox.Ok)
+            with open("../student_reports/" + filename, 'w+') as f:
+                writer = csv.writer(f)
+                header_row = ['Student Name']
+                for col in range(1, col_count):
+                    header_row.append(self.grade_sheet.horizontalHeaderItem(col).text())
+                writer.writerow(header_row)
+
+                for row in range(1, row_count):
+                    student_name = self.grade_sheet.verticalHeaderItem(row)
+                    row_data = [student_name.get_student_name()]
+                    for col in range(1, col_count):
+                        item = self.grade_sheet.item(row, col)
+                        if item is not None:
+                            row_data.append(self.grade_sheet.item(row, col).text())
+                        else:
+                            row_data.append('')
+                    writer.writerow(row_data)
+
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
     def __init__(self, s_name="", s_uuid=""):
         QtWidgets.QTableWidgetItem.__init__(self)
@@ -749,6 +838,9 @@ class HeaderCell(QtWidgets.QTableWidgetItem):
     def setText(self, new_name):
         #self.assignment_name = new_name
         super(HeaderCell, self).setText(new_name)
+
+    def getText(self):
+        return super(HeaderCell, self).text()
 
     def set_assignment_uuid(self, new_uuid):
         self.assignment_uuid = new_uuid

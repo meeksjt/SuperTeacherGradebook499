@@ -5,6 +5,7 @@ from Student import Student, StudentList
 import uuid
 import os
 import Statistics
+import csv
 
 
 class AssignmentStats(object):
@@ -27,25 +28,27 @@ class AssignmentStats(object):
 
     def save_assignment_statistics(self):
         if os.path.isfile(("../student_assignment_statistics/" + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.txt")):
-            overwrite = self.display_message("Overwrite?", "Do you want to overwrite the previous student roster for this course?")
+            overwrite = QtWidgets.QMessageBox.question(self.AStats, "Overwrite?", "Do you want to overwrite the previous student assignments stats file for this course?", QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
         else:
-            overwrite = True
-        if overwrite:
+            overwrite = QtWidgets.QMessageBox.Yes
+        if overwrite == QtWidgets.QMessageBox.Yes:
             x = QtWidgets.QMessageBox.question(self.AStats, "Finished!",
-                                               "Your file has been saved in the 'student_assignment_statistics' directory.",
+                                               "Your file has been saved in the 'student_assignment_statistics' directory with the filename '" + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.csv'",
                                                QtWidgets.QMessageBox.Ok)
-            with open(("../student_assignment_statistics/" + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.txt"), 'w') as f:
-                header_line = "Assignment Name - Assignment Points - Mean - Median - Mode - Standard Deviation\n"
-                f.write(header_line)
+            with open(("../student_assignment_statistics/" + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.csv"), 'w') as f:
+                writer = csv.writer(f)
+
+                writer.writerow(['Assignment Name', 'Assignment Points', 'Mean', 'Median', 'Mode', 'Standard Deviation'])
                 row_count = self.AStats.statsTable.rowCount()
                 for row in range(row_count):
-                    f.write(self.AStats.statsTable.item(row, 0).text().ljust(23))
-                    f.write(self.AStats.statsTable.item(row, 1).text().ljust(15))
-                    f.write(self.AStats.statsTable.item(row, 2).text().ljust(8))
-                    f.write(self.AStats.statsTable.item(row, 3).text().ljust(8))
-                    f.write(self.AStats.statsTable.item(row, 4).text().ljust(8))
-                    f.write(self.AStats.statsTable.item(row, 5).text().ljust(8) + "\n")
-
+                    row_data = []
+                    for column in range(self.AStats.statsTable.columnCount()):
+                        item = self.AStats.statsTable.item(row, column)
+                        if item is not None:
+                            row_data.append(item.text())
+                        else:
+                            row_data.append('')
+                    writer.writerow(row_data)
 
                     #f.write("%-12s%-12s%-12s%-12s%-12s%-12s".format(self.AStats.statsTable.item(row, 0).text(),
                     #        self.AStats.statsTable.item(row, 1).text(),
@@ -58,7 +61,7 @@ class AssignmentStats(object):
     def display_message(self, window_text, window_message):
         choice = QtWidgets.QMessageBox.question(self.AStats, window_text, window_message, QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Cancel)
         if choice == QtWidgets.QMessageBox.Ok:
-            x = QtWidgets.QMessageBox.question(self.AStats, "Finished!", "Your file has been saved in the 'student_rosters' directory.", QtWidgets.QMessageBox.Ok)
+            x = QtWidgets.QMessageBox.question(self.AStats, "Finished!", "Your file has been saved in the 'student_rosters' directory under the filename " + "Your file has been saved in the 'student_assignment_statistics' directory with the filename " + str(self.course_name)+" " +str(self.course_semester)+" Assignment Statistics.txt.", QtWidgets.QMessageBox.Ok)
             return True
         else:
             return False
