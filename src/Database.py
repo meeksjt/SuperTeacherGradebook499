@@ -1,5 +1,6 @@
 import sqlite3
 from Course import Course
+from Student import Student
 
 class Database(object):
     def __init__(self, databaseName):
@@ -61,10 +62,18 @@ class Database(object):
         self.cursor.execute(query, (student.uuid,))
         self.connection.commit()
 
-    def __edit_student(self, property, new_value, student):
-        query = "UPDATE ? SET '" + str(property) + "' = ? WHERE uuid = ?;"
-        self.cursor.execute(query, (student.tableName, new_value, student.uuid))
+    def __edit_student(self, property, new_value, course_uuid, student_uuid):
+        query = "UPDATE '" + course_uuid + "_student_list' SET '" + str(property) + "' = ? WHERE uuid = ?;"
+        self.cursor.execute(query, (new_value, student_uuid))
         self.connection.commit()
+
+    def __get_student_from_course(self, course_uuid, student_uuid):
+        query = "SELECT * FROM '" + str(course_uuid) + "_student_list' WHERE uuid = ?;"
+        self.cursor.execute(query, (student_uuid,))
+        student_info = self.cursor.fetchall()[0]
+        student = Student(str(course_uuid) + "_student_list", student_info[1], student_info[2], student_info[3], student_uuid)
+        return student
+
 
     # these are called outside the class
     def execute(self, string): # execute specific queries not handled in other functions
@@ -88,8 +97,13 @@ class Database(object):
     def drop_student(self, student):
         self.__execute_internal(self.__drop_student, student)
 
-    def edit_student(self, property, new_value, student):
-        self.__execute_internal(self.__edit_student, property, new_value, student)
+    def edit_student(self, property, new_value, course_uuid, student_uuid):
+        self.__execute_internal(self.__edit_student, property, new_value, course_uuid, student_uuid)
+
+    def get_student_from_course(self, course_uuid, student_uuid):
+        return self.__execute_internal(self.__get_student_from_course, course_uuid, student_uuid)
+
+
 
 
 

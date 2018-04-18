@@ -5,9 +5,10 @@ import GlobalVariables
 
 class TemplateCourseCreation(object):
 
-    def __init__(self, course_manager):
+    def __init__(self, course_manager, add_course_fn):
 
         self.course_manager = course_manager
+        self.add_course_fn = add_course_fn
 
         self.TCCreation = QtWidgets.QDialog()
         self.ui = uic.loadUi('../assets/ui/TemplateCourseCreation.ui', self.TCCreation)
@@ -55,7 +56,10 @@ class TemplateCourseCreation(object):
 
         # We want to copy the gradeScale.
         # Copies the gradescale
-        new_course.grade_scale.set_grade_scale(str(old_course.grade_scale.get_A_bottom_score()), str(old_course.grade_scale.get_B_bottom_score()), str(old_course.grade_scale.get_C_bottom_score()), str(old_course.grade_scale.get_D_bottom_score))
+        new_course.grade_scale.set_grade_scale(str(old_course.grade_scale.get_A_bottom_score()),
+                                               str(old_course.grade_scale.get_B_bottom_score()),
+                                               str(old_course.grade_scale.get_C_bottom_score()),
+                                               str(old_course.grade_scale.get_D_bottom_score()))
 
         # Loops through category_dict and creates a new category for each one it finds.
         for category_uuid, category in old_course.assignment_category_dict.assignment_categories.items():
@@ -68,3 +72,6 @@ class TemplateCourseCreation(object):
                                                                              assignment.totalPoints,
                                                                              new_course.student_list)
         self.course_manager.add_course(new_course)
+        self.course_manager.set_current_course(new_course)
+        self.add_course_fn(new_course)
+

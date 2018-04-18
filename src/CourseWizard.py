@@ -234,7 +234,7 @@ class InitialCourseScreen(object):
 
     def create_new_template_course(self):
         self.ICScreen.hide()
-        self.next_screen = TemplateCourseCreation(self.course_manager)
+        self.next_screen = TemplateCourseCreation(self.course_manager, self.add_course_fn)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
