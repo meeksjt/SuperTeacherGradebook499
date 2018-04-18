@@ -16,6 +16,8 @@ from FinalGradeStats import FinalGradeStats
 from EditingGradeDict import EditingGradeDict
 from EditCategories import EditCategories
 from DisplayStudents import DisplayStudents
+from Attendance import *
+from math import ceil
 
 # this class has a lot of buttons that call a lot of functions
 # so it's a bit of a God class
@@ -214,9 +216,14 @@ class MainDisplay(object):
         edit_student_sub.setStatusTip("Modify Student Information")
         edit_student_sub.triggered.connect(self.edit_student_fn)
 
+        create_attendance_record_sub = QtWidgets.QAction(QtGui.QIcon("../assets/add_course_button.png"), "Add Attendance Record", self.add_course)
+        create_attendance_record_sub.setStatusTip("Add a New Attendance Record")
+        create_attendance_record_sub.triggered.connect(self.add_attendance_record)
+
         menu.addAction(add_course_sub)
         menu.addAction(add_student_sub)
         menu.addAction(create_assignment_sub)
+        menu.addAction(create_attendance_record_sub)
 
         self.add_course.setMenu(menu)
         self.edit_button.setMenu(edit_menu)
@@ -256,6 +263,9 @@ class MainDisplay(object):
     def add_course_fn(self):
         self.course_manager.currentCourse = Course()
         self.cc_form = CourseWizard.InitialCourseScreen(self.course_manager, self.add_course_fn_aux)
+
+    def add_attendance_record(self):
+        self.add_attendance = AttendanceSheet(self.course_manager.currentCourse.attendance_dictionary, self.course_manager.currentCourse.student_list, self.course_manager.currentCourse.course_uuid)
 
     def edit_course_fn(self):
         self.edit_course = CourseEditing(self.course_manager.currentCourse)
@@ -409,6 +419,13 @@ class MainDisplay(object):
                 temp = self.calculate_category_grade(int(drop_counts[i]), student_grades[i])
                 student_points = student_points + temp[0]
                 total_points = total_points + temp[1]
+
+            if self.course_manager.currentCourse.attendance_points != "0":
+                atp = float(self.course_manager.currentCourse.attendance_points)
+                x = self.course_manager.currentCourse.attendance_dictionary.get_student_presence_count(studentID)
+                student_points = student_points + ceil(x * atp)
+                total_points = total_points + atp
+
             final_grade = student_points / total_points * 100
             letter_grade = self.course_manager.currentCourse.grade_scale.get_letter_grade(final_grade)
 
