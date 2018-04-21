@@ -42,7 +42,7 @@ class CreateNewStudent(object):
         student_id = self.CNStudent.studentIDField.text()
 
         # Make sure that the input fields contain some content
-        if student_name == "" or student_email == "" or student_id == "":
+        if student_name == "":
             # TODO: throw an error dialog box asking for valid data
             return
 
