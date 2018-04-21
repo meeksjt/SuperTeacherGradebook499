@@ -957,15 +957,16 @@ class MainDisplay(object):
                 writer.writerow(header_row)
 
                 for row in range(1, row_count):
-                    student_name = self.grade_sheet.verticalHeaderItem(row)
-                    row_data = [student_name.get_student_name()]
-                    for col in range(1, col_count):
-                        item = self.grade_sheet.item(row, col)
-                        if item is not None:
-                            row_data.append(self.grade_sheet.item(row, col).text())
-                        else:
-                            row_data.append('')
-                    writer.writerow(row_data)
+                    if self.grade_sheet.item(row, 0).checkState() == QtCore.Qt.Checked:
+                        student_name = self.grade_sheet.verticalHeaderItem(row)
+                        row_data = [student_name.get_student_name()]
+                        for col in range(1, col_count):
+                            item = self.grade_sheet.item(row, col)
+                            if item is not None:
+                                row_data.append(self.grade_sheet.item(row, col).text())
+                            else:
+                                row_data.append('')
+                        writer.writerow(row_data)
 
 class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
     def __init__(self, s_name="", s_uuid=""):
