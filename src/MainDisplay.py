@@ -266,9 +266,10 @@ class MainDisplay(object):
              item = QtGui.QStandardItem(course.course_name + '-' + course.course_section + '-' + course.course_semester)
              item.setAccessibleDescription(course.course_uuid)
              for student in course.student_list:
-                 s = QtGui.QStandardItem(student.student_name)
-                 s.setAccessibleDescription(student.student_uuid)
-                 item.appendRow(s)
+                first, *middle, last = student.student_name.split()
+                s = QtGui.QStandardItem(last + ', ' + first + ' ' + ' '.join(middle))
+                s.setAccessibleDescription(student.student_uuid)
+                item.appendRow(s)
              self.model.appendRow(item)
         self.course_tree_view.setModel(self.model)
 
@@ -380,7 +381,8 @@ class MainDisplay(object):
         if current_item.parent() is not None:
             current_item = current_item.parent()
 
-        s = QtGui.QStandardItem(student.name)
+        first, *middle, last = student.name.split()
+        s = QtGui.QStandardItem(last + ', ' + first + ' ' + ' '.join(middle))
         s.setAccessibleDescription(student.uuid)
         current_item.appendRow(s)
         current_item.sortChildren(0, QtCore.Qt.AscendingOrder)
@@ -414,7 +416,10 @@ class MainDisplay(object):
             course_uuid = self.course_manager.currentCourse.course_uuid
             student = GlobalVariables.database.get_student_from_course(course_uuid, student_uuid)
             EditStudent(student, course_uuid, lambda name: student.set_name(name))
-            child = QtGui.QStandardItem(student.name)
+
+            first, *middle, last = student.name.split()
+            child = QtGui.QStandardItem(last + ', ' + first + ' ' + ' '.join(middle))
+
             child.setAccessibleDescription(student.uuid)
             item.setChild(child_index - 1, child)
             item.sortChildren(0, QtCore.Qt.AscendingOrder)
@@ -432,7 +437,9 @@ class MainDisplay(object):
             course_uuid = current_item.parent().accessibleDescription()
             student = GlobalVariables.database.get_student_from_course(course_uuid, student_uuid)
             EditStudent(student, course_uuid, lambda name: student.set_name(name))
-            current_item.setText(student.name)
+            first, *middle, last = student.name.split()
+            formatted_name = last + ', ' + first + ' ' + ' '.join(middle)
+            current_item.setText(formatted_name)
         else:
             self.edit_course_fn()
         self.load_grade_sheet()
@@ -835,7 +842,10 @@ class MainDisplay(object):
 
         for i in range(1, row_count):
             self.grade_sheet.setVerticalHeaderItem(i, vertical_labels[i - 1])
-            self.grade_sheet.verticalHeaderItem(i).setText(self.grade_sheet.verticalHeaderItem(i).get_student_name())
+            name = self.grade_sheet.verticalHeaderItem(i).get_student_name()
+            first, *middle, last = name.split()
+            formatted_name = last + ', ' + first + ' ' + ' '.join(middle)
+            self.grade_sheet.verticalHeaderItem(i).setText(formatted_name)
 
         # Add the checkboxes
         #for i in range(0, len(vertical_labels)):
@@ -974,7 +984,9 @@ class VerticalHeaderCell(QtWidgets.QTableWidgetItem):
 
     def setText(self, new_name):
         self.student_name = new_name
-        super(VerticalHeaderCell, self).setText(self.student_name)
+        first, *middle, last = self.student_name.split()
+        formatted_name = first + ' ' + last + ' ' + ' '.join(middle)
+        super(VerticalHeaderCell, self).setText(formatted_name)
 
     def set_student_name(self, new_name):
         self.student_name = new_name
