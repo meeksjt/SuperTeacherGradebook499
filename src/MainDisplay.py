@@ -59,7 +59,7 @@ class MainDisplay(object):
         self.layoutWidget.setObjectName("layoutWidget")
         self.layoutWidget.setStyleSheet(layout_widget_style)
 
-        self.splitter.setSizes([1, 800]) # call this after adding to the splitter
+        self.splitter.setSizes([70, 800]) # call this after adding to the splitter
 
         # grade sheet setup
         self.grade_sheet = QtWidgets.QTableWidget(self.splitter)
@@ -290,7 +290,8 @@ class MainDisplay(object):
         self.cc_form = CourseWizard.InitialCourseScreen(self.course_manager, self.add_course_fn_aux)
 
     def add_attendance_record(self):
-        self.get_selected_course()
+        if self.get_selected_course() is None:
+            return
         self.add_attendance = AttendanceSheet(self.course_manager.currentCourse.attendance_dictionary,
                                               self.course_manager.currentCourse.student_list,
                                               self.course_manager.currentCourse.course_uuid)
@@ -478,8 +479,7 @@ class MainDisplay(object):
 
     # delete selected item (row or student) from tree view
     def del_selected_item(self):
-
-        if not self.course_tree_view.currentIndex().isValid():
+        if self.get_selected_course() is None:
             return
 
         row_count = self.grade_sheet.rowCount()
@@ -553,6 +553,9 @@ class MainDisplay(object):
 
 
     def student_final_stats(self):
+        if self.get_selected_course() is None:
+            return
+
         self.calculate_grades()
         col = self.grade_sheet.columnCount() - 2
 

@@ -81,7 +81,6 @@ class StudentList:
         for row in results:
             # print("Here is the row:", row)
             #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
-            print(row)
             newStudent = Student(self.tableName, row[1], row[2], row[4], row[0])
             self.students.append(copy.deepcopy(newStudent))
 
