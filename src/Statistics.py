@@ -55,8 +55,3 @@ def calculate_std_dev(student_grades):
     except:
         std_dev = "No Std. Dev"
     return std_dev
-
-
-if __name__ == "__main__":
-    mode_records = [1, 2, 4, 3, 5, 6, 7, 8]
-    print(calculate_std_dev(mode_records))

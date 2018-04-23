@@ -44,7 +44,6 @@ class Ui_IGPLogin(object):
             if not legitimate:
                 self.bad_input('Error', 'There is no user with the login credentials you entered.  Please try again.')
             else:
-                print("Legit credentials")
                 GlobalVariables.database = Database(username)
                 self.IGPLogin.close()
                 self.main_window = MainDisplay()

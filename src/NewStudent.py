@@ -147,9 +147,3 @@ class CreateNewStudent(object):
                                                 QtWidgets.QMessageBox.Cancel)
         if choice:
             pass
-
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    x = CreateNewStudent()
-    sys.exit(app.exec_())

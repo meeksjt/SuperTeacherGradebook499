@@ -67,9 +67,3 @@ class GradeScale(object):
             return 'D'
         else:
             return 'F'
-
-
-if __name__ == "__main__":
-    print("This is a test.")
-    testGradeScale = GradeScale("StacysMom")
-    testGradeScale.set_grade_scale(1,2,3,4)

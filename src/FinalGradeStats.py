@@ -5,6 +5,7 @@ from Student import Student, StudentList
 import uuid
 import os
 import Statistics
+import csv
 
 class FinalGradeStats(object):
 
@@ -23,7 +24,7 @@ class FinalGradeStats(object):
 
         self.setup_display()
         self.FGStats.show()
-        #self.FGStats.saveStatsButton.clicked.connect()
+        self.FGStats.saveStatsButton.clicked.connect(self.save_student_statistics)
 
     def setup_display(self):
         self.FGStats.statsTable.insertRow(0)
@@ -38,4 +39,32 @@ class FinalGradeStats(object):
         self.FGStats.statsTable.resizeColumnsToContents()
 
     def save_student_statistics(self):
-        pass
+        if os.path.isfile(("../final_grades_stats/" + str(self.name) + " " + str(
+                self.semester) + " Final Grade Statistics.csv")):
+            overwrite = QtWidgets.QMessageBox.question(self.FGStats, "Overwrite?",
+                                                       "Do you want to overwrite the previous student assignments stats file for this course?",
+                                                       QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+        else:
+            overwrite = QtWidgets.QMessageBox.Yes
+        if overwrite == QtWidgets.QMessageBox.Yes:
+            x = QtWidgets.QMessageBox.question(self.FGStats, "Finished!",
+                                               "Your file has been saved in the 'final_grade_stats' directory with the filename '" + str(
+                                                   self.name) + " " + str(
+                                                   self.semester) + " Final Grade Statistics.csv'",
+                                               QtWidgets.QMessageBox.Ok)
+            with open(("../final_grades_stats/" + str(self.name) + " " + str(
+                    self.semester) + " Final Grade Statistics.csv"), 'w') as f:
+                writer = csv.writer(f)
+
+                writer.writerow(
+                    ['Course Name', 'Course Number', 'Course Section', 'Course Semester', 'Mean', 'Median', 'Mode',
+                     'Standard Deviation'])
+
+                row_data = []
+                for column in range(self.FGStats.statsTable.columnCount()):
+                    item = self.FGStats.statsTable.item(0, column)
+                    if item is not None:
+                        row_data.append(item.text())
+                    else:
+                        row_data.append('')
+                writer.writerow(row_data)
