@@ -8,7 +8,7 @@ class StudentList:
         self.students = []
         self.course = courseUUID
         self.tableName = str(courseUUID) + "_student_list"
-        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS '" + self.tableName + "' (uuid TEXT, ID TEXT, name TEXT, email TEXT);")
+        GlobalVariables.database.execute("CREATE TABLE IF NOT EXISTS '" + self.tableName + "' (uuid TEXT, ID TEXT, name TEXT, last_name TEXT, email TEXT);")
         self.load_students()
 
     def set_email(self,uuid,email):
@@ -76,12 +76,12 @@ class StudentList:
 
     def load_students(self):
         self.students.clear() #Erase what's in the list
-        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "` ORDER BY name;")
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "` ORDER BY last_name;")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             # print("Here is the row:", row)
             #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
-            newStudent = Student(self.tableName, row[1], row[2], row[3], row[0])
+            newStudent = Student(self.tableName, row[1], row[2], row[4], row[0])
             self.students.append(copy.deepcopy(newStudent))
 
     def print_students(self):

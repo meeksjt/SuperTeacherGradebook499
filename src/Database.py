@@ -68,8 +68,10 @@ class Database(object):
         return course
 
     def __add_student(self, student):
-        query = "INSERT INTO '" + student.tableName + "' VALUES(?, ?, ?, ?);"
-        self.cursor.execute(query, (student.uuid, student.id, student.name, student.email))
+        query = "INSERT INTO '" + student.tableName + "' VALUES(?, ?, ?, ?, ?);"
+        # parse name into first middle and last
+        word_list = student.name.split()
+        self.cursor.execute(query, (student.uuid, student.id, student.name, word_list[-1], student.email))
         self.connection.commit()
 
     def __drop_student(self, student):
@@ -86,7 +88,7 @@ class Database(object):
         query = "SELECT * FROM '" + str(course_uuid) + "_student_list' WHERE uuid = ?;"
         self.cursor.execute(query, (student_uuid,))
         student_info = self.cursor.fetchall()[0]
-        student = Student(str(course_uuid) + "_student_list", student_info[1], student_info[2], student_info[3], student_uuid)
+        student = Student(str(course_uuid) + "_student_list", student_info[1], student_info[2], student_info[4], student_uuid)
         return student
 
 
