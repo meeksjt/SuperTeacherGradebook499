@@ -12,9 +12,10 @@ class StudentItem(object):
 
 
 class CourseListItem(object):
-    def __init__(self, course_name, course_section, course_uuid, student_list):
+    def __init__(self, course_name, course_section, course_semester, course_uuid, student_list):
         self.course_name = course_name
         self.course_section = course_section
+        self.course_semester = course_semester
         self.course_uuid = course_uuid
         self.student_list = student_list
 
@@ -24,8 +25,8 @@ class CourseList(object):
         self.course_list = []
         self.current_course_item = None
 
-    def add_course(self, course_name, course_section, course_uuid, student_list):
-        self.course_list.append(CourseListItem(course_name, course_section, course_uuid, student_list))
+    def add_course(self, course_name, course_section, course_semester, course_uuid, student_list):
+        self.course_list.append(CourseListItem(course_name, course_section, course_semester, course_uuid, student_list))
 
 # This class will read the CourseList table, and create a Course for each object in it.
 # It will also create a Course.
@@ -59,7 +60,7 @@ class CourseManager(object):
             return
         for student in course.student_list.students:
             student_list_items.append(StudentItem(student.name, student.uuid))
-        self.course_tree_labels.add_course(course.name, course.section, course.course_uuid, student_list_items)
+        self.course_tree_labels.add_course(course.name, course.section, course.semester, course.course_uuid, student_list_items)
 
     def reload_courses(self):
         GlobalVariables.database.execute("SELECT * FROM `courseList` ORDER BY Name;")

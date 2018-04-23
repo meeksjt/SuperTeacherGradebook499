@@ -263,7 +263,7 @@ class MainDisplay(object):
     def update_tree_view(self):
         self.model.clear()
         for course in self.course_manager.course_tree_labels.course_list:
-             item = QtGui.QStandardItem(course.course_name + '-' + course.course_section)
+             item = QtGui.QStandardItem(course.course_name + '-' + course.course_section + '-' + course.course_semester)
              item.setAccessibleDescription(course.course_uuid)
              for student in course.student_list:
                  s = QtGui.QStandardItem(student.student_name)
@@ -314,7 +314,7 @@ class MainDisplay(object):
     # auxiliary function that gets passed into the course wizard
     # to be called when a course is created
     def add_course_fn_aux(self, new_course):
-        course = QtGui.QStandardItem(new_course.name + '-' + new_course.section)
+        course = QtGui.QStandardItem(new_course.name + '-' + new_course.section + '-' + new_course.semester)
         course.setAccessibleDescription(new_course.course_uuid)
 
         self.grade_sheet.setRowCount(0)
