@@ -59,8 +59,6 @@ class Ui_IGPCreateUser(object):
             if not added:
                 self.bad_input('Error', 'User is already in the GlobalVariables.database.\nPlease select a new username.')
             else:
-                print("Credentials added")
-                print("This is where we return to our Login Gui Frame")
                 self.close_button_clicked()
 
 

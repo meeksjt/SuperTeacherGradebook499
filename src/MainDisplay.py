@@ -504,7 +504,6 @@ class MainDisplay(object):
             else:
                 if item.parent():
                     item = item.parent()
-                print(item.child(row-1).text())
                 kept_child_list.append(item.child(row - 1).clone())
 
         item.removeRows(0, item.rowCount())
@@ -569,7 +568,6 @@ class MainDisplay(object):
 
     def plot_grades_vs_attendance(self):
         my_filename = '../course_graphics/grades_vs_attendance.html'
-        print(my_filename)
         final_grades = []
         attendance = []
 
@@ -744,8 +742,6 @@ class MainDisplay(object):
         if drop_count > len(student_grades):
             drop_count = 0
 
-        print(drop_count)
-
         for i in range(drop_count):
             index = int(self.get_max_deficit(deficits))
             del student_grades[index]
@@ -905,6 +901,8 @@ class MainDisplay(object):
             else:
                 self.grade_sheet.showRow(i)
 
+        self.grade_sheet.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.grade_sheet.resizeColumnsToContents()
         # self.horizontal_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         # self.vertical_header_view.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
 

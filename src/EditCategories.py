@@ -32,7 +32,6 @@ class EditCategories(object):
             self.add_category()
             self.ECategories.categoryTable.setItem(row_insert, 0, QtWidgets.QTableWidgetItem(category.categoryName))
             self.ECategories.categoryTable.setItem(row_insert, 1, QtWidgets.QTableWidgetItem(category.drop_count))
-            print(category.category_uuid)
             self.category_uuids.append(category.category_uuid)
 
     def add_category(self):

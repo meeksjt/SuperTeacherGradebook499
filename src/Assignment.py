@@ -141,12 +141,3 @@ class Assignment:
             #print(query)
             GlobalVariables.database.cursor.execute(query)
             GlobalVariables.database.connection.commit()
-
-"""
-#students = StudentList("cs499")
-#students.add_student("42","Jacob Houck", "YourMom@Gmail.com")
-#test = Assignment("AUUID","Quiz 1","100",students)
-#print(test.get_assignment_name(),test.assignmentID)
-#test.set_student_grade("1c9e45e1-a1bb-4f98-ad17-50d4f5912db3","99")
-#test.save_grades()
-"""

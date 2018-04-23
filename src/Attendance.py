@@ -147,16 +147,12 @@ class AttendanceSheet(object):
         self.attendanceDictionary.attendance_sheets[date] = output_string
 
         for i in self.attendanceDictionary.attendance_sheets:
-            # i is the date, attendanceDicctionry[i] is the list of students
-            print(i, self.attendanceDictionary.attendance_sheets[i])
-
             # if the date exists, we update it's entry in the GlobalVariables.database.
             results = GlobalVariables.database.connection.execute("SELECT * FROM `" + self.tableName + "` WHERE date='" + i + "' ;")
             GlobalVariables.database.connection.commit()
             if results.rowcount>0:
                 # Then this date exists.
                 query = "UPDATE " + self.tableName + " SET students = '" + str(self.attendanceDictionary[i]) + "' WHERE date = " + str(i) + ";"
-                print(query)
                 GlobalVariables.database.cursor.execute(query)
                 GlobalVariables.database.connection.commit()
             # Else, we INSERT

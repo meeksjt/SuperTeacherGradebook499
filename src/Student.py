@@ -14,21 +14,18 @@ class StudentList:
     def set_email(self,uuid,email):
         for student in self.students:
             if student.uuid == uuid:
-                print("Found one!")
                 student.set_email(email)
                 self.load_students()
 
     def set_name(self,uuid,name):
         for student in self.students:
             if student.uuid == uuid:
-                print("Found one!")
                 student.set_name(name)
                 self.load_students()
 
     def set_id(self,uuid,id):
         for student in self.students:
             if student.uuid == uuid:
-                print("Found one!")
                 student.set_id(id)
                 self.load_students()
 
@@ -158,14 +155,12 @@ class Student(object):
 
     def remove_student(self):
         query = "DELETE FROM "+self.tableName+" WHERE uuid = '" + str(self.uuid) + "';"
-        print(query)
         GlobalVariables.database.cursor.execute(query)
         GlobalVariables.database.connection.commit()
 
 
 def create_test_database():
     """A simple testing function for just this class"""
-    print("Entered testing function...")
 
     GlobalVariables.database.cursor.execute('CREATE TABLE IF NOT EXISTS `cs499_studentList` (`ID`	INTEGER,`name`	TEXT,`email`	TEXT);')
     GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(1, 'Jacob Houck', 'jeh0029@uah.edu')")
@@ -173,39 +168,4 @@ def create_test_database():
     GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(3, 'Tyler Meeks', 'yomoma@hotmail.com')")
     GlobalVariables.database.connection.execute("INSERT INTO cs499_studentList VALUES(2, 'Chris Christopher', 'chris42@uah.edu')")
     GlobalVariables.database.connection.commit()
-#Remember to find memes for the presentation. Be sure to get a HP one.
 
-#students = StudentList("cs499")
-#students.print_students()
-#students.add_student("id","name","gmail")
-#students.set_email("711bc1b8-265f-4236-a6b2-395bd2107879","HOLYMOLY@BATMAN.CSU")
-#students.set_id("711bc1b8-265f-4236-a6b2-395bd2107879","LET THE BODIES HIT THE FLOOR!")
-#students.set_name("711bc1b8-265f-4236-a6b2-395bd2107879","STAN")
-#print("Hello?!?!")
-#print(students.get_id("711bc1b8-265f-4236-a6b2-395bd2107879"), students.get_email("711bc1b8-265f-4236-a6b2-395bd2107879"),students.get_name("711bc1b8-265f-4236-a6b2-395bd2107879"))
-#students.print_students()
-#students.addStudent(id,name,email)
-#students.removeStudent(id)
-#students.students # This is an list you can iterate through, which has sets for email, id, and name.
-
-#createTestDatabase()
-
-#cursor.execute('SELECT * FROM `cs499studentList`')
-#results = cursor.fetchall()
-#createTestDatabase()
-#for row in results:
-#    newStudent = Student(row[0],row[1],row[2])
-#    students.addStudent(newStudent)
-# students.setEmail(1994, "fhouck8@hotmail.com")
-# students.printStudents()
-# students.setEmail(1, "!@#$%^&*(*&^%")
-# x = input("What student do you want to change?")
-# x = input("Enter a Student name: ")
-
-# y = input("Enter a Student id: ")
-
-# z = input("Enter a Student email: ")
-# students.add_student(y,x,z)
-
-# students.print_students()
-# INSERT INTO `cs499_studentList`(`ID`,`name`,`email`) VALUES (NULL,NULL,NULL);

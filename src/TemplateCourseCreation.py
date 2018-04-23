@@ -34,7 +34,6 @@ class TemplateCourseCreation(object):
 
         # Here is where we get the course_uuid from the drop-down box
         selected_course = str(self.TCCreation.courseChoiceBox.currentText())
-        print(selected_course)
 
         c = [i.strip() for i in selected_course.split(';')]
 
