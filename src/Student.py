@@ -76,11 +76,12 @@ class StudentList:
 
     def load_students(self):
         self.students.clear() #Erase what's in the list
-        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "` ORDER BY last_name;")
+        GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "` ORDER BY last_name, name;")
         results = GlobalVariables.database.cursor.fetchall()
         for row in results:
             # print("Here is the row:", row)
             #'4b9a8f74-3dd4-4cc8-b5fa-7f181c1b866a', 42, 'Jacob Houck', 'YourMom@Gmail.com'
+            print(row)
             newStudent = Student(self.tableName, row[1], row[2], row[4], row[0])
             self.students.append(copy.deepcopy(newStudent))
 
@@ -128,7 +129,9 @@ class Student(object):
     def set_name(self,name):
         """Tested"""
         self.name = name
+        first, *middle, last = self.name.split()
         GlobalVariables.database.cursor.execute("UPDATE `" + self.tableName + "` SET name = ? WHERE uuid = ?;", (self.name, self.uuid))
+        GlobalVariables.database.cursor.execute("UPDATE `" + self.tableName + "` SET last_name = ? WHERE uuid = ?;", (last, self.uuid))
         GlobalVariables.database.connection.commit()
 
     def set_id(self,id):

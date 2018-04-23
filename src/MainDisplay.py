@@ -415,6 +415,7 @@ class MainDisplay(object):
             student_uuid = self.grade_sheet.verticalHeaderItem(checked_indices[0]).get_student_uuid()
             course_uuid = self.course_manager.currentCourse.course_uuid
             student = GlobalVariables.database.get_student_from_course(course_uuid, student_uuid)
+
             EditStudent(student, course_uuid, lambda name: student.set_name(name))
 
             first, *middle, last = student.name.split()
@@ -424,7 +425,8 @@ class MainDisplay(object):
             item.setChild(child_index - 1, child)
             item.sortChildren(0, QtCore.Qt.AscendingOrder)
 
-            # self.course_manager.reload_courses()
+            self.course_manager.reload_courses()
+            self.course_manager.currentCourse.reload_grades()
             self.load_grade_sheet()
 
     def edit_selection(self):
@@ -440,6 +442,7 @@ class MainDisplay(object):
             first, *middle, last = student.name.split()
             formatted_name = last + ', ' + first + ' ' + ' '.join(middle)
             current_item.setText(formatted_name)
+            current_item.parent().sortChildren(0, QtCore.Qt.AscendingOrder)
         else:
             self.edit_course_fn()
         self.load_grade_sheet()
