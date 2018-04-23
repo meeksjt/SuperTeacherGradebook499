@@ -56,7 +56,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Save Assignment Statistics</string>
+    <string>Save Final Grade Statistics</string>
    </property>
   </widget>
  </widget>
