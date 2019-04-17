@@ -20,12 +20,26 @@ class AssignmentCategoryDict(object):
         # Jacob: Need to add loading in from database and saving to database if table already exists
         # Will also need to do the loading for all the assignment categories and everything below that
 
+    """
+        Functions for getting an assignment uuid
+        Parameters:
+            assignment_name
+        Returns:
+            assignmentID
+    """
     def get_assignment_uuid(self, assignment_name):
         for category in self.assignment_categories.values():
             for assignment in category.assignment_dict.values():
                 if assignment.assignmentName == assignment_name:
                     return assignment.assignmentID
 
+    """
+        Function for adding a category
+        Paremeters:
+            uuid, name, drop_count, student_list
+        Returns:
+            uuid
+    """
     def add_category(self, uuid, name, drop_count, student_list):
         category = AssignmentCategory(str(uuid), name, drop_count, self.student_list)
         GlobalVariables.database.execute("INSERT INTO `" + str(self.tableName) + "` VALUES('" + str(uuid) + "', '" + str(name) + "', '" + str(drop_count) + "')")
@@ -33,11 +47,25 @@ class AssignmentCategoryDict(object):
         self.reload_categories()
         return uuid
 
+    """
+        Function for getting a category
+        Parameters:
+            category_name
+        Returns:
+            category
+    """
     def get_category(self, category_name):
         for category in self.assignment_categories.values():
             if category.categoryName == category_name:
                 return category
 
+    """
+        Function for reloading the categories
+        Parameters:
+            None
+        Returns:
+            None
+    """
     def reload_categories(self):
         self.assignment_categories.clear()
         GlobalVariables.database.execute("SELECT * FROM `" + self.tableName + "`")
@@ -46,6 +74,13 @@ class AssignmentCategoryDict(object):
             newAssignmentCategory = AssignmentCategory(row[0], row[1], row[2], self.student_list)
             self.assignment_categories[row[0]] = copy.deepcopy(newAssignmentCategory)
 
+    """
+        Function for setting the assignment name
+        Parameters:
+            uuid, name
+        Returns:
+            None
+    """
     def set_name(self, uuid, name):
         for x in self.assignment_categories.values():
             if x.uuid == uuid:
@@ -54,6 +89,13 @@ class AssignmentCategoryDict(object):
                 GlobalVariables.database.connection.commit()
                 self.reload_categories()
 
+    """
+        Function for setting the drop count
+        Paramters:
+            uuid, dropCount
+        Returns:
+            None
+    """
     def set_drop_count(self,uuid, dropCount):
         for x in self.assignment_categories:
             if x.uuid == uuid:
@@ -62,11 +104,25 @@ class AssignmentCategoryDict(object):
                 GlobalVariables.database.connection.commit()
                 self.reload_categories()
 
+    """
+        Function for saving the category info
+        Parameters:
+            name, drop_count, uuid
+        Returns:
+            None
+    """
     def save_category_info(self, name, drop_count, uuid):
         query = "UPDATE `" + self.tableName + "` SET name = ?, drop_count = ? WHERE uuid = ?;"
         GlobalVariables.database.cursor.execute(query, (name, drop_count, uuid))
         GlobalVariables.database.connection.commit()
 
+    """
+        Function for deleting a category
+        Paramters:
+            course, uuid
+        Returns:
+            None
+    """
     def delete_category(self, course, uuid):
         query = "DELETE FROM `" + self.tableName + "` WHERE uuid = '" + uuid + "';"
         GlobalVariables.database.execute(query)

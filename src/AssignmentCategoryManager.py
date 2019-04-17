@@ -13,6 +13,13 @@ class AssignmentCategoryManager:
 		GlobalVariables.database.cursor.execute("CREATE TABLE IF NOT EXISTS `"+self.tableName+"` (`Name`	TEXT,`Weight`	TEXT,`DropCount`	TEXT);")
 		GlobalVariables.database.connection.commit()
 
+	"""
+		Function for reloading a category
+		Parameters:
+			None
+		Returns:
+			None
+	"""
 	def __reloadCategory(self):
 		# Loads a category list back.
 		self.course_list.clear()  # Erase what's in the list

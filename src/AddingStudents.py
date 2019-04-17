@@ -32,6 +32,13 @@ class AddingStudents(object):
         self.AStudents.show()
         self.AStudents.addSelectedStudentsButton.clicked.connect(self.add_students)
 
+    """
+    Function for the adding of students
+    Parameters:
+        None
+    Returns:
+        None
+    """
     def add_students(self):
 
         row_count = self.AStudents.studentTable.rowCount()
@@ -51,7 +58,13 @@ class AddingStudents(object):
 
         self.AStudents.hide()
 
-
+    """
+    Function for setting up the display
+    Paremeters:
+        None
+    Returns:
+        None
+    """
     def setup_display(self):
 
         #Get all the students

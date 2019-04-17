@@ -27,7 +27,13 @@ class AssignmentCategory:
 
         self.reload_assignments()
 
-    # reload assignments, pretty sure this is right
+    """
+        Function to reload the assignments
+        Parameters:
+            None
+        Returns:
+            None
+    """
     def reload_assignments(self):
         self.assignment_dict.clear()
         GlobalVariables.database.cursor.execute("SELECT * FROM `" + self.tableName + "`")
@@ -48,6 +54,14 @@ class AssignmentCategory:
 
     def get_drop_count(self):
         return self.drop_count
+
+    """
+        Function to reload the grades
+        Parameters:
+            None
+        Returns:
+            None
+    """
 
     def reload_grades(self):
         for key, assignment in self.assignment_dict.items():
